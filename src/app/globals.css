@@ -1,26 +1,153 @@
 @import "tailwindcss";
 
+/* ========== ЗЕФИРНАЯ ТЕМА ========== */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Основные цвета */
+  --background: 45 55% 96%;    /* #faf7f0 - бежевый фон */
+  --foreground: 0 0% 0%;       /* #000000 - черный текст */
+  
+  /* Основная пара цветов */
+  --primary: 330 65% 88%;      /* #f4d8e6 - нежно-розовый */
+  --primary-foreground: 140 20% 35%; /* #557f59 - зеленый текст */
+  
+  /* Вторичная пара (инверсная) */
+  --secondary: 140 20% 35%;    /* #557f59 - зеленый */
+  --secondary-foreground: 330 65% 88%; /* #f4d8e6 - розовый текст */
+  
+  /* Дополнительные цвета */
+  --accent: 45 40% 85%;        /* Светло-бежевый акцент */
+  --accent-foreground: 0 0% 0%; /* Черный текст на акценте */
+  
+  /* Карточки и границы */
+  --card: 0 0% 100%;           /* Белые карточки */
+  --card-foreground: 0 0% 0%;  /* Черный текст в карточках */
+  --border: 45 30% 85%;        /* Светло-бежевые границы */
+  --muted: 45 40% 92%;         /* Светлый для второстепенного */
+  --muted-foreground: 0 0% 45%; /* Серый текст */
+
+  /* Раздел в разработке */
+  --section-development: 140 20% 35%; /* #557f59 - зеленый текст */
 }
 
+/* ========== НОЧНАЯ ТЕМА ========== */
+html.night {
+  /* Основные цвета */
+  --background: 225 35% 12%;   /* Темно-синий фон */
+  --foreground: 0 0% 100%;     /* Белый текст */
+  
+  /* Основная пара цветов */
+  --primary: 210 80% 25%;      /* #083353 - темно-синий */
+  --primary-foreground: 5 55% 65%; /* #d36960 - коралловый текст */
+  
+  /* Вторичная пара (инверсная) */
+  --secondary: 5 55% 65%;      /* #d36960 - коралловый */
+  --secondary-foreground: 210 80% 25%; /* #083353 - синий текст */
+  
+  /* Дополнительные цвета */
+  --accent: 225 30% 20%;       /* Темно-синий акцент */
+  --accent-foreground: 0 0% 100%; /* Белый текст на акценте */
+  
+  /* Карточки и границы */
+  --card: 225 35% 15%;         /* Синие карточки */
+  --card-foreground: 0 0% 100%; /* Белый текст в карточках */
+  --border: 225 25% 25%;       /* Синие границы */
+  --muted: 225 25% 20%;        /* Темный для второстепенного */
+  --muted-foreground: 225 20% 70%; /* Серо-синий текст */
+
+  /* Раздел в разработке */
+  --section-development: 5 55% 65%;  /* #d36960 - коралловый */
+}
+
+/* ========== НЕБЕСНАЯ ТЕМА ========== */
+html.sky {
+  /* Основные цвета */
+  --background: 210 92% 95%;    /* #f8f3ed - кремовый фон */
+  --foreground: 200 40% 20%;   /* Темно-синий текст */
+  
+  /* Основная пара цветов */
+  --primary: 220 70% 70%;      /* #6e93e4 - голубой */
+  --primary-foreground: 45 80% 85%; /* #f7f2ee - кремовый текст */
+  
+  /* Вторичная пара */
+  --secondary: 45 80% 85%;     /* Светло-желтый акцент */
+  --secondary-foreground: 220 70% 70%; /* Темно-синий текст на желтом */
+  
+  /* Дополнительные цвета */
+  --accent: 220 60% 90%;       /* Светло-голубой акцент */
+  --accent-foreground: 200 40% 20%; /* Темно-синий текст */
+  
+  /* Карточки и границы */
+  --card: 0 0% 100%;           /* Белые карточки */
+  --card-foreground: 200 40% 20%; /* Темно-синий текст в карточках */
+  --border: 220 40% 85%;       /* Светло-голубые границы */
+  --muted: 45 40% 92%;         /* Светлый для второстепенного */
+  --muted-foreground: 200 30% 40%; /* Серо-голубой текст */
+
+  /* Раздел в разработке */
+  --section-development: 220 70% 70%; /* #6e93e4 - голубой */
+}
+
+/* ========== ПРИМЕНЕНИЕ В TAILWIND ========== */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Основные цвета */
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  
+  /* Основная пара */
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  
+  /* Вторичная пара */
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  
+  /* Акцентные цвета */
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  
+  /* Дополнительные */
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-border: hsl(var(--border));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  /* Раздел в разработке */
+  --color-section-development: hsl(var(--section-development));
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ========== БАЗОВЫЕ СТИЛИ ========== */
+body {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+/* ========== АНИМАЦИИ ДЛЯ ТЕМЫ (СНИЗУ ВВЕРХ) ========== */
+@keyframes slideUpFromButton {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.6); /* Больше движения */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.theme-button-enter {
+  animation: slideUpFromButton 0.4s ease-out forwards;
 }
+
+.theme-button-enter-delay-1 {
+  animation: slideUpFromButton 0.4s ease-out 0.1s forwards;
+  opacity: 0;
+}
+
+.theme-button-enter-delay-2 {
+  animation: slideUpFromButton 0.4s ease-out 0.2s forwards;
+  opacity: 0;
+}
+
