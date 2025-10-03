@@ -1,5 +1,20 @@
 @import "tailwindcss";
 
+@import url('https://fonts.googleapis.com/css2?family=Stalinist+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Stalinist+One&display=swap');
+
+/* ========== ШРИФТЫ ========== */
+body {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-primary), cursive; /* ← ОСТАВИТЬ */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-accent), sans-serif; /* ← ОСТАВИТЬ */
+}
+
 /* ========== ЗЕФИРНАЯ ТЕМА ========== */
 :root {
   /* Основные цвета */
@@ -117,12 +132,12 @@ html.sky {
 }
 
 /* ========== БАЗОВЫЕ СТИЛИ ========== */
-body {
+/* body {
   background: hsl(var(--background));
   color: hsl(var(--foreground));
   font-family: Arial, Helvetica, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
-}
+} */
 
 
 /* ========== АНИМАЦИИ ДЛЯ ТЕМЫ (СНИЗУ ВВЕРХ) ========== */
@@ -150,4 +165,3 @@ body {
   animation: slideUpFromButton 0.4s ease-out 0.2s forwards;
   opacity: 0;
 }
-

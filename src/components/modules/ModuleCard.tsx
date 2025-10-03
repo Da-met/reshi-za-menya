@@ -94,10 +94,9 @@ export function ModuleCard({ title, description, href, moduleType, icon, colorSc
         </h3>
         
         {/* Изображение */}
-        <div className="flex-1 flex items-center justify-center min-h-[200px] p-4 mb-4"> {/* Добавил margin-bottom */}
+        <div className="flex-1 flex items-center justify-center min-h-[200px] p-4 mb-4"> 
           {isComingSoon ? (
             <div className="text-center text-muted-foreground">
-              <div className="text-6xl md:text-7xl mb-4">🚧</div>
               <p className="text-sm md:text-base font-medium">В разработке</p>
             </div>
           ) : (

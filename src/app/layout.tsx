@@ -5,14 +5,21 @@ import { Providers } from './providers';
 import { ThemeProvider } from '../components/theme/ThemeProvider';
 import { ThemeToggle } from '../components/theme/ThemeToggle';
 import { Header } from '@/components/layout/Header';
+import { Jura, Stalinist_One } from 'next/font/google';
 
 
-const inter = Inter({ subsets: ['latin'] });
+// ЗАМЕНИТЕ Inter на ваши шрифты
+const hachiMaruPop = Jura({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-primary',
+});
 
-export const metadata: Metadata = {
-  title: 'Реши за меня - приложение для генерации идей',
-  description: 'Генерируйте идеи для рецептов, подарков, фильмов и мест для отдыха',
-};
+const stalinistOne = Stalinist_One({
+  weight: '400',
+  subsets: ['cyrillic', 'latin'],
+  variable: '--font-accent',
+});
 
 export default function RootLayout({
   children,
@@ -20,8 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ru" suppressHydrationWarning>
-      <body className={inter.className}>
+    <html lang="ru" suppressHydrationWarning className={`${hachiMaruPop.variable} ${stalinistOne.variable}`}>
+      <body>
         <Providers>
           <Header />
           {children}
