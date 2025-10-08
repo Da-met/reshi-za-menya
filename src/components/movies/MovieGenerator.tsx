@@ -25,7 +25,6 @@ export function MovieGenerator({
   onMovieGenerated,
   isGenerating = false,
   onGeneratingChange,
-  onRequestChange,
   currentRequest = {},
   onClearMovie
 }: MovieGeneratorProps) {

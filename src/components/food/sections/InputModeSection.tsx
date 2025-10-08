@@ -374,7 +374,7 @@ export function InputModeSection({ request, onChange }: InputModeSectionProps) {
                 <Lightbulb size={16} className="text-blue-600 mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-sm text-blue-800 font-medium mb-1">
-                    💡 Введите название блюда и нажмите "✓" или Enter
+                    💡 Введите название блюда и нажмите {"\"✓\""} или Enter
                   </p>
                   <p className="text-xs text-blue-600">
                     База содержит 250+ популярных блюд со всего мира

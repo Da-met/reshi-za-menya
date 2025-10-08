@@ -34,7 +34,7 @@ export function TrendingBanner() {
               Сейчас в тренде
             </h4>
             <p className="text-xs md:text-sm opacity-90 mt-0.5">
-              "Один дома", "Иван Васильевич", "Джентльмены"
+            «Один дома», «Иван Васильевич», «Джентльмены»
             </p>
           </div>
         </div>
