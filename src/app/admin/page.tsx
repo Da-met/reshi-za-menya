@@ -355,7 +355,7 @@ export default function AdminPage() {
   const handleTest = async () => {
     try {
       // Здесь будет вызов API для тестирования
-      const mockResult = {
+      const mockResult: TestResult = {
         success: true,
         response: { 
           gift: { 
@@ -369,7 +369,7 @@ export default function AdminPage() {
         }
       };
       setTestResult(mockResult);
-    } catch (error) {
+    }  catch (error) {
       console.error('Ошибка тестирования:', error);
       setTestResult({ 
         success: false, 
