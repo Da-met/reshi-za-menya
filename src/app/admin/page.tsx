@@ -370,7 +370,11 @@ export default function AdminPage() {
       };
       setTestResult(mockResult);
     } catch (error) {
-      setTestResult({ success: false, error: 'Ошибка тестирования' });
+      console.error('Ошибка тестирования:', error);
+      setTestResult({ 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Неизвестная ошибка тестирования' 
+      });
     }
   };
 

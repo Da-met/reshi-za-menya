@@ -39,7 +39,7 @@ export default function MoviesPage() {
             text-foreground
             mb-3 md:mb-4
           ">
-            🎬 Что посмотреть?
+            Что посмотреть?
           </h1>
           <p className="
             text-base md:text-lg lg:text-xl

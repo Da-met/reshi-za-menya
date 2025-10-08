@@ -1,6 +1,6 @@
 // Все типы для нашего приложения
 
-export type ModuleType = 'recipes' | 'gifts' | 'movies' | 'places';
+export type ModuleType = 'recipes' | 'gifts' | 'books'| 'movies' | 'coming-soon';
 
 export interface User {
   id: string;

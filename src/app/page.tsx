@@ -1,5 +1,6 @@
 import { ModuleCard } from '@/components/modules/ModuleCard';
 import { modulesConfig } from '@/config/modules';
+import { ModuleType } from '@/types';
 import { Goal, Lightbulb, ShoppingCart } from 'lucide-react';
 
 export default function Home() {
@@ -78,7 +79,7 @@ export default function Home() {
                   title={module.title}
                   description={module.description}
                   href={module.href}
-                  moduleType={module.moduleType as any}
+                  moduleType={module.moduleType as ModuleType}
                   icon={module.icon}
                   colorScheme={getMobileColorScheme(index)}
                 />
@@ -92,7 +93,7 @@ export default function Home() {
                   title={module.title}
                   description={module.description}
                   href={module.href}
-                  moduleType={module.moduleType as any}
+                  moduleType={module.moduleType as ModuleType}
                   icon={module.icon}
                   colorScheme={getDesktopColorScheme(index)}
                 />

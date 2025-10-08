@@ -2,7 +2,7 @@
 
 import { FoodResponse } from '@/types/food';
 import { useState } from 'react';
-import { Save, RotateCw, Check, Sparkles, Clock, Zap, ShoppingCart, ChefHat, Heart } from 'lucide-react';
+import { Save, RotateCw, Check, Sparkles, Clock, Zap, ShoppingCart, ChefHat } from 'lucide-react';
 
 interface FoodResultProps {
   recipe: FoodResponse;

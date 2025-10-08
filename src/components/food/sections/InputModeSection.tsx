@@ -215,7 +215,7 @@ export function InputModeSection({ request, onChange }: InputModeSectionProps) {
             <div className="flex items-center space-x-2 text-green-800">
               <CheckCircle size={16} />
               <span className="text-sm font-medium">
-                Продукт "<span className="first-letter:uppercase">{lastAddedProduct}</span>" добавлен
+                Продукт -<span className="first-letter:uppercase">{lastAddedProduct}</span>- добавлен
               </span>
             </div>
           </div>

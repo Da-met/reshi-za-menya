@@ -3,12 +3,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useThemeStore } from '@/stores/theme-store';
+import { ModuleType } from '@/types';
 
 interface ModuleCardProps {
   title: string;
   description: string;
   href: string;
-  moduleType: 'recipes' | 'gifts' | 'coming-soon';
+  moduleType: ModuleType;
   icon: string;
   colorScheme: 'primary' | 'inverted';
 }
