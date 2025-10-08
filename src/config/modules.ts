@@ -11,10 +11,10 @@ export interface ModuleConfig {
   export const modulesConfig: ModuleConfig[] = [
     // Активные модули
     {
-      id: 'recipes',
+      id: 'food',
       title: 'Что приготовить?',
       description: 'Рецепты по вашим продуктам или предпочтениям',
-      href: '/recipes',
+      href: '/food',
       moduleType: 'active',
       icon: 'recipes',
       status: 'active',
@@ -28,26 +28,27 @@ export interface ModuleConfig {
       icon: 'gifts',
       status: 'active',
     },
-    
-    // Модули в разработке (только для внутреннего использования)
     {
       id: 'movies',
       title: 'Что посмотреть?',
       description: 'Подборки фильмов и сериалов по вашему настроению',
-      href: '#',
-      moduleType: 'coming-soon',
+      href: '/movies',
+      moduleType: 'active',
       icon: 'movies',
-      status: 'development',
+      status: 'active',
     },
     {
       id: 'books',
       title: 'Что почитать?',
       description: 'Книжные рекомендации по вашим интересам',
       href: '#',
-      moduleType: 'coming-soon', 
+      moduleType: 'active', 
       icon: 'books',
-      status: 'development',
+      status: 'active',
     },
+
+
+    // Модули в разработке (только для внутреннего использования)
     {
       id: 'places',
       title: 'Куда сходить?',

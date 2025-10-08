@@ -30,8 +30,7 @@ export function ModuleCard({ title, description, href, moduleType, icon, colorSc
         bg: 'bg-transparent',
         text: 'text-muted-foreground',
         border: 'border-dashed border-muted-foreground/30',
-        buttonBg: 'bg-muted/50',
-        buttonText: 'text-muted-foreground'
+        buttonText: 'text-muted-foreground' // Цвет текста как у заголовка
       };
     }
 
@@ -40,16 +39,14 @@ export function ModuleCard({ title, description, href, moduleType, icon, colorSc
         bg: 'bg-primary',
         text: 'text-primary-foreground',
         border: 'border-primary',
-        buttonBg: 'bg-primary-foreground', // Зеленый фон для кнопки
-        buttonText: 'text-primary' // Розовый текст на кнопке
+        buttonText: 'text-primary-foreground' // Цвет текста как у заголовка
       };
     } else {
       return {
         bg: 'bg-primary-foreground',
         text: 'text-primary',
         border: 'border-primary-foreground', 
-        buttonBg: 'bg-primary', // Розовый фон для кнопки
-        buttonText: 'text-primary-foreground' // Зеленый текст на кнопке
+        buttonText: 'text-primary' // Цвет текста как у заголовка
       };
     }
   };
@@ -94,40 +91,45 @@ export function ModuleCard({ title, description, href, moduleType, icon, colorSc
         </h3>
         
         {/* Изображение */}
-        <div className="flex-1 flex items-center justify-center min-h-[200px] p-4 mb-4"> 
+        <div className="flex-1 flex items-center justify-center p-4"> 
           {isComingSoon ? (
             <div className="text-center text-muted-foreground">
               <p className="text-sm md:text-base font-medium">В разработке</p>
             </div>
           ) : (
-            <div className="relative w-full h-full max-w-[280px] max-h-[280px] md:max-w-[320px] md:max-h-[320px]">
+            <div className="relative w-full h-full">
               <Image
                 src={imagePath}
                 alt={title}
-                width={320}
-                height={320}
-                className="object-contain transition-transform duration-200 group-hover:scale-110 w-full h-full"
+                width={400}
+                height={400}
+                className="object-contain transition-transform duration-200 group-hover:scale-110 
+                          w-full h-full 
+                          min-h-[180px]  // Минимальная высота на мобильных
+                          max-w-[90vw]   // 90% ширины экрана на мобильных
+                          max-h-[50vh]   // 50% высоты экрана на мобильных
+                          md:min-h-0 
+                          md:max-w-[280px] md:max-h-[280px]
+                          lg:max-w-[320px] lg:max-h-[320px]"
                 priority={true}
               />
             </div>
           )}
         </div>
 
-        {/* Кнопка с описанием ВНУТРИ карточки */}
+        {/* Кнопка с описанием */}
         <div className={`
-          ${colors.buttonBg}
-          ${colors.buttonText}
-          rounded-2xl /* Скругленные углы */
-          p-2 /* Внутренние отступы */
-          min-h-[60px] /* Фиксированная высота */
+          ${colors.buttonText} /* Только цвет текста, без фона */
+          rounded-2xl
+          min-h-[60px] /* Сохраняем фиксированную высоту */
           flex
           items-center
           justify-center
           text-center
-          mx-2 /* Отступы от краев карточки */
+          mx-2
           transition-all
           duration-200
-          group-hover:shadow-md
+          border-2 border-transparent /* Прозрачная граница для сохранения размера */
         `}>
           <p className="
             text-sm md:text-base
