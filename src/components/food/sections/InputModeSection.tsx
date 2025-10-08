@@ -288,7 +288,7 @@ export function InputModeSection({ request, onChange }: InputModeSectionProps) {
                 <Lightbulb size={16} className="text-blue-600 mt-0.5 flex-shrink-0" />
                 <div>
                   <p className="text-sm text-blue-800 font-medium mb-1">
-                    💡 Вводите продукты по одному. Нажмите Enter или кнопку "+"
+                    💡 Вводите продукты по одному. Нажмите Enter или кнопку {"\"+\""}
                   </p>
                   <p className="text-xs text-blue-600">
                     Система подскажет популярные варианты из 600+ продуктов

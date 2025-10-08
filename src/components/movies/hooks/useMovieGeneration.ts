@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { MovieRequest, MovieResponse } from '@/types/movies';
+import { useState } from 'react';
+import { MovieRequest } from '@/types/movies';
 
 export function useMovieGeneration(initialRequest: MovieRequest = {}) {
   const [movieRequest, setMovieRequest] = useState<MovieRequest>(initialRequest);

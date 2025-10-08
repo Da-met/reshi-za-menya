@@ -2,7 +2,7 @@
 
 import { MovieResponse } from '@/types/movies';
 import { useState } from 'react';
-import { Save, RotateCw, Check, Sparkles, Film, Clock, Calendar, Globe } from 'lucide-react';
+import { Save, RotateCw, Check, Sparkles, Film, Clock, Globe } from 'lucide-react';
 
 interface MovieResultProps {
   movie: MovieResponse;

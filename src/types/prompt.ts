@@ -17,7 +17,7 @@ export interface Prompt {
   
   export interface TestResult {
     success: boolean;
-    response?: any;
+    response?: unknown[];
     error?: string;
   }
   

@@ -30,7 +30,7 @@ export function MovieGenerator({
   onClearMovie
 }: MovieGeneratorProps) {
   const [activeSection, setActiveSection] = useState<'context' | 'mood' | 'filters'>('context');
-  const { movieRequest, setMovieRequest, isFormValid, handleRequestChange } = useMovieGeneration(currentRequest);
+  const { movieRequest, isFormValid, handleRequestChange } = useMovieGeneration(currentRequest);
   const { generateRandomRequest } = useRandomMovies();
 
   const handleGenerate = async () => {

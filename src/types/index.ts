@@ -13,7 +13,7 @@ export interface FavoriteBase {
   moduleType: ModuleType;
   title: string;
   image?: string;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 export interface FavoriteWithComments extends FavoriteBase {
