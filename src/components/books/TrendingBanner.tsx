@@ -1,21 +1,21 @@
 'use client';
 
-import { Snowflake, ArrowRight } from 'lucide-react';
+import { TrendingUp, ArrowRight } from 'lucide-react';
 
-export function SeasonalBanner() {
+export function TrendingBanner() {
   const handleBannerClick = () => {
-    console.log('Открываем новогодние подборки');
-    // Здесь будет логика открытия спец. подборок
+    console.log('Открываем книжные тренды');
+    // Здесь будет логика открытия трендов
   };
 
   return (
-    <div 
+    <div
       onClick={handleBannerClick}
       className="
-        bg-gradient-to-r from-primary/90 to-secondary/90 
-        text-primary-foreground 
-        p-4 md:p-5 
-        rounded-xl 
+        bg-gradient-to-r from-primary/90 to-secondary/90
+        text-primary-foreground
+        p-4 md:p-5
+        rounded-xl
         mb-4 md:mb-6
         cursor-pointer
         transition-all
@@ -28,29 +28,29 @@ export function SeasonalBanner() {
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3 md:space-x-4">
-          <Snowflake size={20} className="md:size-6 flex-shrink-0" />
+          <TrendingUp size={20} className="md:size-6 flex-shrink-0" />
           <div>
             <h4 className="text-l md:text-xl lg:text-2xl leading-[1.2]">
-              Скоро Новый год!
+              Сейчас читают
             </h4>
             <p className="text-xs md:text-sm opacity-90 mt-1.5">
-              Специальные подборки подарков
+              «Тонкое искусство пофигизма», «Атлант расправил плечи», «Маленькие женщины»
             </p>
           </div>
         </div>
         
-        {/* Стрелка вместо кнопки */}
-        <ArrowRight 
-          size={18} 
+        {/* Стрелка */}
+        <ArrowRight
+          size={18}
           className="
-            md:size-5 
-            opacity-80 
-            group-hover:opacity-100 
+            md:size-5
+            opacity-80
+            group-hover:opacity-100
             group-hover:translate-x-1
             transition-all
             duration-300
             flex-shrink-0
-          " 
+          "
         />
       </div>
     </div>

@@ -65,7 +65,10 @@ export function ContextSection({ request, onChange }: ContextSectionProps) {
 
   return (
     <div>
-      <h3 className="text-l md:text-xl font-accent font-semibold mb-3 md:mb-4 text-foreground">
+      <h3 className="
+          text-xl md:text-2xl lg:text-3xl font-accent 
+          mb-3 md:mb-4 text-foreground
+      ">
         С кем планируете смотреть?
       </h3>
       <p className="text-sm md:text-base text-muted-foreground mb-4 md:mb-6">

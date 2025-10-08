@@ -35,7 +35,10 @@ export function CharacteristicsSection({ request, onChange }: CharacteristicsSec
   return (
     <div className="space-y-6 md:space-y-8">
       <div>
-        <h3 className="text-l md:text-xl font-accent font-semibold mb-2 text-foreground">
+        <h3 className="
+          text-xl md:text-2xl lg:text-3xl font-accent 
+          mb-3 md:mb-4 text-foreground
+        ">
           Опишите человека подробнее
         </h3>
         <p className="text-sm md:text-base text-muted-foreground mb-4 md:mb-6">
@@ -45,7 +48,7 @@ export function CharacteristicsSection({ request, onChange }: CharacteristicsSec
       
       {/* Профессии */}
       <div>
-        <h4 className="font-semibold mb-2 md:mb-3 text-foreground text-sm md:text-base">💼 Род занятий</h4>
+        <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">💼 Род занятий</h4>
         <div className="flex flex-wrap gap-1 md:gap-2">
           {professions.map(prof => (
             <button
@@ -67,7 +70,7 @@ export function CharacteristicsSection({ request, onChange }: CharacteristicsSec
 
       {/* Интересы */}
       <div>
-        <h4 className="font-semibold mb-2 md:mb-3 text-foreground text-sm md:text-base">❤️ Интересы и хобби</h4>
+        <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">❤️ Интересы и хобби</h4>
         <div className="flex flex-wrap gap-1 md:gap-2">
           {interests.map(interest => (
             <button
@@ -89,7 +92,7 @@ export function CharacteristicsSection({ request, onChange }: CharacteristicsSec
 
       {/* Характер */}
       <div>
-        <h4 className="font-semibold mb-2 md:mb-3 text-foreground text-sm md:text-base">👤 Характер и стиль</h4>
+        <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">👤 Характер и стиль</h4>
         <div className="flex flex-wrap gap-1 md:gap-2">
           {personality.map(trait => (
             <button

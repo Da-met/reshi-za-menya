@@ -166,7 +166,10 @@ export function InputModeSection({ request, onChange }: InputModeSectionProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg md:text-xl font-accent font-semibold mb-3 md:mb-4 text-foreground">
+        <h3 className="
+          text-xl md:text-2xl lg:text-3xl font-accent 
+          mb-3 md:mb-4 text-foreground
+        ">
           Как будем искать рецепт?
         </h3>
         

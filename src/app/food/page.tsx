@@ -42,8 +42,7 @@ export default function FoodPage() {
         <div className="text-center mb-8 md:mb-10 lg:mb-12">
         <header className="text-center mb-8 md:mb-10 lg:mb-12">
           <h1 className="
-            text-2xl md:text-3xl lg:text-4xl xl:text-5xl  // Уменьшил размеры
-            font-bold 
+            text-4xl md:text-5xl lg:text-6xl 
             text-foreground
             mb-2 md:mb-3
             px-2  // Добавил отступы по бокам

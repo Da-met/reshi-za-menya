@@ -41,7 +41,7 @@ export interface ModuleConfig {
       id: 'books',
       title: 'Что почитать?',
       description: 'Книжные рекомендации по вашим интересам',
-      href: '#',
+      href: '/books',
       moduleType: 'active', 
       icon: 'books',
       status: 'active',

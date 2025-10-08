@@ -30,10 +30,10 @@ export function TrendingBanner() {
         <div className="flex items-center space-x-3 md:space-x-4">
           <TrendingUp size={20} className="md:size-6 flex-shrink-0" />
           <div>
-            <h4 className="font-bold text-sm md:text-base lg:text-lg">
+            <h4 className="text-l md:text-xl lg:text-2xl leading-[1.2]">
               Сейчас в тренде
             </h4>
-            <p className="text-xs md:text-sm opacity-90 mt-0.5">
+            <p className="text-xs md:text-sm opacity-90 mt-1.5">
             «Один дома», «Иван Васильевич», «Джентльмены»
             </p>
           </div>

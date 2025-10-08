@@ -1,31 +1,32 @@
 'use client';
 
 import { useState } from 'react';
-import { MovieResponse, MovieRequest } from '@/types/movies';
-import { MovieGenerator } from '@/components/movies/MovieGenerator';
-import { MovieResult } from '@/components/movies/MovieResult';
+import { BookResponse, BookRequest } from '@/types/books';
+import { BookGenerator } from '@/components/books/BookGenerator';
+import { BookResult } from '@/components/books/BookResult';
 
-export default function MoviesPage() {
+
+export default function BooksPage() {
   const [currentView, setCurrentView] = useState<'generator' | 'saved'>('generator');
-  const [currentMovie, setCurrentMovie] = useState<MovieResponse | null>(null);
-  const [currentRequest, setCurrentRequest] = useState<MovieRequest>({});
+  const [currentBook, setCurrentBook] = useState<BookResponse | null>(null);
+  const [currentRequest, setCurrentRequest] = useState<BookRequest>({});
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const handleMovieGenerated = (movie: MovieResponse) => {
-    setCurrentMovie(movie);
+  const handleBookGenerated = (book: BookResponse) => {
+    setCurrentBook(book);
   };
 
-  const handleClearMovie = () => {
-    setCurrentMovie(null);
+  const handleClearBook = () => {
+    setCurrentBook(null);
   };
 
-  const handleRequestChange = (request: MovieRequest) => {
+  const handleRequestChange = (request: BookRequest) => {
     setCurrentRequest(request);
   };
 
-  const handleSaveMovie = () => {
-    console.log('Сохранение фильма:', currentMovie);
-    // Здесь будет логика сохранения
+  const handleSaveBook = () => {
+    console.log('Сохранение книги:', currentBook);
+    // Логика сохранения
   };
 
   return (
@@ -39,7 +40,7 @@ export default function MoviesPage() {
             text-foreground
             mb-3 md:mb-4
           ">
-            Что посмотреть?
+            Что почитать?
           </h1>
           <p className="
             text-base md:text-lg lg:text-xl
@@ -48,7 +49,7 @@ export default function MoviesPage() {
             max-w-2xl
             mx-auto
           ">
-            Найдем идеальный фильм или сериал для вашего настроения
+            Найдем идеальную книгу для вашего настроения и интересов
           </p>
           
           {/* Переключение между вкладками */}
@@ -67,7 +68,7 @@ export default function MoviesPage() {
                 }
               `}
             >
-              🎬 Генератор фильмов
+              📚 Генератор книг
             </button>
             <button
               onClick={() => setCurrentView('saved')}
@@ -83,33 +84,41 @@ export default function MoviesPage() {
                 }
               `}
             >
-              💾 Мои фильмы
+              💾 Мои книги
             </button>
           </div>
         </div>
 
         {currentView === 'generator' ? (
           <>
-            <MovieGenerator
-              onMovieGenerated={handleMovieGenerated}
+            <BookGenerator
+              onBookGenerated={handleBookGenerated}
               isGenerating={isGenerating}
               onGeneratingChange={setIsGenerating}
               onRequestChange={handleRequestChange}
               currentRequest={currentRequest}
-              onClearMovie={handleClearMovie}
+              onClearBook={handleClearBook}
             />
             
-            {currentMovie && (
-              <MovieResult
-                movie={currentMovie}
-                onSave={handleSaveMovie}
-                onGenerateAnother={() => setCurrentMovie(null)}
+            {currentBook && (
+              <BookResult
+                book={currentBook}
+                onSave={handleSaveBook}
+                onGenerateAnother={() => setCurrentBook(null)}
               />
             )}
           </>
         ) : (
-          ``
-          // <SavedMovies /> 
+          <div className="bg-card rounded-2xl shadow-lg p-6">
+            <h2 className="text-2xl font-accent font-bold mb-4 text-foreground">Мои книги</h2>
+            <div className="text-center py-8">
+              <div className="text-4xl mb-4">📚</div>
+              <p className="text-muted-foreground mb-4">Здесь будут ваши сохраненные книги</p>
+              <p className="text-sm text-muted-foreground">
+                Сохраняйте понравившиеся рекомендации, чтобы не потерять их
+              </p>
+            </div>
+          </div>
         )}
       </div>
     </div>

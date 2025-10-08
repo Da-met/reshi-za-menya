@@ -37,7 +37,10 @@ export function MoodSection({ request, onChange }: MoodSectionProps) {
   return (
     <div className="space-y-6 md:space-y-8">
       <div>
-        <h3 className="text-l md:text-xl font-accent font-semibold mb-2 text-foreground">
+        <h3 className="
+          text-xl md:text-2xl lg:text-3xl font-accent 
+          mb-3 md:mb-4 text-foreground
+        ">
           Какое настроение и жанры?
         </h3>
         <p className="text-sm md:text-base text-muted-foreground mb-4 md:mb-6">
@@ -47,7 +50,7 @@ export function MoodSection({ request, onChange }: MoodSectionProps) {
       
       {/* Настроение */}
       <div>
-        <h4 className="font-semibold mb-2 md:mb-3 text-foreground text-sm md:text-base">🎭 Настроение</h4>
+        <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">🎭 Настроение</h4>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {moodOptions.map((mood) => (
             <button
@@ -68,7 +71,7 @@ export function MoodSection({ request, onChange }: MoodSectionProps) {
 
       {/* Жанры */}
       <div>
-        <h4 className="font-semibold mb-2 md:mb-3 text-foreground text-sm md:text-base">
+        <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">
           🎬 Жанры {request.genres && <span className="text-primary">({request.genres.length})</span>}
         </h4>
         <div className="flex flex-wrap gap-2">

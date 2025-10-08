@@ -45,8 +45,7 @@ export default function Home() {
       <div className="flex-1 container mx-auto px-4 sm:px-6 pt-8">
         <header className="text-center mb-10 md:mb-12 lg:mb-14">
           <h1 className="
-            text-3xl md:text-4xl lg:text-5xl xl:text-6xl 
-            font-bold 
+            text-5xl md:text-6xl lg:text-6xl xl:text-[5rem]
             text-foreground
             mb-2 md:mb-3
           ">
@@ -107,16 +106,16 @@ export default function Home() {
               bg-transparent
               border-2 border-dashed border-section-development/30
               rounded-2xl
-              p-6 md:p-8
+              p-6 
               flex
               items-center
               justify-center
-              min-h-[120px]
+              min-h-[100px]
               md:min-h-[140px]
             ">
               <div className="text-center text-section-development flex items-center space-x-4 md:space-x-6">
                 <div className="text-center">
-                  <h3 className="text-lg md:text-xl lg:text-2xl font-bold mb-1">
+                  <h3 className="text-xl md:text-2xl lg:text-3xl mb-1">
                     Разделы в разработке
                   </h3>
                   <p className="text-sm md:text-base opacity-80">
@@ -133,8 +132,7 @@ export default function Home() {
       <div className="container mx-auto px-4 sm:px-6 pb-8 md:pb-12">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="
-            text-lg md:text-xl lg:text-2xl
-            font-semibold
+            text-xl md:text-2xl lg:text-3xl
             text-foreground
             mb-6 md:mb-8
           ">
@@ -145,7 +143,7 @@ export default function Home() {
               <div className="flex justify-center mb-3">
                 <Goal className="w-8 h-8 md:w-10 md:h-10 text-primary" />
               </div>
-              <h3 className="text-base md:text-lg font-medium mb-2">Выберите раздел</h3>
+              <h3 className="text-xl mb-2">Выберите раздел</h3>
               <p className="text-muted-foreground text-sm md:text-s">
                 Рецепты, подарки и многое другое
               </p>
@@ -154,7 +152,7 @@ export default function Home() {
               <div className="flex justify-center mb-3">
                 <Lightbulb className="w-8 h-8 md:w-10 md:h-10 text-primary" />
               </div>
-              <h3 className="text-base md:text-lg font-medium mb-2">Получите идеи</h3>
+              <h3 className="text-xl mb-2">Получите идеи</h3>
               <p className="text-muted-foreground text-sm md:text-s">
                 Рекомендации на основе ваших предпочтений
               </p>
@@ -163,7 +161,7 @@ export default function Home() {
               <div className="flex justify-center mb-3">
                 <ShoppingCart className="w-8 h-8 md:w-10 md:h-10 text-primary" />
               </div>
-              <h3 className="text-base md:text-lg font-medium mb-2">Реализуйте легко</h3>
+              <h3 className="text-xl mb-2">Реализуйте легко</h3>
               <p className="text-muted-foreground text-sm md:text-s">
                 От идеи до реализации - всё в одном приложении
               </p>

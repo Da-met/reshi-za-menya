@@ -36,8 +36,11 @@ export function MovieGenerator({
     if (!isFormValid() || isGenerating) return;
     onClearMovie?.();
     onGeneratingChange?.(true);
-    
-    // TODO: Реальный API вызов
+  
+    // 🔍 ЛОГИРУЕМ ГОТОВЫЙ ОБЪЕКТ ДЛЯ БЭКЕНДА
+    console.log('🎬 ОТПРАВЛЯЕМ НА БЭКЕНД:', movieRequest);
+  
+    // TODO: Заменить на реальный API вызов
     setTimeout(() => {
       const mockMovie: MovieResponse = {
         recommendation: {
@@ -58,15 +61,17 @@ export function MovieGenerator({
       onGeneratingChange?.(false);
     }, 2000);
   };
-
+  
   const handleLucky = async () => {
     onClearMovie?.();
     onGeneratingChange?.(true);
     
     const randomRequest = generateRandomRequest();
-    console.log('🎲 Рандомный запрос:', randomRequest);
     
-    // TODO: Реальный API вызов с randomRequest
+    // 🔍 ЛОГИРУЕМ РАНДОМНЫЙ ОБЪЕКТ ДЛЯ БЭКЕНДА
+    console.log('🎲 ОТПРАВЛЯЕМ РАНДОМНЫЙ ЗАПРОС:', randomRequest);
+  
+    // TODO: Заменить на реальный API вызов
     setTimeout(() => {
       const mockMovie: MovieResponse = {
         recommendation: {
@@ -87,6 +92,35 @@ export function MovieGenerator({
       onGeneratingChange?.(false);
     }, 2000);
   };
+
+  // const handleLucky = async () => {
+  //   onClearMovie?.();
+  //   onGeneratingChange?.(true);
+    
+  //   const randomRequest = generateRandomRequest();
+  //   console.log('🎲 Рандомный запрос:', randomRequest);
+    
+  //   // TODO: Реальный API вызов с randomRequest
+  //   setTimeout(() => {
+  //     const mockMovie: MovieResponse = {
+  //       recommendation: {
+  //         id: `lucky-${Date.now()}`,
+  //         title: 'Случайный фильм',
+  //         type: 'movie',
+  //         genre: randomRequest.genres || [],
+  //         year: 2020,
+  //         description: 'Отличный выбор для случайного просмотра!',
+  //         whyMatch: 'Идеально подходит для разнообразия',
+  //         duration: '1ч 30м - 2ч 10м',
+  //         country: 'США'
+  //       },
+  //       generationId: `lucky-${Date.now()}`
+  //     };
+      
+  //     onMovieGenerated?.(mockMovie);
+  //     onGeneratingChange?.(false);
+  //   }, 2000);
+  // };
 
   return (
     <div className="space-y-6">

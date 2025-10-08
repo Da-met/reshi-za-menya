@@ -100,7 +100,7 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
     isMultiple = false
   ) => (
     <div className="mb-6">
-      <h4 className="font-semibold text-foreground mb-3 text-sm md:text-base">{title}</h4>
+      <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">{title}</h4>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
         {filters.map(filter => {
           const isSelected = isMultiple
@@ -140,7 +140,10 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg md:text-xl font-accent font-semibold mb-4 md:mb-6 text-foreground">
+        <h3 className="
+          text-xl md:text-2xl lg:text-3xl font-accent 
+          mb-3 md:mb-4 text-foreground
+        ">
           Уточните параметры рецепта
         </h3>
         <p className="text-sm md:text-base text-muted-foreground mb-6">
@@ -156,9 +159,9 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
         <div className="border-t border-border pt-6">
           <button
             onClick={() => setShowAdditional(!showAdditional)}
-            className="flex items-center space-x-2 text-foreground hover:text-primary transition-colors mb-4"
+            className="flex items-center space-x-2 hover:text-primary transition-colors mb-4"
           >
-            <span className="font-semibold text-sm md:text-base">Дополнительные фильтры</span>
+            <span className="text-xl md:text-2xl lg:text-3xl" style={{ fontFamily: 'var(--font-accent)' }}>Дополнительные фильтры</span>
             {showAdditional ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
           </button>
 

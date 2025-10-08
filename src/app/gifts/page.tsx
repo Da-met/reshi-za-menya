@@ -35,8 +35,8 @@ export default function GiftsPage() {
         {/* Заголовок и навигация */}
         <div className="text-center mb-8 md:mb-10 lg:mb-12">
           <h1 className="
-            text-3xl md:text-4xl lg:text-5xl 
-            font-accent font-bold 
+            text-4xl md:text-5xl lg:text-6xl  
+            font-accent 
             text-foreground 
             mb-3 md:mb-4
           ">

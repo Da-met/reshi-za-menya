@@ -83,10 +83,12 @@ export function ModuleCard({ title, description, href, moduleType, icon, colorSc
       <div className="p-6 flex-1 flex flex-col">
         {/* Заголовок */}
         <h3 className="
-          font-bold
           text-center
-          text-xl md:text-2xl lg:text-3xl
+          text-4xl md:text-[2.6rem] lg:text-[3.3rem]
           flex-shrink-0
+          h-[50px] md:h-[70px] lg:h-[90px] /* Фиксируем высоту */
+          flex items-center justify-center /* Центрируем текст */
+          leading-[0.7]
         ">
           {title}
         </h3>
@@ -122,7 +124,7 @@ export function ModuleCard({ title, description, href, moduleType, icon, colorSc
         <div className={`
           ${colors.buttonText} /* Только цвет текста, без фона */
           rounded-2xl
-          min-h-[60px] /* Сохраняем фиксированную высоту */
+          h-[40px] md:h-[50px] lg:h-[60px] /* Фиксируем высоту */
           flex
           items-center
           justify-center

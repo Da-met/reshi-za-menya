@@ -72,7 +72,10 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
   return (
     <div className="space-y-6 md:space-y-8">
       <div>
-        <h3 className="text-l md:text-xl font-accent font-semibold mb-2 text-foreground">
+        <h3 className="
+          text-xl md:text-2xl lg:text-3xl font-accent 
+          mb-3 md:mb-4 text-foreground
+        ">
           Дополнительные фильтры
         </h3>
         <p className="text-sm md:text-base text-muted-foreground mb-4 md:mb-6">
@@ -82,7 +85,7 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
       
       {/* Формат */}
       <div>
-        <h4 className="font-semibold mb-2 md:mb-3 text-foreground text-sm md:text-base">📺 Формат</h4>
+        <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">📺 Формат</h4>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {formatOptions.map((format) => (
             <button
@@ -102,7 +105,7 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
 
       {/* Длительность */}
       <div>
-        <h4 className="font-semibold mb-2 md:mb-3 text-foreground text-sm md:text-base">⏱️ Длительность</h4>
+        <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">⏱️ Длительность</h4>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {durationOptions.map((duration) => (
             <button
@@ -122,7 +125,7 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
 
       {/* Год выхода */}
       <div>
-        <h4 className="font-semibold mb-2 md:mb-3 text-foreground text-sm md:text-base">📅 Год выхода</h4>
+        <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">📅 Год выхода</h4>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {yearOptions.map((year) => (
             <button
@@ -142,7 +145,7 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
 
       {/* Страна */}
       <div>
-        <h4 className="font-semibold mb-2 md:mb-3 text-foreground text-sm md:text-base">🌍 Страна</h4>
+        <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">🌍 Страна</h4>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {countryOptions.map((country) => (
             <button
@@ -162,7 +165,7 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
 
       {/* Рейтинг */}
       <div>
-        <h4 className="font-semibold mb-2 md:mb-3 text-foreground text-sm md:text-base">⭐ Рейтинг Кинопоиск/IMDb</h4>
+        <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">⭐ Рейтинг Кинопоиск/IMDb</h4>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {ratingOptions.map((rating) => (
             <button

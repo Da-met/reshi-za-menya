@@ -7,9 +7,6 @@ import { useUserStore } from '@/stores/user-store';
 export function Header() {
   const { theme } = useThemeStore();
   const { user, isAuthenticated, logout } = useUserStore();
-//   const { logout } = useUserStore();
-//   const isAuthenticated = true; // Временная заглушка
-//   const user = { id: '1', email: 'test@test.com', name: 'Тестовый пользователь' };
 
   return (
     <header className="
@@ -57,10 +54,6 @@ export function Header() {
             {isAuthenticated && user ? (
               // Авторизованный пользователь
               <div className="flex items-center space-x-6">
-                {/* <span className="text-card-foreground hidden sm:block">
-                  Привет, {user.name}!
-                </span> */}
-
                 <Link 
                   href="/profile"
                   className="
@@ -84,37 +77,10 @@ export function Header() {
                 </button>
               </div>
             ) : (
-              // Неавторизованный пользователь
+              // Неавторизованный пользователь - ТОЛЬКО ВХОД
               <div className="flex items-center space-x-6">
-                <button 
-                    onClick={() => useUserStore.getState().login({
-                        id: '1', 
-                        email: 'test@test.com', 
-                        name: 'Тестовый пользователь'
-                    })}
-                    className="
-                        text-card-foreground 
-                        hover:text-primary 
-                        transition-colors 
-                        font-medium
-                        text-sm md:text-base lg:text-lg
-                    ">
-                    Тест: Войти
-                </button>
-                {/* <Link 
-                  href="/login"
-                  className="
-                    text-card-foreground 
-                    hover:text-primary 
-                    transition-colors
-                    font-medium
-                    text-sm md:text-base lg:text-lg
-                  "
-                >
-                  Войти
-                </Link> */}
                 <Link 
-                  href="/register"
+                  href="/login"
                   className="
                     bg-primary 
                     text-primary-foreground 
@@ -126,7 +92,7 @@ export function Header() {
                     text-sm md:text-base lg:text-lg
                   "
                 >
-                  Регистрация
+                  Войти
                 </Link>
               </div>
             )}

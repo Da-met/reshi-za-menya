@@ -87,10 +87,10 @@ export function SeasonalBanner() {
             <ChefHat size={20} className="md:size-6 flex-shrink-0" />
           </div>
           <div>
-            <h4 className="font-bold text-sm md:text-base lg:text-lg">
+            <h4 className="text-l md:text-xl lg:text-2xl leading-[1.2]">
               {seasonalContent.title}
             </h4>
-            <p className="text-xs md:text-sm opacity-90 mt-0.5">
+            <p className="text-xs md:text-sm opacity-90 mt-1.5">
               {seasonalContent.description}
             </p>
           </div>

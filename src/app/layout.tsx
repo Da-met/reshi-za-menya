@@ -3,7 +3,7 @@ import { Providers } from './providers';
 import { ThemeProvider } from '../components/theme/ThemeProvider';
 import { ThemeToggle } from '../components/theme/ThemeToggle';
 import { Header } from '@/components/layout/Header';
-import { Jura, Stalinist_One } from 'next/font/google';
+import { Jura, Stalinist_One, Pacifico, Rubik_Marker_Hatch } from 'next/font/google';
 
 
 // ЗАМЕНИТЕ Inter на ваши шрифты
@@ -12,8 +12,8 @@ const hachiMaruPop = Jura({
   subsets: ['latin'],
   variable: '--font-primary',
 });
-
-const stalinistOne = Stalinist_One({
+//Pacifico
+const stalinistOne = Rubik_Marker_Hatch({
   weight: '400',
   subsets: ['cyrillic', 'latin'],
   variable: '--font-accent',
