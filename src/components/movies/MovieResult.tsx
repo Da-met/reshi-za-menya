@@ -13,6 +13,7 @@ interface MovieResultProps {
 
 export function MovieResult({ movie, onSave, onGenerateAnother }: MovieResultProps) {
   const [saved, setSaved] = useState(false);
+  const [imageError, setImageError] = useState(false); // 👈 ДОБАВЛЯЕМ ЭТО
 
   const handleSave = () => {
     onSave();
@@ -59,16 +60,16 @@ export function MovieResult({ movie, onSave, onGenerateAnother }: MovieResultPro
               </span>
               <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-muted text-muted-foreground rounded-full text-xs sm:text-sm">
                 <Calendar size={12} className="sm:size-[14px] mr-1" />
-                {movie.recommendation.year}
+                {movie.recommendation.releaseYear}
               </span>
               <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-muted text-muted-foreground rounded-full text-xs sm:text-sm">
                 <Clock size={12} className="sm:size-[14px] mr-1" />
-                {movie.recommendation.duration}
+                {movie.recommendation.runtime}
               </span>
-              {movie.recommendation.rating && (
+              {movie.recommendation.kinopoiskRating && (
                 <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs sm:text-sm">
                   <span className="mr-1">⭐</span>
-                  {movie.recommendation.rating}
+                  {movie.recommendation.kinopoiskRating}
                 </span>
               )}
             </div>
@@ -78,14 +79,14 @@ export function MovieResult({ movie, onSave, onGenerateAnother }: MovieResultPro
               
               {/* Постер - такой же размер как в saved/[id] */}
               <div className="lg:w-2/5">
-                {movie.recommendation.poster ? (
+                {movie.recommendation.poster && !imageError ? (
                   <div className="w-full max-w-sm mx-auto lg:max-w-full relative rounded-lg overflow-hidden shadow-lg">
                     <div className="aspect-[3/4] relative">
-                      <Image
+                      <img
                         src={movie.recommendation.poster}
                         alt={movie.recommendation.title}
-                        fill
-                        className="object-cover"
+                        className="w-full h-full object-cover"
+                        onError={() => setImageError(true)} // 👈 ОБРАБОТКА ОШИБКИ
                       />
                     </div>
                   </div>
@@ -104,11 +105,11 @@ export function MovieResult({ movie, onSave, onGenerateAnother }: MovieResultPro
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Длительность:</span>
-                        <span className="text-foreground">{movie.recommendation.duration}</span>
+                        <span className="text-foreground">{movie.recommendation.runtime}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Страна:</span>
-                        <span className="text-foreground">{movie.recommendation.country}</span>
+                        <span className="text-foreground">{movie.recommendation.productionCountry}</span>
                       </div>
                       {movie.recommendation.director && (
                         <div className="flex justify-between">

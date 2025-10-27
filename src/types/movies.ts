@@ -15,15 +15,19 @@ export interface MovieResponse {
     title: string;
     type: string;
     genre: string[];
-    year: number;
+    releaseYear: number;          // 👈 было year → releaseYear
     description: string;
     whyMatch: string;
-    duration: string;
-    country: string;
-    poster?: string;          // добавил
-    director?: string;        // добавил
-    actors?: string[];        // добавил
-    rating?: number;          // добавил (рейтинг Кинопоиска/IMDb)
+    runtime: string;          // 👈 было duration → runtime
+    productionCountry: string; // 👈 было country → productionCountry
+    poster?: string;
+    director?: string;
+    actors?: string[];
+    kinopoiskRating?: number;     // 👈 было rating → kinopoiskRating
+    imdbRating?: number;          // 👈 новое поле для IMDb
+    streamingPlatforms?: string[]; // 👈 новое поле
+    streamingLink?: string;       // 👈 новое поле
+    tags?: string[];              // 👈 новое поле
   };
   generationId: string;
 }

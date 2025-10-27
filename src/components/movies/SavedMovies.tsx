@@ -52,12 +52,12 @@ const mockSavedMovies: SavedMovie[] = [
         title: 'Назад в будущее',
         type: 'movie',
         genre: ['фантастика', 'комедия', 'приключения'],
-        year: 1985,
+        releaseYear: 1985,
         description: 'Подросток Марти Макфлай случайно попадает в прошлое на машине времени, построенной его другом-учёным доком Брауном.',
         whyMatch: 'Идеально подходит для семейного просмотра, сочетает юмор и захватывающий сюжет',
-        duration: '116 мин',
-        country: 'США',
-        rating: 8.5
+        runtime: '116 мин',
+        productionCountry: 'США',
+        kinopoiskRating: 8.5
       },
       generationId: 'gen-1'
     },
@@ -82,12 +82,12 @@ const mockSavedMovies: SavedMovie[] = [
         title: 'Острые козырьки',
         type: 'series',
         genre: ['криминал', 'драма'],
-        year: 2013,
+        releaseYear: 2013,
         description: 'Британская криминальная драма о семье Шелби, которая контролирует криминальный мир Бирмингема 1920-х годов.',
         whyMatch: 'Подходит для любителей интеллектуальных криминальных драм с глубокими персонажами',
-        duration: '6 сезонов',
-        country: 'Великобритания',
-        rating: 8.8
+        runtime: '6 сезонов',
+        productionCountry: 'Великобритания',
+        kinopoiskRating: 8.8
       },
       generationId: 'gen-2'
     },
@@ -178,15 +178,15 @@ export function SavedMovies() {
                     {/* Мета-информация */}
                     <div className="flex items-center gap-3 mt-2 flex-wrap">
                       <span className="text-lg text-primary font-semibold">
-                        {savedMovie.movieData.recommendation.year}
+                        {savedMovie.movieData.recommendation.releaseYear}
                       </span>
                       <span className="text-lg text-primary font-semibold">
                         {savedMovie.movieData.recommendation.type === 'series' ? 'Сериал' : 'Фильм'}
                       </span>
-                      {savedMovie.movieData.recommendation.rating && (
+                      {savedMovie.movieData.recommendation.kinopoiskRating && (
                         <span className="flex items-center gap-1 text-lg text-yellow-600 font-semibold">
                           <Star size={16} className="fill-yellow-500" />
-                          {savedMovie.movieData.recommendation.rating}
+                          {savedMovie.movieData.recommendation.kinopoiskRating}
                         </span>
                       )}
                       {savedMovie.userRating && (

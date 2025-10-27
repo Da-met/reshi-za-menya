@@ -32,65 +32,124 @@ export function MovieGenerator({
  const { movieRequest, isValid, handleRequestChange, setIsGenerating } = useMovieGeneration(currentRequest);
   const { generateRandomRequest } = useRandomMovies();
 
+  // const handleGenerate = async () => {
+  //   if (!isValid || isGenerating) return;
+  //   onClearMovie?.();
+  //   onGeneratingChange?.(true);
+  
+  //   // 🔍 ЛОГИРУЕМ ГОТОВЫЙ ОБЪЕКТ ДЛЯ БЭКЕНДА
+  //   console.log('🎬 ОТПРАВЛЯЕМ НА БЭКЕНД:', movieRequest);
+  
+  //   // TODO: Заменить на реальный API вызов
+  //   setTimeout(() => {
+  //     const mockMovie: MovieResponse = {
+  //       recommendation: {
+  //         id: '1',
+  //         title: 'Один дома',
+  //         type: 'movie',
+  //         genre: ['комедия', 'семейный'],
+  //         releaseYear: 1990,
+  //         description: 'Мальчик Кевин остался один дома на Рождество и защищает свой дом от грабителей.',
+  //         whyMatch: 'Идеально для семейного просмотра - смешная и добрая комедия',
+  //         runtime: '1ч 43м',
+  //         productionCountry: 'США'
+  //       },
+  //       generationId: '123'
+  //     };
+      
+  //     onMovieGenerated?.(mockMovie);
+  //     onGeneratingChange?.(false);
+  //   }, 2000);
+  // };
+  
+
   const handleGenerate = async () => {
     if (!isValid || isGenerating) return;
     onClearMovie?.();
     onGeneratingChange?.(true);
-  
-    // 🔍 ЛОГИРУЕМ ГОТОВЫЙ ОБЪЕКТ ДЛЯ БЭКЕНДА
-    console.log('🎬 ОТПРАВЛЯЕМ НА БЭКЕНД:', movieRequest);
-  
-    // TODO: Заменить на реальный API вызов
-    setTimeout(() => {
-      const mockMovie: MovieResponse = {
-        recommendation: {
-          id: '1',
-          title: 'Один дома',
-          type: 'movie',
-          genre: ['комедия', 'семейный'],
-          year: 1990,
-          description: 'Мальчик Кевин остался один дома на Рождество и защищает свой дом от грабителей.',
-          whyMatch: 'Идеально для семейного просмотра - смешная и добрая комедия',
-          duration: '1ч 43м',
-          country: 'США'
-        },
-        generationId: '123'
+
+    try {
+      const requestBody = {
+        category: "Films",
+        parameters: {
+          context: movieRequest.context,
+          mood: movieRequest.mood,
+          genres: movieRequest.genres || [],
+          format: movieRequest.format || [],
+          duration: movieRequest.duration,
+          year: movieRequest.year,
+          country: movieRequest.country,
+          rating: movieRequest.rating
+        }
       };
-      
-      onMovieGenerated?.(mockMovie);
-      onGeneratingChange?.(false);
-    }, 2000);
-  };
-  
-  const handleLucky = async () => {
-    onClearMovie?.();
-    onGeneratingChange?.(true);
-    
-    const randomRequest = generateRandomRequest();
-    
-    // 🔍 ЛОГИРУЕМ РАНДОМНЫЙ ОБЪЕКТ ДЛЯ БЭКЕНДА
-    console.log('🎲 ОТПРАВЛЯЕМ РАНДОМНЫЙ ЗАПРОС:', randomRequest);
-  
-    // TODO: Заменить на реальный API вызов
-    setTimeout(() => {
-      const mockMovie: MovieResponse = {
-        recommendation: {
-          id: `lucky-${Date.now()}`,
-          title: 'Случайный фильм',
-          type: 'movie',
-          genre: randomRequest.genres || [],
-          year: 2020,
-          description: 'Отличный выбор для случайного просмотра!',
-          whyMatch: 'Идеально подходит для разнообразия',
-          duration: '1ч 30м - 2ч 10м',
-          country: 'США'
-        },
-        generationId: `lucky-${Date.now()}`
+
+      console.log('🎬 Отправляем запрос:', requestBody);
+
+      const response = await fetch('/api/prompt-templates/generate-structured', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Ошибка API: ${response.status} - ${errorText}`);
+      }
+
+      const apiResponse = await response.json();
+      console.log('🎬 Получен ответ:', apiResponse);
+
+      // Функция адаптации данных от API
+      const adaptApiResponse = (apiData: any) => {
+        return {
+          ...apiData,
+          // Преобразуем genre из строки в массив
+          genre: typeof apiData.genre === 'string' 
+            ? apiData.genre.split(', ').map((g: string) => g.trim())
+            : apiData.genre || [],
+          // Преобразуем actors из строки в массив
+          actors: typeof apiData.actors === 'string'
+            ? apiData.actors.split(', ').map((a: string) => a.trim())
+            : apiData.actors || [],
+          // Преобразуем streamingPlatforms из строки в массив
+          streamingPlatforms: typeof apiData.streamingPlatforms === 'string'
+            ? apiData.streamingPlatforms.split(', ').map((p: string) => p.trim())
+            : apiData.streamingPlatforms || [],
+          // Преобразуем tags из строки в массив
+          tags: typeof apiData.tags === 'string'
+            ? apiData.tags.split(', ').map((t: string) => t.trim())
+            : apiData.tags || [],
+          // Преобразуем releaseYear в число если нужно
+          releaseYear: typeof apiData.releaseYear === 'string' 
+            ? parseInt(apiData.releaseYear) 
+            : apiData.releaseYear,
+          // Преобразуем kinopoiskRating в число если нужно
+          kinopoiskRating: typeof apiData.kinopoiskRating === 'string'
+            ? parseFloat(apiData.kinopoiskRating)
+            : apiData.kinopoiskRating,
+          // Преобразуем imdbRating в число если нужно
+          imdbRating: typeof apiData.imdbRating === 'string'
+            ? parseFloat(apiData.imdbRating)
+            : apiData.imdbRating
+        };
       };
-      
-      onMovieGenerated?.(mockMovie);
+
+      const movieData: MovieResponse = {
+        recommendation: {
+          ...adaptApiResponse(apiResponse.jsonStructuredResponse),
+          id: Date.now().toString(),
+        },
+        generationId: Date.now().toString()
+      };
+
+      console.log('🎬 Адаптированные данные:', movieData);
+      onMovieGenerated?.(movieData);
+
+    } catch (error) {
+      console.error('❌ Ошибка генерации фильма:', error);
+    } finally {
       onGeneratingChange?.(false);
-    }, 2000);
+    }
   };
 
   // const handleLucky = async () => {
@@ -98,9 +157,11 @@ export function MovieGenerator({
   //   onGeneratingChange?.(true);
     
   //   const randomRequest = generateRandomRequest();
-  //   console.log('🎲 Рандомный запрос:', randomRequest);
     
-  //   // TODO: Реальный API вызов с randomRequest
+  //   // 🔍 ЛОГИРУЕМ РАНДОМНЫЙ ОБЪЕКТ ДЛЯ БЭКЕНДА
+  //   console.log('🎲 ОТПРАВЛЯЕМ РАНДОМНЫЙ ЗАПРОС:', randomRequest);
+  
+  //   // TODO: Заменить на реальный API вызов
   //   setTimeout(() => {
   //     const mockMovie: MovieResponse = {
   //       recommendation: {
@@ -108,11 +169,11 @@ export function MovieGenerator({
   //         title: 'Случайный фильм',
   //         type: 'movie',
   //         genre: randomRequest.genres || [],
-  //         year: 2020,
+  //         releaseYear: 2020,
   //         description: 'Отличный выбор для случайного просмотра!',
   //         whyMatch: 'Идеально подходит для разнообразия',
-  //         duration: '1ч 30м - 2ч 10м',
-  //         country: 'США'
+  //         runtime: '1ч 30м - 2ч 10м',
+  //         productionCountry: 'США'
   //       },
   //       generationId: `lucky-${Date.now()}`
   //     };
@@ -121,6 +182,42 @@ export function MovieGenerator({
   //     onGeneratingChange?.(false);
   //   }, 2000);
   // };
+
+  const handleLucky = async () => {
+    onClearMovie?.();
+    onGeneratingChange?.(true);
+    
+    const randomRequest = generateRandomRequest();
+    
+    try {
+      const response = await fetch('/api/prompt-templates/generate-structured', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          templateName: "smart_movie_recommendation",
+          category: "Movies", 
+          parameters: randomRequest
+        })
+      });
+
+      if (!response.ok) throw new Error('Ошибка API');
+
+      const apiResponse = await response.json();
+      const movieData: MovieResponse = {
+        recommendation: {
+          ...apiResponse.jsonStructuredResponse,
+          id: `lucky-${Date.now()}`
+        },
+        generationId: `lucky-${Date.now()}`
+      };
+
+      onMovieGenerated?.(movieData);
+    } catch (error) {
+      console.error('Ошибка случайного фильма:', error);
+    } finally {
+      onGeneratingChange?.(false);
+    }
+  };
 
   return (
     <div className="space-y-6">

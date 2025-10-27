@@ -1,9 +1,8 @@
 'use client';
 
 import { use, useState } from 'react';
-import { ArrowLeft, Heart, Share2, Play, Star, Calendar, Clock, MessageCircle, Edit3, Trash2, Eye, EyeOff, Film, Globe, Users } from 'lucide-react';
+import { ArrowLeft, Heart, Share2, Play, Star, Calendar, Clock, MessageCircle, Edit3, Trash2, Eye, EyeOff, Film} from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { SavedMovie } from '@/types/movies';
 import { MovieOptionTag } from '@/components/movies/MovieOptionTag';
 
@@ -16,12 +15,12 @@ const mockMovieData: SavedMovie = {
       title: 'Назад в будущее',
       type: 'movie',
       genre: ['фантастика', 'комедия', 'приключения'],
-      year: 1985,
+      releaseYear: 1985,
       description: 'Подросток Марти Макфлай случайно попадает в прошлое на машине времени, построенной его другом-учёным доком Брауном. Теперь ему нужно найти способ вернуться в своё время, не изменив при этом ход истории.',
       whyMatch: 'Идеально подходит для семейного просмотра, сочетает юмор, захватывающий сюжет и научную фантастику. Фильм стал классикой кинематографа и понравится как детям, так и взрослым.',
-      duration: '116 мин',
-      country: 'США',
-      rating: 8.5,
+      runtime: '116 мин',
+      productionCountry: 'США',
+      kinopoiskRating: 8.5,
       director: 'Роберт Земекис',
       actors: ['Майкл Дж. Фокс', 'Кристофер Ллойд', 'Лиа Томпсон', 'Криспин Гловер'],
       poster: '/images/movies/back-to-the-future.png'
@@ -219,16 +218,16 @@ export default function MovieDetailPage({ params }: { params: Promise<{ id: stri
               </span>
               <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-muted text-muted-foreground rounded-full text-xs sm:text-sm">
                 <Calendar size={12} className="sm:size-[14px] mr-1" />
-                {movie.movieData.recommendation.year}
+                {movie.movieData.recommendation.releaseYear}
               </span>
               <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-muted text-muted-foreground rounded-full text-xs sm:text-sm">
                 <Clock size={12} className="sm:size-[14px] mr-1" />
-                {movie.movieData.recommendation.duration}
+                {movie.movieData.recommendation.runtime}
               </span>
-              {movie.movieData.recommendation.rating && (
+              {movie.movieData.recommendation.kinopoiskRating && (
                 <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs sm:text-sm">
                   <Star size={12} className="sm:size-[14px] mr-1 fill-yellow-500" />
-                  {movie.movieData.recommendation.rating}
+                  {movie.movieData.recommendation.kinopoiskRating}
                 </span>
               )}
             </div>
@@ -241,12 +240,11 @@ export default function MovieDetailPage({ params }: { params: Promise<{ id: stri
                 {movie.movieData.recommendation.poster ? (
                   <div className="w-full max-w-sm mx-auto lg:max-w-full relative rounded-lg overflow-hidden shadow-lg">
                     <div className="aspect-[3/4] relative">
-                      <Image
-                        src={movie.movieData.recommendation.poster}
-                        alt={movie.movieData.recommendation.title}
-                        fill
-                        className="object-cover"
-                      />
+                    <img
+                      src={movie.movieData.recommendation.poster}
+                      alt={movie.movieData.recommendation.title}
+                      className="w-full h-full object-cover"
+                    />
                     </div>
                   </div>
                 ) : (
@@ -264,11 +262,11 @@ export default function MovieDetailPage({ params }: { params: Promise<{ id: stri
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Длительность:</span>
-                        <span className="text-foreground">{movie.movieData.recommendation.duration}</span>
+                        <span className="text-foreground">{movie.movieData.recommendation.runtime}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Страна:</span>
-                        <span className="text-foreground">{movie.movieData.recommendation.country}</span>
+                        <span className="text-foreground">{movie.movieData.recommendation.productionCountry}</span>
                       </div>
                       {movie.movieData.recommendation.director && (
                         <div className="flex justify-between">
