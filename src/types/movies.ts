@@ -20,6 +20,10 @@ export interface MovieResponse {
     whyMatch: string;
     duration: string;
     country: string;
+    poster?: string;          // добавил
+    director?: string;        // добавил
+    actors?: string[];        // добавил
+    rating?: number;          // добавил (рейтинг Кинопоиска/IMDb)
   };
   generationId: string;
 }
@@ -29,4 +33,16 @@ export interface MovieOption {
   label: string;
   emoji?: string;
   hints?: string[];
+}
+
+// Аналог SavedGift для фильмов
+export interface SavedMovie {
+  id: string;
+  movieData: MovieResponse;
+  requestData: MovieRequest;
+  createdAt: Date;
+  userComment?: string;
+  userRating?: number;        // пользовательская оценка 1-10
+  watched?: boolean;          // просмотрено/не просмотрено
+  watchDate?: Date;           // когда посмотрели
 }

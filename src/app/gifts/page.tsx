@@ -1,16 +1,39 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { GiftGenerator } from '@/components/gifts/GiftGenerator';
 import { GiftResult } from '@/components/gifts/GiftResult';
 import { SavedGifts } from '@/components/gifts/SavedGifts';
 import { GiftResponse, GiftRequest } from '@/types/gifts';
 
 export default function GiftsPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [currentView, setCurrentView] = useState<'generator' | 'saved'>('generator');
   const [currentGift, setCurrentGift] = useState<GiftResponse | null>(null);
   const [currentRequest, setCurrentRequest] = useState<GiftRequest>({});
   const [isGenerating, setIsGenerating] = useState(false);
+
+  // При загрузке проверяем параметр URL
+  useEffect(() => {
+    const view = searchParams.get('view');
+    if (view === 'saved') {
+      setCurrentView('saved');
+    }
+  }, [searchParams]);
+
+  // Функция для переключения вкладок с обновлением URL
+  const handleViewChange = (view: 'generator' | 'saved') => {
+    setCurrentView(view);
+    const newParams = new URLSearchParams(searchParams.toString());
+    if (view === 'saved') {
+      newParams.set('view', 'saved');
+    } else {
+      newParams.delete('view');
+    }
+    router.replace(`/gifts?${newParams.toString()}`, { scroll: false });
+  };
 
   const handleGiftGenerated = (gift: GiftResponse) => {
     setCurrentGift(gift);
@@ -55,7 +78,7 @@ export default function GiftsPage() {
           {/* Переключение между вкладками */}
           <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4 mb-6 md:mb-8">
             <button
-              onClick={() => setCurrentView('generator')}
+              onClick={() => handleViewChange('generator')}
               className={`
                 px-5 py-3 md:px-6 md:py-3 
                 rounded-full 
@@ -71,7 +94,7 @@ export default function GiftsPage() {
               🎁 Генератор подарков
             </button>
             <button
-              onClick={() => setCurrentView('saved')}
+              onClick={() => handleViewChange('saved')}
               className={`
                 px-5 py-3 md:px-6 md:py-3 
                 rounded-full 

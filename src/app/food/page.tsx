@@ -1,13 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { FoodResponse, FoodRequest } from '@/types/food';
 import { FoodGenerator } from '@/components/food/FoodGenerator';
 import { FoodResult } from '@/components/food/FoodResult';
 import { SavedRecipes } from '@/components/food/SavedRecipes';
 
-
 export default function FoodPage() {
+  const searchParams = useSearchParams();
   const [currentView, setCurrentView] = useState<'generator' | 'saved'>('generator');
   const [currentRecipe, setCurrentRecipe] = useState<FoodResponse | null>(null);
   const [currentRequest, setCurrentRequest] = useState<FoodRequest>({
@@ -17,6 +18,22 @@ export default function FoodPage() {
     filters: {}
   });
   const [isGenerating, setIsGenerating] = useState(false);
+
+  // При загрузке проверяем параметр URL
+  useEffect(() => {
+    const view = searchParams.get('view');
+    if (view === 'saved') {
+      setCurrentView('saved');
+    }
+  }, [searchParams]);
+
+  // Функция для переключения вкладок с обновлением URL
+  const handleViewChange = (view: 'generator' | 'saved') => {
+    setCurrentView(view);
+    // Можно добавить обновление URL если нужно
+    // const newUrl = view === 'saved' ? '/food?view=saved' : '/food';
+    // window.history.pushState({}, '', newUrl);
+  };
 
   const handleRecipeGenerated = (recipe: FoodResponse) => {
     setCurrentRecipe(recipe);
@@ -40,30 +57,30 @@ export default function FoodPage() {
       <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
         {/* Заголовок и навигация */}
         <div className="text-center mb-8 md:mb-10 lg:mb-12">
-        <header className="text-center mb-8 md:mb-10 lg:mb-12">
-          <h1 className="
-            text-4xl md:text-5xl lg:text-6xl 
-            text-foreground
-            mb-2 md:mb-3
-            px-2  // Добавил отступы по бокам
-          ">
-            Что приготовить?
-          </h1>
-          <p className="
-            text-sm md:text-base lg:text-lg xl:text-xl  // Уменьшил размеры
-            text-muted-foreground
-            max-w-3xl 
-            mx-auto
-            px-4  // Добавил отступы
-          ">
-            Превратим ваши продукты в кулинарные шедевры или найдем идеальный рецепт
-          </p>
-        </header>
+          <header className="text-center mb-8 md:mb-10 lg:mb-12">
+            <h1 className="
+              text-4xl md:text-5xl lg:text-6xl 
+              text-foreground
+              mb-2 md:mb-3
+              px-2
+            ">
+              Что приготовить?
+            </h1>
+            <p className="
+              text-sm md:text-base lg:text-lg xl:text-xl
+              text-muted-foreground
+              max-w-3xl 
+              mx-auto
+              px-4
+            ">
+              Превратим ваши продукты в кулинарные шедевры или найдем идеальный рецепт
+            </p>
+          </header>
           
           {/* Переключение между вкладками */}
           <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4 mb-6 md:mb-8">
             <button
-              onClick={() => setCurrentView('generator')}
+              onClick={() => handleViewChange('generator')}
               className={`
                 px-5 py-3 md:px-6 md:py-3 
                 rounded-full 
@@ -79,7 +96,7 @@ export default function FoodPage() {
               🍳 Генератор рецептов
             </button>
             <button
-              onClick={() => setCurrentView('saved')}
+              onClick={() => handleViewChange('saved')}
               className={`
                 px-5 py-3 md:px-6 md:py-3 
                 rounded-full 

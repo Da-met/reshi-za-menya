@@ -29,11 +29,11 @@ export function MovieGenerator({
   onClearMovie
 }: MovieGeneratorProps) {
   const [activeSection, setActiveSection] = useState<'context' | 'mood' | 'filters'>('context');
-  const { movieRequest, isFormValid, handleRequestChange } = useMovieGeneration(currentRequest);
+ const { movieRequest, isValid, handleRequestChange, setIsGenerating } = useMovieGeneration(currentRequest);
   const { generateRandomRequest } = useRandomMovies();
 
   const handleGenerate = async () => {
-    if (!isFormValid() || isGenerating) return;
+    if (!isValid || isGenerating) return;
     onClearMovie?.();
     onGeneratingChange?.(true);
   
@@ -165,13 +165,13 @@ export function MovieGenerator({
 
         {/* Кнопки действий */}
         <MovieActions
-          isFormValid={isFormValid()}
+          isFormValid={isValid} // 👈 Явно говорим TypeScript что это boolean
           isGenerating={isGenerating}
           onGenerate={handleGenerate}
           onLucky={handleLucky}
         />
 
-        {!isFormValid() && (
+        {!isValid && (
           <p className="text-sm text-muted-foreground mt-3 text-center">
             Выберите с кем смотрим и добавьте настроение или 2+ жанра
           </p>

@@ -19,6 +19,12 @@ const stalinistOne = Rubik_Marker_Hatch({
   variable: '--font-accent',
 });
 
+// ✅ ДОБАВЬТЕ МЕТАДАННЫЕ
+export const metadata = {
+  title: 'Реши за меня',
+  description: 'Помощник для принятия решений',
+}
+
 export default function RootLayout({
   children,
 }: {

@@ -1,15 +1,33 @@
+
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { MovieResponse, MovieRequest } from '@/types/movies';
 import { MovieGenerator } from '@/components/movies/MovieGenerator';
 import { MovieResult } from '@/components/movies/MovieResult';
+import { SavedMovies } from '@/components/movies/SavedMovies'; // Добавляем импорт
 
 export default function MoviesPage() {
+  const searchParams = useSearchParams();
   const [currentView, setCurrentView] = useState<'generator' | 'saved'>('generator');
   const [currentMovie, setCurrentMovie] = useState<MovieResponse | null>(null);
   const [currentRequest, setCurrentRequest] = useState<MovieRequest>({});
   const [isGenerating, setIsGenerating] = useState(false);
+
+  // При загрузке проверяем параметр URL
+  useEffect(() => {
+    const view = searchParams.get('view');
+    if (view === 'saved') {
+      setCurrentView('saved');
+    }
+  }, [searchParams]);
+
+  // Функция для переключения вкладок с обновлением URL
+  const handleViewChange = (view: 'generator' | 'saved') => {
+    setCurrentView(view);
+    // Здесь можно добавить обновление URL если нужно
+  };
 
   const handleMovieGenerated = (movie: MovieResponse) => {
     setCurrentMovie(movie);
@@ -108,8 +126,7 @@ export default function MoviesPage() {
             )}
           </>
         ) : (
-          ``
-          // <SavedMovies /> 
+          <SavedMovies /> // Теперь используем полноценный компонент
         )}
       </div>
     </div>

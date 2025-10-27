@@ -113,7 +113,10 @@ export function FoodResult({ recipe, onSave, onGenerateAnother }: FoodResultProp
                 {recipe.recipe.ingredients.available.map((ingredient, index) => (
                   <li key={index} className="text-xs md:text-sm text-card-foreground flex items-center space-x-2">
                     <div className="w-1.5 h-1.5 bg-green-500 rounded-full flex-shrink-0"></div>
-                    <span className="first-letter:uppercase">{ingredient}</span>
+                    <span className="first-letter:uppercase">
+                      {ingredient.name}
+                      {ingredient.quantity && ` (${ingredient.quantity})`}
+                    </span>
                   </li>
                 ))}
               </ul>

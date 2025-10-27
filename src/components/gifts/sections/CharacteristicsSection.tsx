@@ -76,10 +76,10 @@ export function CharacteristicsSection({ request, onChange }: CharacteristicsSec
             <button
               key={interest}
               onClick={() => {
-                onChange({ interests: toggleArrayItem(request.interests, interest) });
+                onChange({ interests_hobbies: toggleArrayItem(request.interests_hobbies, interest) });
               }}
               className={`px-2 py-1 md:px-3 md:py-2 rounded-lg border transition-all text-xs md:text-sm ${
-                request.interests?.includes(interest)
+                request.interests_hobbies?.includes(interest)
                   ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                   : 'bg-card border-border hover:border-primary hover:bg-accent'
               }`}
@@ -98,10 +98,10 @@ export function CharacteristicsSection({ request, onChange }: CharacteristicsSec
             <button
               key={trait}
               onClick={() => {
-                onChange({ personality: toggleArrayItem(request.personality, trait) });
+                onChange({ temperament: toggleArrayItem(request.temperament, trait) });
               }}
               className={`px-2 py-1 md:px-3 md:py-2 rounded-lg border transition-all text-xs md:text-sm ${
-                request.personality?.includes(trait)
+                request.temperament?.includes(trait)
                   ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                   : 'bg-card border-border hover:border-primary hover:bg-accent'
               }`}

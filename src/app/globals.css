@@ -44,6 +44,8 @@ h1, h2, h3, h4, h5, h6 {
 
   /* Раздел в разработке */
   --section-development: 140 20% 35%; /* #557f59 - зеленый текст */
+  --inverted-section-development: 330 65% 88%; /* нежно-розовый */
+  --saved-examples-text: 140 20% 35%; /* #557f59 - зеленый */
 }
 
 /* ========== НОЧНАЯ ТЕМА ========== */
@@ -73,6 +75,8 @@ html.night {
 
   /* Раздел в разработке */
   --section-development: 5 55% 65%;  /* #d36960 - коралловый */
+  --inverted-section-development: 210 80% 25%; /* Темно-синий */
+  --saved-examples-text: 5 55% 65%; /* #d36960 - коралловый */
 }
 
 /* ========== НЕБЕСНАЯ ТЕМА ========== */
@@ -102,6 +106,8 @@ html.sky {
 
   /* Раздел в разработке */
   --section-development: 220 70% 70%; /* #6e93e4 - голубой */
+  --inverted-section-development: 45 80% 85%; /* Светло-желтый */
+  --saved-examples-text: 220 70% 70%; /* Темно-синий */
 }
 
 /* ========== ПРИМЕНЕНИЕ В TAILWIND ========== */
@@ -131,6 +137,8 @@ html.sky {
 
   /* Раздел в разработке */
   --color-section-development: hsl(var(--section-development));
+  --color-inverted-section-development: hsl(var(--inverted-section-development));
+  --color-saved-examples-text: hsl(var(--saved-examples-text));
 }
 
 /* ========== БАЗОВЫЕ СТИЛИ ========== */

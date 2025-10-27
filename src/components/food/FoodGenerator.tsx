@@ -64,7 +64,11 @@ export function FoodGenerator({
           title: 'Курица с рисом и овощами',
           description: 'Ароматное и сытное блюдо с нежным мясом и полезными овощами',
           ingredients: {
-            available: ['куриное филе', 'рис'],
+            available: [
+              { name: 'куриное филе', quantity: '500 гр' },
+              { name: 'hbc', quantity: '500 гр' },
+            ],
+            // ['куриное филе', 'рис'],
             toBuy: [
               { name: 'лук репчатый', quantity: '1 шт' },
               { name: 'морковь', quantity: '1 шт' },

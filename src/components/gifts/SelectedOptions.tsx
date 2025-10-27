@@ -31,13 +31,13 @@ const getGiftTypeIcon = (type: string) => {
 
 export function SelectedOptions({ request }: SelectedOptionsProps) {
   const hasSelections = 
-    request.category || 
+    request.recipient_type || 
     request.profession?.length || 
-    request.interests?.length || 
-    request.personality?.length ||
+    request.interests_hobbies?.length || 
+    request.temperament?.length ||
     request.budget ||
-    request.occasion ||
-    request.giftTypes?.length;
+    request.gift_occasion ||
+    request.gift_format?.length;
 
   if (!hasSelections) {
     return null;
@@ -45,13 +45,13 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
 
   // Считаем общее количество выбранных параметров
   const totalSelections = 
-    (request.category ? 1 : 0) +
+    (request.recipient_type ? 1 : 0) +
     (request.profession?.length || 0) +
-    (request.interests?.length || 0) +
-    (request.personality?.length || 0) +
+    (request.interests_hobbies?.length || 0) +
+    (request.temperament?.length || 0) +
     (request.budget ? 1 : 0) +
-    (request.occasion ? 1 : 0) +
-    (request.giftTypes?.length || 0);
+    (request.gift_occasion ? 1 : 0) +
+    (request.gift_format?.length || 0);
 
   return (
     <div className="bg-card rounded-xl md:rounded-2xl shadow-lg p-4 md:p-6 border-l-4 border-primary">
@@ -62,7 +62,7 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
       {/* Контейнер для выбранных опций */}
       <div className="flex flex-wrap gap-1 md:gap-2">
         {/* Категория */}
-        {request.category && (
+        {request.recipient_type && (
           <span className="
             bg-primary/20 text-primary 
             px-2 py-1 md:px-3 md:py-1 
@@ -73,7 +73,7 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
             flex-shrink-0
           ">
             <User size={10} className="md:size-[14px] flex-shrink-0" />
-            <span className="truncate">{categoryLabels[request.category]}</span>
+            <span className="truncate">{categoryLabels[request.recipient_type]}</span>
           </span>
         )}
         
@@ -93,7 +93,7 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
         ))}
         
         {/* Интересы */}
-        {request.interests?.map(interest => (
+        {request.interests_hobbies?.map(interest => (
           <span key={interest} className="
             bg-green-100 text-green-800 
             px-2 py-1 md:px-3 md:py-1 
@@ -108,8 +108,8 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
         ))}
         
         {/* Характер */}
-        {request.personality?.map(personality => (
-          <span key={personality} className="
+        {request.temperament?.map(temperament => (
+          <span key={temperament} className="
             bg-purple-100 text-purple-800 
             px-2 py-1 md:px-3 md:py-1 
             rounded-full 
@@ -118,7 +118,7 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
             flex-shrink-0
           ">
             <Smile size={10} className="md:size-[14px] flex-shrink-0" />
-            <span className="truncate">{personality}</span>
+            <span className="truncate">{temperament}</span>
           </span>
         ))}
         
@@ -138,7 +138,7 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
         )}
         
         {/* Повод */}
-        {request.occasion && (
+        {request.gift_occasion && (
           <span className="
             bg-pink-100 text-pink-800 
             px-2 py-1 md:px-3 md:py-1 
@@ -148,13 +148,13 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
             flex-shrink-0
           ">
             <Calendar size={10} className="md:size-[14px] flex-shrink-0" />
-            <span className="truncate">{request.occasion}</span>
+            <span className="truncate">{request.gift_occasion}</span>
           </span>
         )}
         
         {/* Типы подарков */}
-        {request.giftTypes?.map(type => (
-          <span key={type} className="
+        {request.gift_format?.map(format => (
+          <span key={format} className="
             bg-indigo-100 text-indigo-800 
             px-2 py-1 md:px-3 md:py-1 
             rounded-full 
@@ -162,8 +162,8 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
             flex items-center space-x-1
             flex-shrink-0
           ">
-            {getGiftTypeIcon(type)}
-            <span className="truncate">{type}</span>
+            {getGiftTypeIcon(format)}
+            <span className="truncate">{format}</span>
           </span>
         ))}
       </div>

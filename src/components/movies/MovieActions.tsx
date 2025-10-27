@@ -1,7 +1,7 @@
 'use client';
 
 interface MovieActionsProps {
-  isFormValid: boolean;
+  isFormValid: boolean; // 👈 Должно быть boolean, а не boolean | undefined
   isGenerating: boolean;
   onGenerate: () => void;
   onLucky: () => void;
@@ -63,3 +63,4 @@ export function MovieActions({
     </div>
   );
 }
+

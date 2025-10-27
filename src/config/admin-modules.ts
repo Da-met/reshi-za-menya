@@ -1,64 +1,69 @@
 import { AdminModule } from '@/types/prompt';
 
-export const adminModules: AdminModule[] = [
-    {
-        id: 'cooking',
-        name: '🍳 Что приготовить',
-        prompts: [
-          {
-            key: 'by_products',
-            name: 'По продуктам',
-            description: 'Генерация рецептов по списку продуктов пользователя',
-            variables: [
-              'products', 'excludeIngredients', 'dishType', 'cookingTime', 
-              'cuisine', 'diet', 'allergens', 'occasion', 'difficulty', 'cookingMethod'
-            ]
-          },
-          {
-            key: 'by_dish_name', 
-            name: 'По названию блюда',
-            description: 'Генерация рецепта по названию блюда с адаптацией',
-            variables: [
-              'dishName', 'excludeIngredients', 'dishType', 'cookingTime',
-              'cuisine', 'diet', 'allergens', 'occasion', 'difficulty', 'cookingMethod'
-            ]
-          }
-        ]
-    },
-    {
-    id: 'gifts',
-    name: '🎁 Что подарить',
+export const adminModules: readonly AdminModule[] = [
+  {
+    id: '1',
+    name: 'Что подарить',
+    category: 'Gifts',
     prompts: [
       {
-        key: 'by_interests',
-        name: 'По интересам',
-        description: 'Генерация подарков на основе интересов и характеристик',
-        variables: ['category', 'profession', 'interests', 'personality', 'budget', 'occasion', 'giftTypes', 'age', 'gender', 'excludeTitles']
+        key: 'smart_gift_recommendation', // МЕНЯЕМ на точное совпадение с API!
+        name: 'Умная рекомендация',
+        description: 'smart_gift_recommendation',
+        variables: ['recipient_type', 'gift_occasion', 'budget']
       }
     ]
   },
   {
-    id: 'movies',
-    name: '🎬 Что посмотреть',
+    id: '2',
+    name: 'Что посмотреть', 
+    category: 'Films',
     prompts: [
       {
-        key: 'by_mood',
-        name: 'По настроению',
-        description: 'Генерация фильмов по настроению и предпочтениям',
-        variables: ['mood', 'genre', 'duration', 'year', 'excludeTitles']
+        key: 'movies_recommendation',
+        name: 'Рекомендация фильмов',
+        description: 'movies_recommendation', 
+        variables: ['context', 'mood', 'genres']
       }
     ]
   },
   {
-    id: 'books',
-    name: '📚 Что почитать', 
+    id: '3',
+    name: 'Что приготовить (по названию)',
+    category: 'Dishes', 
     prompts: [
       {
-        key: 'by_preferences',
-        name: 'По предпочтениям',
-        description: 'Генерация книг по жанрам и интересам',
-        variables: ['genre', 'mood', 'length', 'year', 'excludeTitles']
+        key: 'dishes_by_name',
+        name: 'По названию блюда',
+        description: 'dishes_by_name', 
+        variables: ['dish_name', 'diet', 'cooking_time', 'cuisine']
+      }
+    ]
+  },
+  {
+    id: '4',
+    name: 'Что приготовить (по ингредиентам)',
+    category: 'DishesByIngredients',
+    prompts: [
+      {
+        key: 'dishes_by_ingredients', 
+        name: 'По ингредиентам',
+        description: 'dishes_by_ingredients',
+        variables: ['ingredients', 'diet', 'cooking_time', 'cuisine']
+      }
+    ]
+  },
+  {
+    id: '5',
+    name: 'Что почитать',
+    category: 'Books',
+    prompts: [
+      {
+        key: 'books_recommendation',
+        name: 'Рекомендация книг',
+        description: 'books_recommendation',
+        variables: ['genre', 'mood', 'reading_time']
       }
     ]
   }
-];
+] as const;

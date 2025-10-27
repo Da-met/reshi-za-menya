@@ -1,11 +1,15 @@
+// D:\МАЙО\JavaScript\ПРОЕКТЫ\РЕШИ ЗА МЕНЯ\reshi-za-menya\src\components\gifts\SeasonalBanner.tsx
 'use client';
 
 import { Snowflake, ArrowRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export function SeasonalBanner() {
+  const router = useRouter();
+
   const handleBannerClick = () => {
-    console.log('Открываем новогодние подборки');
-    // Здесь будет логика открытия спец. подборок
+    // Переход на страницу новогодней подборки
+    router.push('/gifts/collections/new-year');
   };
 
   return (
@@ -39,7 +43,6 @@ export function SeasonalBanner() {
           </div>
         </div>
         
-        {/* Стрелка вместо кнопки */}
         <ArrowRight 
           size={18} 
           className="

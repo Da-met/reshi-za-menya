@@ -7,8 +7,67 @@ interface FiltersSectionProps {
   onChange: (updates: Partial<GiftRequest>) => void;
 }
 
-const occasions = ['День рождения', 'Новый год', '8 Марта', '23 Февраля', 'Свадьба', 'Юбилей'];
-const budgets = ['до 1000₽', '1000-3000₽', '3000-5000₽', '5000+₽'];
+const occasions = [
+  // 🎂 Личные праздники
+  'День рождения',
+  'Юбилей',
+  'Выпускной',
+  'Повышение на работе',
+  'Защита диплома',
+  
+  // 💕 Романтические
+  'Свадьба',
+  'Годовщина отношений',
+  'День святого Валентина',
+  'Предложение',
+  
+  // 🏠 Семейные и домашние
+  'Новоселье',
+  'Рождение ребенка',
+  'Крестины',
+  'Семейное торжество',
+  
+  // 🎅 Сезонные праздники
+  'Новый год',
+  'Рождество',
+  '8 Марта', 
+  '23 Февраля',
+  'День матери',
+  'День отца',
+  
+  // 🎓 Профессиональные
+  'День учителя',
+  'День медицинского работника',
+  'Профессиональный праздник',
+  'Выход на пенсию',
+  
+  // ✨ Просто так
+  'Без повода',
+  'В знак благодарности',
+  'Для поддержки',
+  'Сюрприз',
+  
+  // 🏆 Достижения
+  'Спортивная победа',
+  'Завершение проекта',
+  'Личное достижение',
+  'Преодоление трудностей',
+  
+  // 🌍 Путешествия и события
+  'Отпуск',
+  'Командировка', 
+  'Переезд в другой город',
+  'Напутствие в дорогу'
+];
+const budgets = [
+  'до 500₽', 
+  '500-1000₽', 
+  '1000-3000₽', 
+  '3000-5000₽', 
+  '5000-10000₽', 
+  '10000-20000₽',
+  '20000+₽'
+];
 const giftTypes = ['Вещь', 'Впечатление', 'Сделай сам'];
 
 export function FiltersSection({ request, onChange }: FiltersSectionProps) {
@@ -48,9 +107,9 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
           {occasions.map(occasion => (
             <button
               key={occasion}
-              onClick={() => handleSingleSelect('occasion', occasion)}
+              onClick={() => handleSingleSelect('gift_occasion', occasion)}
               className={`px-2 py-1 md:px-4 md:py-2 rounded-lg border transition-all text-xs md:text-sm ${
-                request.occasion === occasion
+                request.gift_occasion === occasion
                   ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                   : 'bg-card border-border hover:border-primary hover:bg-accent'
               }`}
@@ -89,10 +148,10 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
             <button
               key={type}
               onClick={() => {
-                onChange({ giftTypes: toggleArrayItem(request.giftTypes, type) });
+                onChange({ gift_format: toggleArrayItem(request.gift_format, type) });
               }}
               className={`px-2 py-1 md:px-4 md:py-2 rounded-lg border transition-all text-xs md:text-sm ${
-                request.giftTypes?.includes(type)
+                request.gift_format?.includes(type)
                   ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                   : 'bg-card border-border hover:border-primary hover:bg-accent'
               }`}

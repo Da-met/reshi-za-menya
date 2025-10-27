@@ -2,7 +2,8 @@
 
 import { MovieResponse } from '@/types/movies';
 import { useState } from 'react';
-import { Save, RotateCw, Check, Sparkles, Film, Clock, Globe } from 'lucide-react';
+import { RotateCw, Check, Sparkles, Film, Clock, Globe, Heart, Share2, Play, Calendar } from 'lucide-react';
+import Image from 'next/image';
 
 interface MovieResultProps {
   movie: MovieResponse;
@@ -19,189 +20,209 @@ export function MovieResult({ movie, onSave, onGenerateAnother }: MovieResultPro
   };
 
   const handleWatchClick = () => {
-    // TODO: Заменить на реальную партнерскую ссылку
     window.open('https://start.ru/partner-link', '_blank');
   };
 
   return (
-    <div className="
-      bg-gradient-to-br from-primary/10 to-secondary/10
-      rounded-xl md:rounded-2xl
-      shadow-2xl
-      p-4 md:p-6
-      mb-6 md:mb-8
-      border-2 border-primary/30
-      mt-6 md:mt-8
-      relative
-      overflow-hidden
-    ">
-      {/* Декоративные элементы */}
-      <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 rounded-full -translate-y-12 translate-x-12" />
-      <div className="absolute bottom-0 left-0 w-20 h-20 bg-secondary/10 rounded-full translate-y-10 -translate-x-10" />
-      
-      <div className="relative z-10">
-        {/* Заголовок результата */}
-        <div className="text-center mb-4 md:mb-6">
-          <div className="flex items-center justify-center space-x-2 mb-2">
-            <Sparkles size={20} className="text-primary" />
-            <h2 className="text-lg md:text-xl lg:text-2xl font-accent font-bold text-foreground">
-              Мы нашли идеальный фильм!
-            </h2>
-            <Sparkles size={20} className="text-secondary" />
+    <div className="min-h-screen bg-background py-6 md:py-8">
+      <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
+        {/* Блок "МЫ НАШЛИ ИДЕАЛЬНЫЙ ФИЛЬМ" */}
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center space-x-3 mb-3">
+            <Sparkles size={24} className="text-primary" />
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-accent text-foreground">
+              МЫ НАШЛИ ИДЕАЛЬНЫЙ ФИЛЬМ!
+            </h1>
+            <Sparkles size={24} className="text-secondary" />
           </div>
-          <p className="text-xs md:text-sm text-muted-foreground">
+          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
             Вот что мы предлагаем для вашего настроения
           </p>
         </div>
 
-        {/* Карточка фильма */}
-        <div className="
-          bg-card
-          rounded-lg md:rounded-xl
-          p-4 md:p-6
-          mb-4 md:mb-6
-          border-2 border-primary/20
-          shadow-lg
-          relative
-          overflow-hidden
-        ">
-          {/* Акцентная полоска */}
-          <div className="absolute top-0 left-0 w-full h-1 bg-primary" />
-          
-          {/* Заголовок фильма и мета-информация */}
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-3 md:mb-4 gap-2">
-            <div className="flex items-start space-x-2">
-              <Film size={20} className="text-primary mt-1 flex-shrink-0" />
-              <div>
-                <h3 className="text-base md:text-lg lg:text-xl font-bold text-card-foreground mb-1">
-                  {movie.recommendation.title}
-                </h3>
-                <div className="flex flex-wrap gap-1">
-                  <span className="inline-block bg-primary text-primary-foreground px-2 py-1 rounded-full text-xs font-medium shadow-md">
-                    {movie.recommendation.type === 'movie' ? '🎬 Фильм' : '📺 Сериал'}
-                  </span>
-                  <span className="inline-block bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium shadow-md">
-                    {movie.recommendation.year} год
-                  </span>
+        {/* Основной контент */}
+        <div className="space-y-8">
+          {/* Основной блок с фильмом */}
+          <div className="bg-card rounded-2xl shadow-lg p-4 md:p-8">
+            
+            {/* Заголовок */}
+            <div className="mb-4">
+              <h1 className="text-2xl md:text-3xl text-foreground mb-3">
+                {movie.recommendation.title}
+              </h1>
+            </div>
+
+            {/* Чипы */}
+            <div className="flex flex-wrap gap-2 mb-6">
+              <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-primary/10 text-primary rounded-full text-xs sm:text-sm">
+                {movie.recommendation.type === 'series' ? 'Сериал' : 'Фильм'}
+              </span>
+              <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-muted text-muted-foreground rounded-full text-xs sm:text-sm">
+                <Calendar size={12} className="sm:size-[14px] mr-1" />
+                {movie.recommendation.year}
+              </span>
+              <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-muted text-muted-foreground rounded-full text-xs sm:text-sm">
+                <Clock size={12} className="sm:size-[14px] mr-1" />
+                {movie.recommendation.duration}
+              </span>
+              {movie.recommendation.rating && (
+                <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs sm:text-sm">
+                  <span className="mr-1">⭐</span>
+                  {movie.recommendation.rating}
+                </span>
+              )}
+            </div>
+
+            {/* Постер и детали - горизонтально на десктопе */}
+            <div className="flex flex-col lg:flex-row gap-8 mb-6">
+              
+              {/* Постер - такой же размер как в saved/[id] */}
+              <div className="lg:w-2/5">
+                {movie.recommendation.poster ? (
+                  <div className="w-full max-w-sm mx-auto lg:max-w-full relative rounded-lg overflow-hidden shadow-lg">
+                    <div className="aspect-[3/4] relative">
+                      <Image
+                        src={movie.recommendation.poster}
+                        alt={movie.recommendation.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="w-full max-w-sm mx-auto lg:max-w-full aspect-[3/4] bg-muted rounded-lg flex items-center justify-center shadow-lg">
+                    <Film size={48} className="text-muted-foreground/50" />
+                  </div>
+                )}
+              </div>
+
+              {/* Детали фильма */}
+              <div className="lg:w-3/5">
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-lg text-foreground mb-2">Информация</h3>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Длительность:</span>
+                        <span className="text-foreground">{movie.recommendation.duration}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Страна:</span>
+                        <span className="text-foreground">{movie.recommendation.country}</span>
+                      </div>
+                      {movie.recommendation.director && (
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Режиссер:</span>
+                          <span className="text-foreground text-right">{movie.recommendation.director}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Жанры */}
+                  <div>
+                    <h3 className="text-lg text-foreground mb-2">Жанры</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {movie.recommendation.genre.map((genre, index) => (
+                        <span key={index} className="px-2 py-1 bg-primary-foreground text-primary rounded text-sm">
+                          {genre}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Актеры */}
+                  {movie.recommendation.actors && (
+                    <div>
+                      <h3 className="text-lg text-foreground mb-2">В ролях</h3>
+                      <p className="text-sm text-muted-foreground">
+                        {movie.recommendation.actors.slice(0, 3).join(', ')}
+                        {movie.recommendation.actors.length > 3 && '...'}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Детали фильма */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3 md:mb-4">
-            <div className="flex items-center space-x-1 text-xs md:text-sm text-card-foreground">
-              <Clock size={14} className="text-primary flex-shrink-0" />
-              <span>{movie.recommendation.duration}</span>
+            {/* Кнопка "Смотреть" */}
+            <div className="mb-6 p-4 bg-gradient-to-r from-primary/20 to-primary/30 rounded-xl border border-primary/20">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="text-center sm:text-left">
+                  <p className="text-sm text-muted-foreground">Доступно для просмотра</p>
+                  <p className="text-2xl font-bold text-primary">Кинопоиск, ivi, Netflix</p>
+                </div>
+                <button 
+                  onClick={handleWatchClick}
+                  className="
+                    flex items-center justify-center gap-2
+                    px-4 py-3 sm:py-2
+                    bg-green-600 text-white
+                    rounded-lg
+                    font-medium
+                    hover:bg-green-700
+                    transition-colors
+                    w-full sm:w-auto
+                  "
+                >
+                  <Play size={20} />
+                  <span>Смотреть онлайн</span>
+                </button>
+              </div>
             </div>
-            <div className="flex items-center space-x-1 text-xs md:text-sm text-card-foreground">
-              <Globe size={14} className="text-primary flex-shrink-0" />
-              <span>{movie.recommendation.country}</span>
+
+            {/* Описание фильма */}
+            <div className="mb-6">
+              <h2 className="text-xl text-foreground mb-3">О фильме</h2>
+              <p className="text-muted-foreground leading-normal text-sm md:text-base font-medium">
+                {movie.recommendation.description}
+              </p>
+            </div>
+
+            {/* Почему подходит */}
+            <div className="mb-2">
+              <h2 className="text-xl text-foreground mb-3">Почему это хорошая рекомендация</h2>
+              <p className="text-muted-foreground leading-normal text-sm md:text-base font-medium">
+                {movie.recommendation.whyMatch}
+              </p>
             </div>
           </div>
 
-          {/* Жанры */}
-          <div className="mb-3 md:mb-4">
-            <h4 className="font-semibold text-card-foreground mb-1 md:mb-2 text-sm md:text-base flex items-center space-x-2">
-              <span className="w-2 h-2 bg-primary rounded-full"></span>
-              <span>Жанры:</span>
-            </h4>
-            <div className="flex flex-wrap gap-1">
-              {movie.recommendation.genre.map((genre, index) => (
-                <span key={index} className="bg-muted text-muted-foreground px-2 py-1 rounded-lg text-xs">
-                  {genre}
-                </span>
-              ))}
+          {/* Кнопки действий - АДАПТИВНЫЕ */}
+          <div className="bg-card rounded-2xl shadow-lg p-4 md:p-6">
+            <div className="flex flex-col sm:flex-row gap-3">
+              {/* Кнопки сохранить и поделиться */}
+              <div className="flex flex-col xs:flex-row gap-3 flex-1">
+                <button
+                  onClick={handleSave}
+                  disabled={saved}
+                  className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl transition-colors flex-1 min-w-0 ${
+                    saved
+                      ? 'bg-green-500 text-white cursor-not-allowed'
+                      : 'bg-primary text-primary-foreground hover:bg-primary/90'
+                  }`}
+                >
+                  {saved ? <Check size={18} className="flex-shrink-0" /> : <Heart size={18} className="flex-shrink-0" />}
+                  <span className="font-semibold text-sm sm:text-base truncate">
+                    {saved ? 'Сохранено!' : 'Сохранить фильм'}
+                  </span>
+                </button>
+                <button className="flex items-center justify-center gap-2 py-3 px-4 bg-secondary text-secondary-foreground rounded-xl font-semibold hover:bg-secondary/90 transition-colors flex-1 min-w-0">
+                  <Share2 size={18} className="flex-shrink-0" />
+                  <span className="text-sm sm:text-base truncate">Поделиться</span>
+                </button>
+              </div>
+
+              {/* Кнопка другой вариант */}
+              <button
+                onClick={onGenerateAnother}
+                className="flex items-center justify-center gap-2 py-3 px-4 border border-border text-foreground rounded-xl font-semibold hover:bg-accent transition-colors min-w-0"
+              >
+                <RotateCw size={18} className="flex-shrink-0" />
+                <span className="text-sm sm:text-base truncate">Другой вариант</span>
+              </button>
             </div>
           </div>
-
-          {/* Описание */}
-          <div className="mb-3 md:mb-4">
-            <p className="text-sm md:text-base text-card-foreground leading-relaxed">
-              {movie.recommendation.description}
-            </p>
-          </div>
-
-          {/* Почему подходит */}
-          <div className="
-            bg-accent
-            rounded-lg
-            p-3 md:p-4
-            border border-border
-          ">
-            <h4 className="font-semibold text-accent-foreground mb-1 md:mb-2 text-sm md:text-base flex items-center space-x-2">
-              <span className="w-2 h-2 bg-secondary rounded-full"></span>
-              <span>Почему вам подойдет:</span>
-            </h4>
-            <p className="text-xs md:text-sm text-accent-foreground leading-relaxed">
-              {movie.recommendation.whyMatch}
-            </p>
-          </div>
-        </div>
-
-        {/* Кнопки действий */}
-        <div className="flex flex-col sm:flex-row gap-2 md:gap-3 justify-center">
-          <button
-            onClick={handleWatchClick}
-            className="
-              px-3 py-2 md:px-4 md:py-2 lg:px-6 lg:py-3
-              rounded-lg md:rounded-xl
-              font-semibold
-              bg-green-600 hover:bg-green-700
-              text-white
-              transition-all
-              shadow-lg hover:shadow-xl
-              hover:scale-105
-              flex items-center justify-center space-x-2
-              text-xs md:text-sm lg:text-base
-              flex-1 sm:flex-none
-            "
-          >
-            <span>🍿 Смотреть по подписке на START</span>
-          </button>
-
-          <button
-            onClick={handleSave}
-            disabled={saved}
-            className={`
-              px-3 py-2 md:px-4 md:py-2 lg:px-6 lg:py-3
-              rounded-lg md:rounded-xl
-              font-semibold
-              transition-all
-              flex items-center justify-center space-x-2
-              text-xs md:text-sm lg:text-base
-              flex-1 sm:flex-none
-              shadow-lg
-              ${saved
-                ? 'bg-green-500 text-white cursor-not-allowed'
-                : 'bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105'
-              }
-            `}
-          >
-            {saved ? <Check size={14} className="md:size-4" /> : <Save size={14} className="md:size-4" />}
-            <span className="truncate">{saved ? 'Сохранено!' : 'Сохранить фильм'}</span>
-          </button>
-
-          <button
-            onClick={onGenerateAnother}
-            className="
-              px-3 py-2 md:px-4 md:py-2 lg:px-6 lg:py-3
-              rounded-lg md:rounded-xl
-              font-semibold
-              bg-secondary
-              hover:bg-secondary/90
-              text-secondary-foreground
-              transition-all
-              shadow-lg hover:shadow-xl
-              hover:scale-105
-              flex items-center justify-center space-x-2
-              text-xs md:text-sm lg:text-base
-              flex-1 sm:flex-none
-            "
-          >
-            <RotateCw size={14} className="md:size-4" />
-            <span>Другой вариант</span>
-          </button>
         </div>
       </div>
     </div>

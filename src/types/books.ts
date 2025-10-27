@@ -29,6 +29,7 @@ export interface BookResponse {
     year?: number;
     country?: string;
     features?: string[];
+    cover?: string; //  обложка книги
   };
   generationId: string;
 }
@@ -38,4 +39,15 @@ export interface BookOption {
   label: string;
   emoji?: string;
   hints?: string[];
+}
+
+export interface SavedBook {
+  id: string;
+  bookData: BookResponse;
+  requestData: BookRequest;
+  createdAt: Date;
+  userComment?: string;
+  userRating?: number;        // пользовательская оценка 1-10
+  read?: boolean;             // прочитана/не прочитана
+  readDate?: Date;            // когда прочитали
 }

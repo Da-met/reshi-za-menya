@@ -17,6 +17,13 @@ export interface FoodRequest {
   };
 }
 
+// Базовый тип для ингредиента
+export interface IngredientItem {
+  name: string;
+  quantity?: string;
+  category?: string;
+}
+
 export interface FoodResponse {
   recipe: {
     id: string;
@@ -24,12 +31,8 @@ export interface FoodResponse {
     description: string;
     imageUrl?: string;
     ingredients: {
-      available: string[];
-      toBuy: Array<{
-        name: string;
-        quantity?: string;
-        category?: string;
-      }>;
+      available: IngredientItem[]; 
+      toBuy: IngredientItem[]; 
     };
     steps: string[];
     cookingTime: string;

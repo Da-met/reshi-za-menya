@@ -1,16 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { BookResponse, BookRequest } from '@/types/books';
 import { BookGenerator } from '@/components/books/BookGenerator';
 import { BookResult } from '@/components/books/BookResult';
-
+import { SavedBooks } from '@/components/books/SavedBooks';
 
 export default function BooksPage() {
+  const searchParams = useSearchParams();
   const [currentView, setCurrentView] = useState<'generator' | 'saved'>('generator');
   const [currentBook, setCurrentBook] = useState<BookResponse | null>(null);
   const [currentRequest, setCurrentRequest] = useState<BookRequest>({});
   const [isGenerating, setIsGenerating] = useState(false);
+
+  // При загрузке проверяем параметр URL
+  useEffect(() => {
+    const view = searchParams.get('view');
+    if (view === 'saved') {
+      setCurrentView('saved');
+    }
+  }, [searchParams]);
 
   const handleBookGenerated = (book: BookResponse) => {
     setCurrentBook(book);
@@ -26,7 +36,7 @@ export default function BooksPage() {
 
   const handleSaveBook = () => {
     console.log('Сохранение книги:', currentBook);
-    // Логика сохранения
+    // Здесь будет логика сохранения
   };
 
   return (
@@ -109,16 +119,7 @@ export default function BooksPage() {
             )}
           </>
         ) : (
-          <div className="bg-card rounded-2xl shadow-lg p-6">
-            <h2 className="text-2xl font-accent font-bold mb-4 text-foreground">Мои книги</h2>
-            <div className="text-center py-8">
-              <div className="text-4xl mb-4">📚</div>
-              <p className="text-muted-foreground mb-4">Здесь будут ваши сохраненные книги</p>
-              <p className="text-sm text-muted-foreground">
-                Сохраняйте понравившиеся рекомендации, чтобы не потерять их
-              </p>
-            </div>
-          </div>
+          <SavedBooks />
         )}
       </div>
     </div>

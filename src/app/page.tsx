@@ -1,10 +1,24 @@
+'use client';
+
 import { ModuleCard } from '@/components/modules/ModuleCard';
 import { modulesConfig } from '@/config/modules';
 import { ModuleType } from '@/types';
 import { Goal, Lightbulb, ShoppingCart } from 'lucide-react';
+import Link from 'next/link';
+import { useThemeStore } from '@/stores/theme-store';
+
+
 
 export default function Home() {
+  const { theme } = useThemeStore();
   const activeModules = modulesConfig.filter(module => module.status === 'active');
+
+  // Пути к картинкам для разных тем
+  const backgroundImages = {
+    light: '/images/themes/light/collections-bg.svg',
+    night: '/images/themes/night/collections-bg.svg', 
+    sky: '/images/themes/sky/collections-bg.svg'
+  };
 
   // Функции для цветовых схем
   const getMobileColorScheme = (index: number) => {
@@ -70,6 +84,7 @@ export default function Home() {
             gap-6 md:gap-8 lg:gap-10
             max-w-4xl 
             mx-auto
+            mb-12 md:mb-16
           ">
             {/* Мобильная версия с измененным порядком и схемой 1-2-1-2 */}
             {mobileModules.map((module, index) => (
@@ -99,9 +114,71 @@ export default function Home() {
               </div>
             ))}
           </div>
+
+          {/* Блок с подборками - ПРОСТОЙ И СТИЛЬНЫЙ */}
+          <div className="max-w-4xl mx-auto mb-12">
+            <Link href="/collections" className="group block">
+              <div 
+                className="
+                  border-2
+                  border-inverted-section-development
+                  rounded-xl
+                  shadow-lg
+                  hover:shadow-xl
+                  transition-all
+                  duration-200
+                  hover:scale-105
+                  cursor-pointer
+                  transform-gpu
+                  will-change-transform
+                  h-48
+                  flex
+                  items-center
+                  justify-center
+                  bg-cover bg-center bg-no-repeat
+                  relative
+                " 
+                style={{
+                  backgroundImage: `url(${backgroundImages[theme]})`
+                }}
+              >
+                
+                <div className="text-center p-6 relative z-10">
+                  <h3 className="
+                    text-3xl md:text-4xl
+                    text-center
+                    flex-shrink-0
+                    mb-4
+                    leading-tight
+                    font-normal
+                    text-section-development
+                  ">
+                    Готовые подборки
+                  </h3>
+                  
+                  <div className="
+                    rounded-2xl
+                    flex
+                    items-center
+                    justify-center
+                    transition-all
+                    duration-200
+                  ">
+                    <p className="
+                      text-base md:text-lg
+                      font-normal
+                      text-section-development
+                    ">
+                      Идеи для всех разделов: рецепты, подарки, фильмы, книги
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </div>
           
           {/* Блок "В разработке" */}
-          <div className="max-w-4xl mx-auto mt-10 md:mt-12">
+          {/* <div className="max-w-4xl mx-auto mt-10 md:mt-12">
             <div className="
               bg-transparent
               border-2 border-dashed border-section-development/30
@@ -124,7 +201,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 

@@ -26,7 +26,12 @@ export function GiftGenerator({
   currentRequest = {},
   onClearGift
 }: GiftGeneratorProps) {
-  const [giftRequest, setGiftRequest] = useState<GiftRequest>(currentRequest);
+  const [giftRequest, setGiftRequest] = useState<GiftRequest>({
+    recipient_type: 'friend', // 👈 предвыбрано
+    gift_occasion: 'Без повода', // 👈 предвыбрано  
+    budget: '1000-3000₽', // 👈 предвыбрано
+    ...currentRequest
+  });
   const [activeSection, setActiveSection] = useState<'category' | 'characteristics' | 'filters'>('category');
 
   // Синхронизируем с родительским состоянием
@@ -36,39 +41,61 @@ export function GiftGenerator({
 
   // Валидация формы
   const isFormValid = () => {
-    const hasCategory = !!giftRequest.category;
-    const hasCharacteristics = 
-      (giftRequest.profession?.length || 0) + 
-      (giftRequest.interests?.length || 0) + 
-      (giftRequest.personality?.length || 0) >= 2;
+    const hasRecipient = !!giftRequest.recipient_type;
+    const hasOccasion = !!giftRequest.gift_occasion;
+    const hasBudget = !!giftRequest.budget;
     
-    return hasCategory && hasCharacteristics;
+    return hasRecipient && hasOccasion && hasBudget; // 👈 Проверяем ОБЯЗАТЕЛЬНЫЕ параметры
   };
 
   const handleGenerate = async () => {
     if (!isFormValid() || isGenerating) return;
     onClearGift?.();
     onGeneratingChange?.(true);
-    console.log('Генерируем подарок с параметрами:', giftRequest);
     
-    // Временная заглушка
-    setTimeout(() => {
-      const mockGift: GiftResponse = {
-        gift: {
-          id: '1',
-          title: 'Энциклопедия садовода',
-          description: 'Красивая книга о садоводстве с практическими советами и иллюстрациями',
-          type: 'thing',
-          price_range: '1000-3000₽',
-          examples: ['Книга "Секреты успешного садовода"', 'Набор качественных садовых инструментов'],
-          reasoning: 'Идеально подходит для учителя, который увлекается садоводством - сочетает практическую пользу с эстетическим удовольствием'
+    console.log('Генерируем подарок с параметрами:', giftRequest);
+
+    try {
+      const response = await fetch('/api/prompt-templates/generate-structured', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        generationId: '123'
+        body: JSON.stringify({
+          templateName: "smart_gift_recommendation",
+          category: "Gifts", 
+          parameters: giftRequest
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Ошибка сервера: ${response.status}`);
+      }
+
+      const apiResponse = await response.json();
+      console.log('Получен ответ от API:', apiResponse);
+
+      // 👇 АДАПТИРУЕМ СТРУКТУРУ ОТВЕТА
+      const giftData: GiftResponse = {
+        gift: {
+          ...apiResponse.jsonStructuredResponse,
+          // Добавляем недостающие поля или преобразуем
+          price: `${apiResponse.jsonStructuredResponse.price} ₽`, // добавляем знак рубля
+          price_range: `${apiResponse.jsonStructuredResponse.price} ₽` // для совместимости
+        },
+        generationId: Date.now().toString() // или из ответа API если есть
       };
+
+      console.log('Адаптированные данные:', giftData);
       
-      onGiftGenerated?.(mockGift);
+      onGiftGenerated?.(giftData);
+      
+    } catch (error) {
+      console.error('Ошибка генерации подарка:', error);
+      alert('Произошла ошибка при генерации подарка. Попробуйте еще раз.');
+    } finally {
       onGeneratingChange?.(false);
-    }, 2000);
+    }
   };
 
   const handleRequestChange = (updates: Partial<GiftRequest>) => {
@@ -162,7 +189,7 @@ export function GiftGenerator({
           
           {!isFormValid() && (
             <p className="text-sm text-muted-foreground mt-3">
-              Выберите кому ищем подарок и добавьте минимум 2 характеристики
+              Выберите кому дарим, повод и бюджет для генерации подарка
             </p>
           )}
         </div>

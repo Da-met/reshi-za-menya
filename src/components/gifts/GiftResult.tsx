@@ -2,7 +2,7 @@
 
 import { GiftResponse } from '@/types/gifts';
 import { useState } from 'react';
-import { Package, Ticket, Hammer, Save, RotateCw, Check, Sparkles } from 'lucide-react';
+import { Package, Ticket, Hammer, Save, RotateCw, Check, Sparkles, ShoppingCart, Heart, Share2, CheckCircle, Star } from 'lucide-react';
 
 interface GiftResultProps {
   gift: GiftResponse;
@@ -12,6 +12,7 @@ interface GiftResultProps {
 
 export function GiftResult({ gift, onSave, onGenerateAnother }: GiftResultProps) {
   const [saved, setSaved] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const handleSave = () => {
     onSave();
@@ -20,191 +21,211 @@ export function GiftResult({ gift, onSave, onGenerateAnother }: GiftResultProps)
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'thing': return <Package size={18} className="md:size-5 flex-shrink-0" />;
-      case 'experience': return <Ticket size={18} className="md:size-5 flex-shrink-0" />;
-      case 'handmade': return <Hammer size={18} className="md:size-5 flex-shrink-0" />;
-      default: return <Package size={18} className="md:size-5 flex-shrink-0" />;
+      case 'thing': return <Package size={20} className="flex-shrink-0" />;
+      case 'experience': return <Ticket size={20} className="flex-shrink-0" />;
+      case 'handmade': return <Hammer size={20} className="flex-shrink-0" />;
+      default: return <Package size={20} className="flex-shrink-0" />;
     }
   };
 
+  const getTypeLabel = (type: string) => {
+    switch (type) {
+      case 'thing': return 'Вещь';
+      case 'experience': return 'Впечатление';
+      case 'handmade': return 'Хендмейд';
+      default: return type;
+    }
+  };
+
+  // Используем новые поля или старые для совместимости
+  const displayPrice = gift.gift.price || gift.gift.price_range;
+  const displayFeatures = gift.gift.features || gift.gift.examples || [];
+
+  // Fallback для изображения
+  const imageSrc = imageError || !gift.gift.image 
+    ? `/images/fallbacks/${gift.gift.category || 'default'}.jpg`
+    : gift.gift.image;
+
   return (
-    <div className="
-      bg-gradient-to-br from-primary/10 to-secondary/10
-      rounded-xl md:rounded-2xl 
-      shadow-2xl
-      p-4 md:p-6 
-      mb-6 md:mb-8 
-      border-2 border-primary/30
-      mt-6 md:mt-8
-      relative
-      overflow-hidden
-    ">
-      {/* Декоративные элементы используя наши цвета */}
-      <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 rounded-full -translate-y-12 translate-x-12" />
-      <div className="absolute bottom-0 left-0 w-20 h-20 bg-secondary/10 rounded-full translate-y-10 -translate-x-10" />
-      
-      <div className="relative z-10">
-        {/* Заголовок результата */}
-        <div className="text-center mb-4 md:mb-6">
-          <div className="flex items-center justify-center space-x-2 mb-2">
-            <Sparkles size={20} className="text-primary" />
-            <h2 className="text-lg md:text-xl lg:text-2xl font-accent font-bold text-foreground">
-              Мы нашли идеальный подарок!
-            </h2>
-            <Sparkles size={20} className="text-secondary" />
+    <div className="space-y-6 md:space-y-8 mt-8">
+      {/* Блок "МЫ НАШЛИ ИДЕАЛЬНЫЙ ПОДАРОК" */}
+      <div className="text-center">
+        <div className="flex items-center justify-center space-x-3 mb-3">
+          <Sparkles size={24} className="text-primary" />
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-accent text-foreground">
+            МЫ НАШЛИ ИДЕАЛЬНЫЙ ПОДАРОК!
+          </h2>
+          <Sparkles size={24} className="text-secondary" />
+        </div>
+        <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
+          Вот что мы предлагаем для вашего случая
+        </p>
+      </div>
+
+      {/* Карточка товара */}
+      <div className="bg-card rounded-2xl shadow-lg overflow-hidden">
+        {/* Верхняя часть с изображением и основной информацией */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 p-6 md:p-8">
+          {/* Изображение */}
+          <div className="rounded-xl overflow-hidden bg-muted/20">
+            <img
+              src={imageSrc}
+              alt={gift.gift.title}
+              className="w-full h-64 md:h-80 object-cover"
+              onError={() => setImageError(true)}
+            />
           </div>
-          <p className="text-xs md:text-sm text-muted-foreground">
-            Вот что мы предлагаем для вашего случая
-          </p>
+
+          {/* Информация */}
+          <div className="space-y-6">
+            {/* Заголовок и категория */}
+            <div>
+              <div className="flex items-center gap-3 mb-3 flex-wrap">
+                <span className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
+                  {getTypeIcon(gift.gift.type)}
+                  {getTypeLabel(gift.gift.type)}
+                </span>
+                {gift.gift.brand && (
+                  <span className="text-sm text-muted-foreground bg-muted px-3 py-1 rounded-full">
+                    {gift.gift.brand}
+                  </span>
+                )}
+                {gift.gift.category && (
+                  <span className="text-sm text-muted-foreground bg-muted px-3 py-1 rounded-full">
+                    {gift.gift.category}
+                  </span>
+                )}
+              </div>
+              
+              <h2 className="text-2xl md:text-3xl text-foreground mb-4">
+                {gift.gift.title}
+              </h2>
+            </div>
+
+            {/* Цена и кнопка купить */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-4">
+                <span className="text-3xl text-primary">{displayPrice}</span>
+              </div>
+
+              {/* Кнопка купить */}
+              <button className="flex items-center justify-center gap-3 w-full py-4 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-colors text-lg">
+                <ShoppingCart size={24} />
+                <span>Купить на маркетплейсе</span>
+              </button>
+            </div>
+          </div>
         </div>
 
-        {/* Карточка подарка */}
-        <div className="
-          bg-card
-          rounded-lg md:rounded-xl 
-          p-4 md:p-6 
-          mb-4 md:mb-6 
-          border-2 border-primary/20
-          shadow-lg
-          relative
-          overflow-hidden
-        ">
-          {/* Акцентная полоска используя primary цвет */}
-          <div className="absolute top-0 left-0 w-full h-1 bg-primary" />
-          
-          {/* Заголовок подарка и тип */}
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-3 md:mb-4 gap-2">
-            <div className="flex items-start space-x-2">
-              {getTypeIcon(gift.gift.type)}
-              <div>
-                <h3 className="text-base md:text-lg lg:text-xl font-bold text-card-foreground mb-1">
-                  {gift.gift.title}
-                </h3>
-                <span className="inline-block bg-primary text-primary-foreground px-2 py-1 md:px-3 md:py-1 rounded-full text-xs md:text-sm font-medium shadow-md">
-                  {gift.gift.price_range}
-                </span>
-              </div>
-            </div>
-            <span className="text-xs md:text-sm text-muted-foreground capitalize self-start sm:self-center bg-muted px-2 py-1 rounded-lg">
-              {gift.gift.type === 'thing' ? '🎁 Вещь' : 
-               gift.gift.type === 'experience' ? '🎭 Впечатление' : '🛠️ Сделай сам'}
-            </span>
-          </div>
-
-          {/* Описание */}
-          <p className="text-sm md:text-base text-card-foreground mb-3 md:mb-4 leading-relaxed">
-            {gift.gift.description}
-          </p>
-
-          {/* Примеры товаров */}
-          <div className="mb-3 md:mb-4">
-            <h4 className="font-semibold text-card-foreground mb-1 md:mb-2 text-sm md:text-base flex items-center space-x-2">
-              <span className="w-2 h-2 bg-primary rounded-full"></span>
-              <span>Конкретные примеры:</span>
-            </h4>
-            <ul className="list-none space-y-1 md:space-y-1.5 text-card-foreground">
-              {gift.gift.examples.map((example, index) => (
-                <li key={index} className="text-xs md:text-sm flex items-start space-x-2">
-                  <span className="text-primary mt-0.5">•</span>
-                  <span>{example}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Обоснование */}
-          <div className="
-            bg-accent
-            rounded-lg 
-            p-3 md:p-4 
-            border border-border
-          ">
-            <h4 className="font-semibold text-accent-foreground mb-1 md:mb-2 text-sm md:text-base flex items-center space-x-2">
-              <span className="w-2 h-2 bg-secondary rounded-full"></span>
-              <span>Почему этот подарок подходит:</span>
-            </h4>
-            <p className="text-xs md:text-sm text-accent-foreground leading-relaxed">
-              {gift.gift.reasoning}
+        {/* Описание */}
+        <div className="border-t border-border p-6 md:p-8">
+          <div className="space-y-4">
+            <h3 className="text-xl text-foreground">Описание</h3>
+            <p className="text-muted-foreground leading-relaxed">
+              {gift.gift.description}
             </p>
           </div>
         </div>
 
-        {/* Кнопки действий */}
-        <div className="flex flex-col sm:flex-row gap-2 md:gap-3 justify-center">
-          <button
-            onClick={handleSave}
-            disabled={saved}
-            className={`
-              px-3 py-2 md:px-4 md:py-2 lg:px-6 lg:py-3 
-              rounded-lg md:rounded-xl 
-              font-semibold 
-              transition-all 
-              flex items-center justify-center space-x-2
-              text-xs md:text-sm lg:text-base
-              flex-1 sm:flex-none
-              shadow-lg
-              ${saved
-                ? 'bg-green-500 text-white cursor-not-allowed'
-                : 'bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105'
-              }
-            `}
-          >
-            {saved ? <Check size={14} className="md:size-4" /> : <Save size={14} className="md:size-4" />}
-            <span className="truncate">{saved ? 'Сохранено!' : 'Сохранить подарок'}</span>
-          </button>
+        {/* Особенности и причины */}
+        <div className="border-t border-border">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 md:p-8">
+            {/* Особенности */}
+            <div className="space-y-4">
+              <h3 className="text-xl text-foreground">Особенности</h3>
+              <div className="space-y-3">
+                {displayFeatures.map((feature: string, index: number) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <CheckCircle size={18} className="text-green-500 flex-shrink-0" />
+                    <span className="text-muted-foreground">{feature}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-          <button
-            onClick={onGenerateAnother}
-            className="
-              px-3 py-2 md:px-4 md:py-2 lg:px-6 lg:py-3 
-              rounded-lg md:rounded-xl 
-              font-semibold 
-              bg-secondary 
-              hover:bg-secondary/90 
-              text-secondary-foreground
-              transition-all 
-              shadow-lg hover:shadow-xl 
-              hover:scale-105
-              flex items-center justify-center space-x-2
-              text-xs md:text-sm lg:text-base
-              flex-1 sm:flex-none
-            "
-          >
-            <RotateCw size={14} className="md:size-4" />
-            <span>Другой вариант</span>
-          </button>
-        </div>
-
-        {/* Интеграция с маркетплейсами */}
-        <div className="mt-4 md:mt-6 pt-4 md:pt-6 border-t border-border">
-          <h4 className="font-semibold text-foreground mb-2 md:mb-3 text-sm md:text-base flex items-center space-x-2">
-            <span className="w-2 h-2 bg-primary rounded-full"></span>
-            <span>Где купить:</span>
-          </h4>
-          <div className="flex flex-wrap gap-1 md:gap-2">
-            {['Ozon', 'Wildberries', 'Яндекс.Маркет', 'AliExpress'].map(market => (
-              <button
-                key={market}
-                className="
-                  px-2 py-1 md:px-3 md:py-2 
-                  rounded-lg 
-                  bg-card
-                  border border-border
-                  hover:border-primary 
-                  hover:bg-accent
-                  transition-all 
-                  text-xs md:text-sm
-                  flex-shrink-0
-                  shadow-sm
-                  hover:shadow-md
-                  hover:scale-105
-                "
-              >
-                {market}
-              </button>
-            ))}
+            {/* Почему хороший подарок */}
+            {gift.gift.reasons && gift.gift.reasons.length > 0 && (
+              <div className="space-y-4">
+                <h3 className="text-xl text-foreground">Почему это хороший подарок</h3>
+                <div className="space-y-3">
+                  {gift.gift.reasons.map((reason: string, index: number) => (
+                    <div key={index} className="flex items-center gap-3">
+                      <Star size={18} className="text-yellow-500 flex-shrink-0" />
+                      <span className="text-muted-foreground">{reason}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
+
+        {/* Почему подходит по критериям */}
+        {gift.gift.reasoning && (
+          <div className="border-t border-border p-6 md:p-8 bg-primary/5">
+            <div className="space-y-4">
+              <h3 className="text-xl text-foreground flex items-center gap-2">
+                <Sparkles size={20} className="text-primary" />
+                Почему подходит именно вам
+              </h3>
+              <p className="text-muted-foreground leading-relaxed">
+                {gift.gift.reasoning}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Теги */}
+        {gift.gift.tags && gift.gift.tags.length > 0 && (
+          <div className="border-t border-border p-6 md:p-8">
+            <div className="flex flex-wrap gap-2">
+              {gift.gift.tags.map((tag: string, index: number) => (
+                <span 
+                  key={index}
+                  className="px-3 py-1 bg-secondary text-primary text-sm rounded-full font-medium"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Кнопки действий внизу */}
+        <div className="bg-card rounded-2xl shadow-lg p-4 md:p-6">
+            <div className="flex flex-col sm:flex-row gap-3">
+              {/* Кнопки сохранить и поделиться */}
+              <div className="flex flex-col xs:flex-row gap-3 flex-1">
+                <button
+                  onClick={handleSave}
+                  disabled={saved}
+                  className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl transition-colors flex-1 min-w-0 ${
+                    saved
+                      ? 'bg-green-500 text-white cursor-not-allowed'
+                      : 'bg-primary text-primary-foreground hover:bg-primary/90'
+                  }`}
+                >
+                  {saved ? <Check size={18} className="flex-shrink-0" /> : <Heart size={18} className="flex-shrink-0" />}
+                  <span className="font-semibold text-sm sm:text-base truncate">
+                    {saved ? 'Сохранено!' : 'Сохранить фильм'}
+                  </span>
+                </button>
+                <button className="flex items-center justify-center gap-2 py-3 px-4 bg-secondary text-secondary-foreground rounded-xl font-semibold hover:bg-secondary/90 transition-colors flex-1 min-w-0">
+                  <Share2 size={18} className="flex-shrink-0" />
+                  <span className="text-sm sm:text-base truncate">Поделиться</span>
+                </button>
+              </div>
+
+              {/* Кнопка другой вариант */}
+              <button
+                onClick={onGenerateAnother}
+                className="flex items-center justify-center gap-2 py-3 px-4 border border-border text-foreground rounded-xl font-semibold hover:bg-accent transition-colors min-w-0"
+              >
+                <RotateCw size={18} className="flex-shrink-0" />
+                <span className="text-sm sm:text-base truncate">Другой вариант</span>
+              </button>
+            </div>
+          </div>
       </div>
     </div>
   );

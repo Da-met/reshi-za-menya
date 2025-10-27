@@ -1,26 +1,37 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { MovieRequest } from '@/types/movies';
 
-export function useMovieGeneration(initialRequest: MovieRequest = {}) {
-  const [movieRequest, setMovieRequest] = useState<MovieRequest>(initialRequest);
+interface UseMovieGenerationReturn {
+  movieRequest: MovieRequest;
+  isGenerating: boolean;
+  isValid: boolean;
+  handleRequestChange: (updates: Partial<MovieRequest>) => void;
+  setIsGenerating: (generating: boolean) => void;
+}
+
+export function useMovieGeneration(initialRequest: MovieRequest = {}): UseMovieGenerationReturn {
+const [movieRequest, setMovieRequest] = useState<MovieRequest>({
+    context: 'solo',
+    mood: 'funny', // 👈 Меняем 'any' на валидное значение
+    ...initialRequest
+  });
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const isFormValid = (): boolean => {
-    const hasContext = !!movieRequest.context;
-    const hasMoodOrGenres = !!movieRequest.mood || (movieRequest.genres?.length || 0) >= 2;
-    return hasContext && hasMoodOrGenres;
-  };
+  // Вычисляем валидность
+  const isValid = Boolean(
+    movieRequest.context && 
+    (movieRequest.mood && movieRequest.mood !== 'any' || movieRequest.genres && movieRequest.genres.length >= 2)
+  );
 
-  const handleRequestChange = (updates: Partial<MovieRequest>) => {
+  const handleRequestChange = useCallback((updates: Partial<MovieRequest>) => {
     setMovieRequest(prev => ({ ...prev, ...updates }));
-  };
+  }, []);
 
   return {
     movieRequest,
-    setMovieRequest,
     isGenerating,
-    setIsGenerating,
-    isFormValid,
-    handleRequestChange
+    isValid,
+    handleRequestChange,
+    setIsGenerating
   };
 }

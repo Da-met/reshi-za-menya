@@ -24,7 +24,7 @@ export function CategorySection({ request, onChange }: CategorySectionProps) {
     
     if (category) {
       onChange({
-        category: categoryId,
+        recipient_type: categoryId,
         ...category.auto
       });
     }
@@ -50,7 +50,7 @@ export function CategorySection({ request, onChange }: CategorySectionProps) {
             className={`
               p-3 md:p-4 rounded-xl border-2 transition-all duration-200
               flex flex-col items-center justify-center space-y-1 md:space-y-2
-              ${request.category === category.id
+              ${request.recipient_type === category.id
                 ? 'bg-primary border-primary text-primary-foreground shadow-md scale-105'
                 : 'bg-card border-border text-foreground hover:border-primary hover:shadow-md'
               }
@@ -62,11 +62,11 @@ export function CategorySection({ request, onChange }: CategorySectionProps) {
         ))}
       </div>
       
-      {request.category && (
+      {request.recipient_type && (
         <div className="mt-3 md:mt-4 p-2 md:p-3 bg-accent rounded-lg">
           <p className="text-xs md:text-sm text-accent-foreground">
             ✅ Автоматически установлено: {
-              categories.find(c => c.id === request.category)?.auto.gender 
+              categories.find(c => c.id === request.recipient_type)?.auto.gender 
                 ? `Пол: ${request.gender === 'female' ? 'женский' : 'мужской'}, ` 
                 : ''
             }Возраст: {request.age === 'child' ? 'ребенок' : 'взрослый'}
