@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { BookResponse, BookRequest } from '@/types/books';
@@ -7,7 +8,8 @@ import { BookGenerator } from '@/components/books/BookGenerator';
 import { BookResult } from '@/components/books/BookResult';
 import { SavedBooks } from '@/components/books/SavedBooks';
 
-export default function BooksPage() {
+// Выносим основной контент в отдельный компонент
+function BooksContent() {
   const searchParams = useSearchParams();
   const [currentView, setCurrentView] = useState<'generator' | 'saved'>('generator');
   const [currentBook, setCurrentBook] = useState<BookResponse | null>(null);
@@ -123,5 +125,21 @@ export default function BooksPage() {
         )}
       </div>
     </div>
+  );
+}
+
+// Основной компонент с Suspense boundary
+export default function BooksPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Загрузка...</p>
+        </div>
+      </div>
+    }>
+      <BooksContent />
+    </Suspense>
   );
 }
