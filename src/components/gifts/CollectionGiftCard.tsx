@@ -1,7 +1,5 @@
-// src/components/gifts/CollectionGiftCard.tsx
 'use client';
 
-import Link from 'next/link';
 
 interface CollectionGiftCardProps {
   gift: {

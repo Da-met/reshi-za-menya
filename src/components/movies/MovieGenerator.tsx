@@ -21,6 +21,28 @@ interface MovieGeneratorProps {
   onClearMovie?: () => void;
 }
 
+interface ApiMovieData {
+  // Поля которые могут прийти из API
+  genre?: string | string[];
+  actors?: string | string[];
+  streamingPlatforms?: string | string[];
+  tags?: string | string[];
+  releaseYear?: string | number;
+  kinopoiskRating?: string | number;
+  imdbRating?: string | number;
+  title?: string;
+  description?: string;
+  duration?: string | number;
+  type?: string;
+  whyMatch?: string;
+  runtime?: string;
+  productionCountry?: string;
+  poster?: string;
+  director?: string;
+  streamingLink?: string;
+  [key: string]: unknown;
+}
+
 export function MovieGenerator({
   onMovieGenerated,
   isGenerating = false,
@@ -29,7 +51,7 @@ export function MovieGenerator({
   onClearMovie
 }: MovieGeneratorProps) {
   const [activeSection, setActiveSection] = useState<'context' | 'mood' | 'filters'>('context');
- const { movieRequest, isValid, handleRequestChange, setIsGenerating } = useMovieGeneration(currentRequest);
+  const { movieRequest, isValid, handleRequestChange } = useMovieGeneration(currentRequest);
   const { generateRandomRequest } = useRandomMovies();
 
   // const handleGenerate = async () => {
@@ -100,39 +122,63 @@ export function MovieGenerator({
       console.log('🎬 Получен ответ:', apiResponse);
 
       // Функция адаптации данных от API
-      const adaptApiResponse = (apiData: any) => {
+      const adaptApiResponse = (apiData: ApiMovieData): MovieResponse['recommendation'] => {
         return {
-          ...apiData,
-          // Преобразуем genre из строки в массив
+          // Обязательные поля с значениями по умолчанию
+          id: Date.now().toString(),
+          title: apiData.title || 'Название не указано',
+          type: apiData.type || 'movie',
+          description: apiData.description || 'Описание отсутствует',
+          whyMatch: apiData.whyMatch || 'Отлично подходит под ваши предпочтения',
+          
+          // Исправляем runtime - преобразуем число в строку
+          runtime: typeof apiData.runtime === 'string' 
+            ? apiData.runtime 
+            : typeof apiData.duration === 'string'
+              ? apiData.duration
+              : typeof apiData.duration === 'number'
+                ? `${apiData.duration} мин`
+                : '120 мин',
+          
+          productionCountry: apiData.productionCountry || 'США',
+          
+          // Преобразованные поля
           genre: typeof apiData.genre === 'string' 
             ? apiData.genre.split(', ').map((g: string) => g.trim())
-            : apiData.genre || [],
-          // Преобразуем actors из строки в массив
-          actors: typeof apiData.actors === 'string'
-            ? apiData.actors.split(', ').map((a: string) => a.trim())
-            : apiData.actors || [],
-          // Преобразуем streamingPlatforms из строки в массив
-          streamingPlatforms: typeof apiData.streamingPlatforms === 'string'
-            ? apiData.streamingPlatforms.split(', ').map((p: string) => p.trim())
-            : apiData.streamingPlatforms || [],
-          // Преобразуем tags из строки в массив
-          tags: typeof apiData.tags === 'string'
-            ? apiData.tags.split(', ').map((t: string) => t.trim())
-            : apiData.tags || [],
-          // Преобразуем releaseYear в число если нужно
+            : Array.isArray(apiData.genre) ? apiData.genre : [],
+          
           releaseYear: typeof apiData.releaseYear === 'string' 
             ? parseInt(apiData.releaseYear) 
-            : apiData.releaseYear,
-          // Преобразуем kinopoiskRating в число если нужно
+            : typeof apiData.releaseYear === 'number' ? apiData.releaseYear : new Date().getFullYear(),
+          
+          // Остальные поля без изменений
+          poster: apiData.poster,
+          director: apiData.director,
+          
+          actors: typeof apiData.actors === 'string'
+            ? apiData.actors.split(', ').map((a: string) => a.trim())
+            : Array.isArray(apiData.actors) ? apiData.actors : undefined,
+          
           kinopoiskRating: typeof apiData.kinopoiskRating === 'string'
             ? parseFloat(apiData.kinopoiskRating)
-            : apiData.kinopoiskRating,
-          // Преобразуем imdbRating в число если нужно
+            : typeof apiData.kinopoiskRating === 'number' ? apiData.kinopoiskRating : undefined,
+          
           imdbRating: typeof apiData.imdbRating === 'string'
             ? parseFloat(apiData.imdbRating)
-            : apiData.imdbRating
+            : typeof apiData.imdbRating === 'number' ? apiData.imdbRating : undefined,
+          
+          streamingPlatforms: typeof apiData.streamingPlatforms === 'string'
+            ? apiData.streamingPlatforms.split(', ').map((p: string) => p.trim())
+            : Array.isArray(apiData.streamingPlatforms) ? apiData.streamingPlatforms : undefined,
+          
+          streamingLink: apiData.streamingLink,
+          
+          tags: typeof apiData.tags === 'string'
+            ? apiData.tags.split(', ').map((t: string) => t.trim())
+            : Array.isArray(apiData.tags) ? apiData.tags : undefined
         };
       };
+
 
       const movieData: MovieResponse = {
         recommendation: {

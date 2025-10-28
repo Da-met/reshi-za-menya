@@ -2,7 +2,7 @@
 
 import { MovieResponse } from '@/types/movies';
 import { useState } from 'react';
-import { RotateCw, Check, Sparkles, Film, Clock, Globe, Heart, Share2, Play, Calendar } from 'lucide-react';
+import { RotateCw, Check, Sparkles, Film, Clock, Heart, Share2, Play, Calendar } from 'lucide-react';
 import Image from 'next/image';
 
 interface MovieResultProps {
@@ -82,9 +82,11 @@ export function MovieResult({ movie, onSave, onGenerateAnother }: MovieResultPro
                 {movie.recommendation.poster && !imageError ? (
                   <div className="w-full max-w-sm mx-auto lg:max-w-full relative rounded-lg overflow-hidden shadow-lg">
                     <div className="aspect-[3/4] relative">
-                      <img
+                      <Image 
                         src={movie.recommendation.poster}
                         alt={movie.recommendation.title}
+                        width={0}
+                        height={0}
                         className="w-full h-full object-cover"
                         onError={() => setImageError(true)} // 👈 ОБРАБОТКА ОШИБКИ
                       />

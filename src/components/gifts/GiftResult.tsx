@@ -2,7 +2,10 @@
 
 import { GiftResponse } from '@/types/gifts';
 import { useState } from 'react';
-import { Package, Ticket, Hammer, Save, RotateCw, Check, Sparkles, ShoppingCart, Heart, Share2, CheckCircle, Star } from 'lucide-react';
+import { Package, Ticket, Hammer, RotateCw, Check, Sparkles, ShoppingCart, Heart, Share2, CheckCircle, Star } from 'lucide-react';
+import Image from 'next/image';
+
+
 
 interface GiftResultProps {
   gift: GiftResponse;
@@ -68,8 +71,10 @@ export function GiftResult({ gift, onSave, onGenerateAnother }: GiftResultProps)
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 p-6 md:p-8">
           {/* Изображение */}
           <div className="rounded-xl overflow-hidden bg-muted/20">
-            <img
+            <Image
               src={imageSrc}
+              width={0}
+              height={0}
               alt={gift.gift.title}
               className="w-full h-64 md:h-80 object-cover"
               onError={() => setImageError(true)}
