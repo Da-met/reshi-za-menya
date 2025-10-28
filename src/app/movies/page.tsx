@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { MovieResponse, MovieRequest } from '@/types/movies';
 import { MovieGenerator } from '@/components/movies/MovieGenerator';
 import { MovieResult } from '@/components/movies/MovieResult';
@@ -23,11 +23,6 @@ export default function MoviesPage() {
     }
   }, [searchParams]);
 
-  // Функция для переключения вкладок с обновлением URL
-  const handleViewChange = (view: 'generator' | 'saved') => {
-    setCurrentView(view);
-    // Здесь можно добавить обновление URL если нужно
-  };
 
   const handleMovieGenerated = (movie: MovieResponse) => {
     setCurrentMovie(movie);
