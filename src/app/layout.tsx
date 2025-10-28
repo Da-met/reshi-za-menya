@@ -3,7 +3,7 @@ import { Providers } from './providers';
 import { ThemeProvider } from '../components/theme/ThemeProvider';
 import { ThemeToggle } from '../components/theme/ThemeToggle';
 import { Header } from '@/components/layout/Header';
-import { Jura, Stalinist_One, Pacifico, Rubik_Marker_Hatch } from 'next/font/google';
+import { Jura, Rubik_Marker_Hatch } from 'next/font/google';
 
 
 // ЗАМЕНИТЕ Inter на ваши шрифты

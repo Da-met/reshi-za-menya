@@ -1,9 +1,11 @@
 // src/app/gifts/collections/new-year/[id]/page.tsx
 'use client';
 
-import { use } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ShoppingCart, Heart, Share2, Check, Star } from 'lucide-react';
+import Image from 'next/image';
+
+
 
 const giftDetails = {
   id: '1',
@@ -31,8 +33,7 @@ const giftDetails = {
   tags: ['технологии', 'здоровье', 'премиум', 'гаджеты']
 };
 
-export default function GiftDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function GiftDetailPage({ }: { params: Promise<{ id: string }> }) {
   const gift = giftDetails;
 
   return (
@@ -55,7 +56,7 @@ export default function GiftDetailPage({ params }: { params: Promise<{ id: strin
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 md:p-8">
             {/* Изображение */}
             <div className="rounded-xl overflow-hidden">
-              <img
+              <Image
                 src={gift.image}
                 alt={gift.title}
                 className="w-full h-80 object-cover"

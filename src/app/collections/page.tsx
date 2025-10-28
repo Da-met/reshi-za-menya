@@ -4,6 +4,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Sparkles } from 'lucide-react';
+import Image from 'next/image';
 
 const allCollections = [
   {
@@ -121,7 +122,7 @@ export default function AllCollectionsPage() {
             >
               <div className="bg-card rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl h-full flex flex-col">
                 <div className="h-48 relative overflow-hidden">
-                  <img 
+                  <Image 
                     src={collection.image}
                     alt={collection.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"

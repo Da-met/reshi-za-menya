@@ -1,5 +1,5 @@
 'use client';
-
+import Image from 'next/image';
 
 interface CollectionGiftCardProps {
   gift: {
@@ -21,7 +21,7 @@ export function CollectionGiftCard({ gift }: CollectionGiftCardProps) {
       <div className="bg-card rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl h-full flex flex-col">
         {/* Изображение */}
         <div className="h-48 relative overflow-hidden">
-          <img 
+          <Image 
             src={gift.image} 
             alt={gift.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"

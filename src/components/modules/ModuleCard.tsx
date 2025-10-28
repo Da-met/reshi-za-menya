@@ -70,7 +70,6 @@ export function ModuleCard({ title, description, href, moduleType, icon, colorSc
         transition-all
         duration-200
         hover:scale-105
-        block
         h-full
         flex flex-col
         ${isComingSoon ? 'cursor-default' : 'cursor-pointer'}

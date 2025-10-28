@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { adminModules } from '@/config/admin-modules';
-import { Save, ChevronDown, ChevronRight, Plus, X } from 'lucide-react';
+import { Save, ChevronDown, ChevronRight, X } from 'lucide-react';
 import { Prompt, AdminModule, AdminPrompt } from '@/types/prompt';
 import { savePrompt, deletePrompt, fetchAllPrompts } from '@/lib/api/prompts';
 import { ParametersEditor } from '@/components/admin/ParametersEditor';
@@ -14,7 +14,7 @@ export default function AdminPage() {
   const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [expandedModules, setExpandedModules] = useState<Record<string, boolean>>({});
-  const [newlyCreatedPromptId, setNewlyCreatedPromptId] = useState<string | null>(null);
+  const [, setNewlyCreatedPromptId] = useState<string | null>(null);
 
   // Загрузка промптов
   const loadPrompts = async () => {
@@ -25,7 +25,7 @@ export default function AdminPage() {
       
       console.log('📥 Все загруженные промпты:', ourData);
       
-    } catch (error) {
+    } catch {
       console.log('API недоступно');
       setPrompts([]);
     } finally {
@@ -34,7 +34,7 @@ export default function AdminPage() {
   };
 
   // Обновление любого поля промпта
-  const updatePromptField = (promptId: string, field: string, value: any) => {
+  const updatePromptField = (promptId: string, field: string, value: string) => {
     setPrompts(prev => prev.map(p =>
       p.id === promptId ? { ...p, [field]: value } : p
     ));
@@ -87,7 +87,7 @@ export default function AdminPage() {
       await savePrompt(prompt);
       alert('Сохранено!');
       loadPrompts();
-    } catch (error) {
+    } catch {
       alert('Ошибка сохранения');
     }
   };
@@ -102,7 +102,7 @@ export default function AdminPage() {
       await deletePrompt(promptId);
       alert('Промпт удален!');
       loadPrompts();
-    } catch (error) {
+    } catch {
       alert('Ошибка удаления');
     }
   };
@@ -147,7 +147,7 @@ export default function AdminPage() {
   // Сбрасываем флаг нового промпта при смене выбора
   useEffect(() => {
     setNewlyCreatedPromptId(null);
-  }, [selectedModule, selectedPrompt]);
+  }, [selectedModule, selectedPrompt, setNewlyCreatedPromptId]);
 
 
   // Автозагрузка при открытии
@@ -247,13 +247,13 @@ export default function AdminPage() {
               // Редактор существующего промпта
               <div className="space-y-6">
                 <PromptBasicInfo
-                  prompt={currentPrompt!} // Добавьте ! здесь
+                  prompt={currentPrompt}
                   onUpdatePrompt={updatePromptField}
                   selectedModule={selectedModule}
                   selectedPrompt={selectedPrompt}
                 />
                 <ParametersEditor
-                  prompt={currentPrompt!} // Добавьте ! здесь
+                  prompt={currentPrompt}
                   onUpdateParameter={updateParameter}
                   onAddParameter={addParameter}
                   onRemoveParameter={removeParameter}
@@ -263,22 +263,22 @@ export default function AdminPage() {
                 <div className="bg-card rounded-lg border border-border p-4">
                   <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
                     <div className="text-sm text-muted-foreground text-center sm:text-left">
-                      {currentPrompt!.id.startsWith('new-') // Добавьте ! здесь
+                      {currentPrompt.id.startsWith('new-')
                         ? 'Готовы сохранить новый промпт?'
-                        : `Последнее изменение: ${new Date(currentPrompt!.updatedAt).toLocaleDateString('ru-RU')}` // Добавьте ! здесь
+                        : `Последнее изменение: ${new Date(currentPrompt.updatedAt).toLocaleDateString('ru-RU')}`
                       }
                     </div>
                     <div className="flex gap-2">
                       <button
-                        onClick={() => handleSavePrompt(currentPrompt!)} // Добавьте ! здесь
+                        onClick={() => handleSavePrompt(currentPrompt)}
                         className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-sm"
                       >
                         <Save className="w-4 h-4" />
                         Сохранить
                       </button>
-                      {!currentPrompt!.id.startsWith('new-') && ( // Добавьте ! здесь
+                      {!currentPrompt.id.startsWith('new-') && (
                         <button
-                          onClick={() => handleDeletePrompt(currentPrompt!.id)} // Добавьте ! здесь
+                          onClick={() => handleDeletePrompt(currentPrompt.id)}
                           className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
                         >
                           <X className="w-4 h-4" />
@@ -296,7 +296,7 @@ export default function AdminPage() {
                   Промпт не найден
                 </h3>
                 <p className="text-muted-foreground mb-4">
-                  Для "{selectedModule.name}" - "{selectedPrompt.name}"
+                  Для &quot;{selectedModule.name}&quot; - &quot;{selectedPrompt.name}&quot;
                 </p>
                 <button
                   onClick={createNewPrompt}

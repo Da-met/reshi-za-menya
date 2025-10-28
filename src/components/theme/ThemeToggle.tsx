@@ -103,7 +103,7 @@ export function ThemeToggle() {
                   ${themeOption.buttonBorder}
                   ${
                     theme === themeOption.id 
-                      ? 'ring-2 ring-accent scale-110 ring-primary-foreground' 
+                      ? 'ring-2 ring-accent scale-110 ' 
                       : 'opacity-90 hover:opacity-100'
                   }
                   ${delayClass}

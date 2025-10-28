@@ -10,7 +10,6 @@ export function Header() {
 
   return (
     <header className="
-      bg-card 
       border-b border-border 
       shadow-sm
       sticky top-0 

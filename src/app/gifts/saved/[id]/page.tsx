@@ -1,10 +1,11 @@
 'use client';
 
-import { use, useState } from 'react';
-import { ArrowLeft, Heart, Share2, ShoppingCart, Star, Calendar, User, MessageCircle, Edit3, Trash2, Clock, CheckCircle, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowLeft, Heart, Share2, ShoppingCart, Star, MessageCircle, Edit3, Trash2, Clock, CheckCircle, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { SavedGift } from '@/types/gifts';
 import { OptionTag } from '@/components/gifts/OptionTag';
+import Image from 'next/image';
 
 // Заглушка данных с НОВОЙ структурой
 const mockGiftData: SavedGift = {
@@ -49,8 +50,7 @@ const mockGiftData: SavedGift = {
   userComment: 'Идеально для мамы - она давно хотела умные часы для прогулок'
 };
 
-export default function GiftDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function GiftDetailPage({ }: { params: Promise<{ id: string }> }) {
   const [gift, setGift] = useState<SavedGift>(mockGiftData);
   const [isEditingComment, setIsEditingComment] = useState(false);
   const [commentText, setCommentText] = useState(gift.userComment || '');
@@ -153,7 +153,7 @@ export default function GiftDetailPage({ params }: { params: Promise<{ id: strin
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 p-6 md:p-8">
               {/* Изображение */}
               <div className="rounded-xl overflow-hidden bg-muted/20">
-                <img
+                <Image
                   src={imageSrc}
                   alt={gift.giftData.title}
                   className="w-full h-64 md:h-80 object-cover"

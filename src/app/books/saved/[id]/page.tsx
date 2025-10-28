@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useState } from 'react';
+import { useState } from 'react';
 import { ArrowLeft, Heart, Share2, BookOpen, Star, Calendar, Clock, MessageCircle, Edit3, Trash2, Eye, EyeOff, Book, Users, Globe } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -77,8 +77,7 @@ const getAudienceLabel = (audience: string) => {
   return labels[audience] || audience;
 };
 
-export default function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function BookDetailPage({ }: { params: Promise<{ id: string }> }) {
   const [book, setBook] = useState<SavedBook>(mockBookData);
   const [isEditingComment, setIsEditingComment] = useState(false);
   const [commentText, setCommentText] = useState(book.userComment || '');
