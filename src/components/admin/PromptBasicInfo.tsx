@@ -1,10 +1,25 @@
 import { Prompt } from '@/types/prompt';
 
+// Создаем интерфейсы для пропсов
+interface AdminModule {
+  id: string;
+  name: string;
+  category: string;
+  prompts: readonly AdminPrompt[];
+}
+
+interface AdminPrompt {
+  key: string;
+  name: string;
+  description: string;
+  variables: readonly string[];
+}
+
 interface PromptBasicInfoProps {
   prompt: Prompt;
-  onUpdatePrompt: (promptId: string, field: string, value: any) => void;
-  selectedModule: any;
-  selectedPrompt: any;
+  onUpdatePrompt: (promptId: string, field: string, value: string) => void; // value всегда string
+  selectedModule: AdminModule;
+  selectedPrompt: AdminPrompt;
 }
 
 export const PromptBasicInfo: React.FC<PromptBasicInfoProps> = ({
@@ -13,11 +28,6 @@ export const PromptBasicInfo: React.FC<PromptBasicInfoProps> = ({
   selectedModule,
   selectedPrompt,
 }) => {
-  // Функция для красивого отображения категории
-  const formatCategory = (category: string) => {
-    return category.charAt(0).toUpperCase() + category.slice(1);
-  };
-
   return (
     <>
       {/* Заголовок */}

@@ -21,7 +21,7 @@ const typeConfig = {
   giftType: { icon: Gift, bgColor: 'bg-cyan-50', textColor: 'text-cyan-800' },
 };
 
-export function OptionTag({ label, value, type, onRemove, showRemove = false }: OptionTagProps) {
+export function OptionTag({ label, type, onRemove, showRemove = false }: OptionTagProps) {
   const { icon: Icon, bgColor, textColor } = typeConfig[type];
 
   return (

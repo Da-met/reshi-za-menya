@@ -1,29 +1,76 @@
-import { Prompt } from '@/types/prompt';
+import { Prompt, PromptParameter } from '@/types/prompt';
 
-export const apiToOurFormat = (apiData: any): Prompt => {
+// Создаем интерфейсы для API данных
+interface ApiParameter {
+  parameterValue: string;
+  comment?: string;
+  [key: string]: unknown;
+}
+
+interface ApiPrompt {
+  id: string | number;
+  category: string;
+  name: string;
+  template: string;
+  requiredParameters?: ApiParameter[];
+  optionalParameters?: ApiParameter[];
+  outputParameters?: ApiParameter[];
+  createdAt?: string;
+  updatedAt?: string;
+  [key: string]: unknown;
+}
+
+interface ApiPromptRequest {
+  name: string;
+  category: string;
+  template: string;
+  requiredParameters?: ApiParameter[];
+  optionalParameters?: ApiParameter[];
+  outputParameters?: ApiParameter[];
+  [key: string]: unknown;
+}
+
+// Функция для преобразования ApiParameter в PromptParameter
+const convertToPromptParameter = (apiParam: ApiParameter): PromptParameter => {
   return {
-    id: apiData.id.toString(),
-    moduleName: apiData.category, // Сохраняем оригинальную категорию
-    promptKey: apiData.name.toLowerCase(),
-    text: apiData.template,
-    description: apiData.name,
-    variables: [...(apiData.requiredParameters?.map((p: any) => p.parameterValue) || [])],
-    requiredParameters: apiData.requiredParameters || [],
-    optionalParameters: apiData.optionalParameters || [],
-    outputParameters: apiData.outputParameters || [],
-    createdAt: apiData.createdAt,
-    updatedAt: apiData.updatedAt
+    parameterValue: apiParam.parameterValue,
+    comment: apiParam.comment || '', // Добавляем comment по умолчанию
   };
 };
 
-export const ourFormatToApi = (ourData: Prompt): any => {
+// Функция для преобразования PromptParameter в ApiParameter
+const convertToApiParameter = (promptParam: PromptParameter): ApiParameter => {
+  return {
+    parameterValue: promptParam.parameterValue,
+    comment: promptParam.comment,
+  };
+};
+
+export const apiToOurFormat = (apiData: ApiPrompt): Prompt => {
+  return {
+    id: apiData.id.toString(),
+    moduleName: apiData.category,
+    promptKey: apiData.name.toLowerCase(),
+    text: apiData.template,
+    description: apiData.name,
+    variables: [...(apiData.requiredParameters?.map((p: ApiParameter) => p.parameterValue) || [])],
+    requiredParameters: apiData.requiredParameters?.map(convertToPromptParameter) || [],
+    optionalParameters: apiData.optionalParameters?.map(convertToPromptParameter) || [],
+    outputParameters: apiData.outputParameters?.map(convertToPromptParameter) || [],
+    createdAt: apiData.createdAt || new Date().toISOString(),
+    updatedAt: apiData.updatedAt || new Date().toISOString()
+    // Убрали version и isActive - их нет в типе Prompt
+  };
+};
+
+export const ourFormatToApi = (ourData: Prompt): ApiPromptRequest => {
   return {
     name: ourData.description,
     category: ourData.moduleName,
     template: ourData.text,
-    requiredParameters: ourData.requiredParameters,
-    optionalParameters: ourData.optionalParameters,
-    outputParameters: ourData.outputParameters,
+    requiredParameters: ourData.requiredParameters.map(convertToApiParameter),
+    optionalParameters: ourData.optionalParameters.map(convertToApiParameter),
+    outputParameters: ourData.outputParameters.map(convertToApiParameter),
   };
 };
 
@@ -33,7 +80,7 @@ export const fetchPromptsByCategory = async (category: string): Promise<Prompt[]
   if (!response.ok) {
     return [];
   }
-  const apiData = await response.json();
+  const apiData = await response.json() as ApiPrompt[];
   return apiData.map(apiToOurFormat);
 };
 
@@ -41,9 +88,9 @@ export const fetchPromptsByCategory = async (category: string): Promise<Prompt[]
 export const fetchAllPrompts = async (): Promise<Prompt[]> => {
   try {
     const response = await fetch('/api/prompt-templates/');
-    const apiData = await response.json();
+    const apiData = await response.json() as ApiPrompt[];
     return apiData.map(apiToOurFormat);
-  } catch (error) {
+  } catch {
     console.log('API недоступно');
     return [];
   }

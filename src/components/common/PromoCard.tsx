@@ -3,6 +3,7 @@
 
 import Link from 'next/link';
 import { useThemeStore } from '@/stores/theme-store';
+import Image from 'next/image';
 
 interface PromoCardProps {
   title: string;
@@ -85,8 +86,10 @@ export function PromoCard({
         {/* Изображение - ВСЕГДА СПРАВА */}
         <div className="flex-shrink-0 w-2/5 md:w-1/3 relative overflow-hidden"> 
           {finalImagePath ? (
-            <img
+            <Image
               src={finalImagePath}
+              width={0}
+              height={0}
               alt={title}
               className="object-cover w-full h-full transition-transform duration-200 group-hover:scale-110"
             />

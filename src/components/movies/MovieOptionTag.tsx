@@ -22,7 +22,7 @@ const typeConfig = {
   rating: { icon: Star, bgColor: 'bg-yellow-50', textColor: 'text-yellow-800' },
 };
 
-export function MovieOptionTag({ label, value, type, onRemove, showRemove = false }: MovieOptionTagProps) {
+export function MovieOptionTag({ label, type, onRemove, showRemove = false }: MovieOptionTagProps) {
   const { icon: Icon, bgColor, textColor } = typeConfig[type];
 
   return (

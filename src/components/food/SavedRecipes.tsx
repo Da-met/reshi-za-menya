@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Trash2, Utensils, Clock, MoreVertical, Eye, EyeOff, Zap, ShoppingCart } from 'lucide-react';
+import { Trash2, Utensils, Clock, MoreVertical, Eye, Zap, ShoppingCart } from 'lucide-react';
 import { SavedRecipe } from '@/types/food';
 import { SeasonalBanner } from './SeasonalBanner';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { Book, Users, Heart, Clock, Calendar, Globe } from 'lucide-react';
+import { Book, Users, Heart, Calendar, Globe } from 'lucide-react';
 
 interface BookOptionTagProps {
   type: 'context' | 'mood' | 'genre' | 'format' | 'year' | 'country';
@@ -8,7 +8,7 @@ interface BookOptionTagProps {
   value: string;
 }
 
-export function BookOptionTag({ type, label, value }: BookOptionTagProps) {
+export function BookOptionTag({ type, label }: BookOptionTagProps) {
   const getIcon = () => {
     switch (type) {
       case 'context':
