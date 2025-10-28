@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useState } from 'react';
+import { useState } from 'react';
 import { ArrowLeft, Clock, Circle, Zap, Heart, Share2, ShoppingCart, MessageCircle, Edit3, Trash2, Eye, EyeOff, Utensils, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -63,8 +63,7 @@ interface IngredientItem {
   category?: string;
 }
 
-export default function RecipeDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function RecipeDetailPage({ }: { params: Promise<{ id: string }> }) {
   const [recipe, setRecipe] = useState<SavedRecipe>(mockRecipeData);
   const [isEditingNote, setIsEditingNote] = useState(false);
   const [noteText, setNoteText] = useState(recipe.note || '');

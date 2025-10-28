@@ -1,10 +1,11 @@
 'use client';
 
-import { use, useState } from 'react';
+import { useState } from 'react';
 import { ArrowLeft, Heart, Share2, Play, Star, Calendar, Clock, MessageCircle, Edit3, Trash2, Eye, EyeOff, Film} from 'lucide-react';
 import Link from 'next/link';
 import { SavedMovie } from '@/types/movies';
 import { MovieOptionTag } from '@/components/movies/MovieOptionTag';
+import Image from 'next/image';
 
 // Заглушка данных
 const mockMovieData: SavedMovie = {
@@ -77,8 +78,7 @@ const getFormatLabel = (format: string) => {
   return labels[format] || format;
 };
 
-export default function MovieDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function MovieDetailPage({ }: { params: Promise<{ id: string }> }) {
   const [movie, setMovie] = useState<SavedMovie>(mockMovieData);
   const [isEditingComment, setIsEditingComment] = useState(false);
   const [commentText, setCommentText] = useState(movie.userComment || '');
@@ -240,7 +240,7 @@ export default function MovieDetailPage({ params }: { params: Promise<{ id: stri
                 {movie.movieData.recommendation.poster ? (
                   <div className="w-full max-w-sm mx-auto lg:max-w-full relative rounded-lg overflow-hidden shadow-lg">
                     <div className="aspect-[3/4] relative">
-                    <img
+                    <Image
                       src={movie.movieData.recommendation.poster}
                       alt={movie.movieData.recommendation.title}
                       className="w-full h-full object-cover"
