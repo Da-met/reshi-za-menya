@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { FoodResponse, FoodRequest } from '@/types/food';
 import { FoodGenerator } from '@/components/food/FoodGenerator';
 import { FoodResult } from '@/components/food/FoodResult';
 import { SavedRecipes } from '@/components/food/SavedRecipes';
 
-export default function FoodPage() {
+function FoodContent() {
   const searchParams = useSearchParams();
   const [currentView, setCurrentView] = useState<'generator' | 'saved'>('generator');
   const [currentRecipe, setCurrentRecipe] = useState<FoodResponse | null>(null);
@@ -138,5 +138,20 @@ export default function FoodPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function FoodPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Загрузка...</p>
+        </div>
+      </div>
+    }>
+      <FoodContent />
+    </Suspense>
   );
 }

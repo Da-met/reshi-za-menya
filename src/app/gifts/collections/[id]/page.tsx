@@ -63,7 +63,13 @@ export default function GiftCollectionPage({ params }: { params: Promise<{ id: s
             <Link key={item.id} href={`/gifts/collections/${id}/${item.id}`} className="group block">
               <div className="bg-card rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl h-full flex flex-col">
                 <div className="h-48 relative overflow-hidden">
-                  <Image src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  <Image 
+                    src={item.image} 
+                    alt={item.title} 
+                    width={0} 
+                    height={0} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+                  />
                 </div>
                 <div className="p-6 flex-1 flex flex-col">
                   <h3 className="text-xl text-foreground mb-3 group-hover:text-primary transition-colors font-normal">

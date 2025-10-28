@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-
+  images: {
+    domains: ['images.unsplash.com', 'static.re-store.ru'],
+    unoptimized: true, // Полностью отключает оптимизацию
   },
   async rewrites() {
     return [

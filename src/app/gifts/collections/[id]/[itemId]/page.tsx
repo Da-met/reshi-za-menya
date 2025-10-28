@@ -59,6 +59,8 @@ export default function GiftDetailPage({ }: { params: Promise<{ id: string }> })
               <Image
                 src={gift.image}
                 alt={gift.title}
+                width={0} 
+                height={0} 
                 className="w-full h-80 object-cover"
               />
             </div>
