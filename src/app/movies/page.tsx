@@ -1,14 +1,13 @@
-
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { MovieResponse, MovieRequest } from '@/types/movies';
 import { MovieGenerator } from '@/components/movies/MovieGenerator';
 import { MovieResult } from '@/components/movies/MovieResult';
-import { SavedMovies } from '@/components/movies/SavedMovies'; // Добавляем импорт
+import { SavedMovies } from '@/components/movies/SavedMovies';
 
-export default function MoviesPage() {
+function MoviesContent() {
   const searchParams = useSearchParams();
   const [currentView, setCurrentView] = useState<'generator' | 'saved'>('generator');
   const [currentMovie, setCurrentMovie] = useState<MovieResponse | null>(null);
@@ -22,7 +21,6 @@ export default function MoviesPage() {
       setCurrentView('saved');
     }
   }, [searchParams]);
-
 
   const handleMovieGenerated = (movie: MovieResponse) => {
     setCurrentMovie(movie);
@@ -64,7 +62,7 @@ export default function MoviesPage() {
             Найдем идеальный фильм или сериал для вашего настроения
           </p>
           
-          {/* Переключение между вкладками */}
+          {/* Переключение между вкладках */}
           <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4 mb-6 md:mb-8">
             <button
               onClick={() => setCurrentView('generator')}
@@ -121,9 +119,24 @@ export default function MoviesPage() {
             )}
           </>
         ) : (
-          <SavedMovies /> // Теперь используем полноценный компонент
+          <SavedMovies />
         )}
       </div>
     </div>
+  );
+}
+
+export default function MoviesPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Загрузка...</p>
+        </div>
+      </div>
+    }>
+      <MoviesContent />
+    </Suspense>
   );
 }

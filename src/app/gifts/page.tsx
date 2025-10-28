@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { GiftGenerator } from '@/components/gifts/GiftGenerator';
 import { GiftResult } from '@/components/gifts/GiftResult';
 import { SavedGifts } from '@/components/gifts/SavedGifts';
 import { GiftResponse, GiftRequest } from '@/types/gifts';
 
-export default function GiftsPage() {
+function GiftsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [currentView, setCurrentView] = useState<'generator' | 'saved'>('generator');
@@ -136,5 +136,20 @@ export default function GiftsPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function GiftsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Загрузка...</p>
+        </div>
+      </div>
+    }>
+      <GiftsContent />
+    </Suspense>
   );
 }
