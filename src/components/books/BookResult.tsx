@@ -2,7 +2,8 @@
 
 import { BookResponse } from '@/types/books';
 import { useState } from 'react';
-import { Save, RotateCw, Check, Sparkles, Book, Clock, Globe, User } from 'lucide-react';
+import { RotateCw, Check, Sparkles, Book, Clock, Globe, Heart, Share2, BookOpen, Calendar } from 'lucide-react';
+import Image from 'next/image';
 
 interface BookResultProps {
   book: BookResponse;
@@ -12,256 +13,308 @@ interface BookResultProps {
 
 export function BookResult({ book, onSave, onGenerateAnother }: BookResultProps) {
   const [saved, setSaved] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const handleSave = () => {
     onSave();
     setSaved(true);
   };
 
-  const handleBuyClick = () => {
-    // TODO: Заменить на реальную партнерскую ссылку
-    window.open('https://www.litres.ru/partner-link', '_blank');
+  const handleBuyClick = (platform?: string) => {
+    const defaultLinks = {
+      litres: 'https://www.litres.ru/partner-link',
+      book24: 'https://book24.ru/partner-link',
+      labyrinth: 'https://www.labirint.ru/partner-link',
+      mybook: 'https://mybook.ru/partner-link',
+      bookmate: 'https://bookmate.ru/partner-link'
+    };
+    
+    const link = book.book.affiliateLinks?.[platform as keyof typeof defaultLinks] || 
+                 defaultLinks[platform as keyof typeof defaultLinks] || 
+                 defaultLinks.litres;
+    
+    window.open(link, '_blank');
   };
 
+  const bookInfo = book.book;
+
   return (
-    <div className="
-      bg-gradient-to-br from-primary/10 to-secondary/10
-      rounded-xl md:rounded-2xl
-      shadow-2xl
-      p-4 md:p-6
-      mb-6 md:mb-8
-      border-2 border-primary/30
-      mt-6 md:mt-8
-      relative
-      overflow-hidden
-    ">
-      {/* Декоративные элементы */}
-      <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 rounded-full -translate-y-12 translate-x-12" />
-      <div className="absolute bottom-0 left-0 w-20 h-20 bg-secondary/10 rounded-full translate-y-10 -translate-x-10" />
-      
-      <div className="relative z-10">
-        {/* Заголовок результата */}
-        <div className="text-center mb-4 md:mb-6">
-          <div className="flex items-center justify-center space-x-2 mb-2">
-            <Sparkles size={20} className="text-primary" />
-            <h2 className="text-lg md:text-xl lg:text-2xl font-accent font-bold text-foreground">
-              Мы нашли идеальную книгу!
-            </h2>
-            <Sparkles size={20} className="text-secondary" />
+    <div className="min-h-screen bg-background py-6 md:py-8">
+      <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
+        
+        {/* Блок "МЫ НАШЛИ ИДЕАЛЬНУЮ КНИГУ" */}
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center space-x-3 mb-3">
+            <Sparkles size={24} className="text-primary" />
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-accent text-foreground">
+              МЫ НАШЛИ ИДЕАЛЬНУЮ КНИГУ!
+            </h1>
+            <Sparkles size={24} className="text-secondary" />
           </div>
-          <p className="text-xs md:text-sm text-muted-foreground">
+          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
             Вот что мы предлагаем для вашего настроения
           </p>
         </div>
 
-        {/* Карточка книги */}
-        <div className="
-          bg-card
-          rounded-lg md:rounded-xl
-          p-4 md:p-6
-          mb-4 md:mb-6
-          border-2 border-primary/20
-          shadow-lg
-          relative
-          overflow-hidden
-        ">
-          {/* Акцентная полоска */}
-          <div className="absolute top-0 left-0 w-full h-1 bg-primary" />
+        {/* Основной контент */}
+        <div className="space-y-8">
           
-          {/* Заголовок книги и автор */}
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-3 md:mb-4 gap-2">
-            <div className="flex items-start space-x-2">
-              <Book size={20} className="text-primary mt-1 flex-shrink-0" />
-              <div>
-                <h3 className="text-base md:text-lg lg:text-xl font-bold text-card-foreground mb-1">
-                  {book.book.title}
-                </h3>
-                <div className="flex items-center space-x-1 text-sm text-muted-foreground mb-2">
-                  <User size={14} className="flex-shrink-0" />
-                  <span>{book.book.author}</span>
-                </div>
-                <div className="flex flex-wrap gap-1">
-                  <span className="inline-block bg-primary text-primary-foreground px-2 py-1 rounded-full text-xs font-medium shadow-md">
-                    {book.book.length}
-                  </span>
-                  <span className="inline-block bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium shadow-md">
-                    {book.book.complexity}
-                  </span>
-                  {book.book.year && (
-                    <span className="inline-block bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-medium shadow-md">
-                      {book.book.year} год
-                    </span>
+          {/* Основной блок с книгой */}
+          <div className="bg-card rounded-2xl shadow-lg p-4 md:p-8">
+            
+            {/* Заголовок и кнопки */}
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex-1 min-w-0 mr-4">
+                <h1 className="text-2xl md:text-3xl text-foreground mb-3">
+                  {bookInfo.title}
+                </h1>
+                <p className="text-xl text-muted-foreground">
+                  {bookInfo.author}
+                </p>
+              </div>
+              
+              {/* Кнопки действий */}
+              <div className="flex gap-1 sm:gap-2 flex-shrink-0">
+                <button className="p-1 sm:p-2 bg-muted rounded-lg hover:bg-accent transition-colors">
+                  <Heart size={18} className="sm:size-5" />
+                </button>
+                <button className="p-1 sm:p-2 bg-muted rounded-lg hover:bg-accent transition-colors">
+                  <Share2 size={18} className="sm:size-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Чипы */}
+            <div className="flex flex-wrap gap-2 mb-6">
+              <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-section-development/10 text-section-development rounded-full text-xs sm:text-sm">
+                {bookInfo.readingComplexity} сложность
+              </span>
+              {bookInfo.year && (
+                <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-muted text-muted-foreground rounded-full text-xs sm:text-sm">
+                  <Calendar size={12} className="sm:size-[14px] mr-1" />
+                  {bookInfo.year}
+                </span>
+              )}
+              <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-muted text-muted-foreground rounded-full text-xs sm:text-sm">
+                <Clock size={12} className="sm:size-[14px] mr-1" />
+                {bookInfo.length}
+              </span>
+              {bookInfo.country && (
+                <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-muted text-muted-foreground rounded-full text-xs sm:text-sm">
+                  <Globe size={12} className="sm:size-[14px] mr-1" />
+                  {bookInfo.country}
+                </span>
+              )}
+              {bookInfo.rating && (
+                <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs sm:text-sm">
+                  <span className="mr-1">⭐</span>
+                  {bookInfo.rating}
+                </span>
+              )}
+            </div>
+
+            {/* Обложка и детали */}
+            <div className="flex flex-col lg:flex-row gap-8 mb-6">
+              
+              {/* Обложка */}
+              <div className="lg:w-2/5">
+                {bookInfo.coverImage && !imageError ? (
+                  <div className="w-full max-w-sm mx-auto lg:max-w-full relative rounded-lg overflow-hidden shadow-lg">
+                    <div className="aspect-[3/4] relative">
+                      <Image 
+                        src={bookInfo.coverImage}
+                        alt={`Обложка книги "${bookInfo.title}"`}
+                        fill
+                        className="object-cover"
+                        onError={() => setImageError(true)}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="w-full max-w-sm mx-auto lg:max-w-full aspect-[3/4] bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center shadow-lg">
+                    <div className="text-center p-6">
+                      <Book className="w-16 h-16 text-blue-600 mb-4 mx-auto" />
+                      <p className="text-sm text-blue-800 font-medium">{bookInfo.title}</p>
+                      <p className="text-xs text-blue-600 mt-1">{bookInfo.author}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Детали книги */}
+              <div className="lg:w-3/5">
+                <div className="space-y-4">
+                  
+                  {/* Информация */}
+                  <div>
+                    <h3 className="text-lg text-foreground mb-2">Информация</h3>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Автор:</span>
+                        <span className="text-foreground">{bookInfo.author}</span>
+                      </div>
+                      {bookInfo.year && (
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Год:</span>
+                          <span className="text-foreground">{bookInfo.year}</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Страниц:</span>
+                        <span className="text-foreground">{bookInfo.length}</span>
+                      </div>
+                      {bookInfo.country && (
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Страна:</span>
+                          <span className="text-foreground">{bookInfo.country}</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Сложность:</span>
+                        <span className="text-foreground">{bookInfo.readingComplexity}</span>
+                      </div>
+                      {bookInfo.publisher && (
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Издательство:</span>
+                          <span className="text-foreground">{bookInfo.publisher}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Жанры */}
+                  <div>
+                    <h3 className="text-lg text-foreground mb-2">Жанры</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {bookInfo.genres.map((genre, index) => (
+                        <span key={index} className="px-2 py-1 bg-primary-foreground text-primary rounded text-sm">
+                          {genre}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Особенности */}
+                  {bookInfo.features && bookInfo.features.length > 0 && (
+                    <div>
+                      <h3 className="text-lg text-foreground mb-2">Особенности</h3>
+                      <ul className="text-sm text-muted-foreground space-y-1">
+                        {bookInfo.features.map((feature, index) => (
+                          <li key={index} className="flex items-start">
+                            <span className="text-primary mr-2">•</span>
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   )}
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Детали книги */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3 md:mb-4">
-            <div className="flex items-center space-x-1 text-xs md:text-sm text-card-foreground">
-              <Clock size={14} className="text-primary flex-shrink-0" />
-              <span>{book.book.length}</span>
-            </div>
-            {book.book.country && (
-              <div className="flex items-center space-x-1 text-xs md:text-sm text-card-foreground">
-                <Globe size={14} className="text-primary flex-shrink-0" />
-                <span>{book.book.country}</span>
+            {/* Кнопка "Читать" */}
+            <div className="mb-6 p-4 bg-gradient-to-r from-primary/20 to-primary/30 rounded-xl border border-primary/20">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="text-center sm:text-left">
+                  <p className="text-sm text-muted-foreground">Доступно для чтения</p>
+                  <p className="text-2xl font-bold text-primary">Литрес, MyBook, Bookmate</p>
+                </div>
+                <button 
+                  onClick={() => handleBuyClick('litres')}
+                  className="
+                    flex items-center justify-center gap-2
+                    px-4 py-3 sm:py-2
+                    bg-green-600 text-white
+                    rounded-lg
+                    font-medium
+                    hover:bg-green-700
+                    transition-colors
+                    w-full sm:w-auto
+                  "
+                >
+                  <BookOpen size={20} />
+                  <span>Читать онлайн</span>
+                </button>
               </div>
-            )}
+            </div>
+
+            {/* Описание книги */}
+            <div className="mb-6">
+              <h2 className="text-xl text-foreground mb-3">О книге</h2>
+              <p className="text-muted-foreground leading-normal text-sm md:text-base font-medium">
+                {bookInfo.description}
+              </p>
+            </div>
+
+            {/* Почему подходит */}
+            <div className="mb-2">
+              <h2 className="text-xl text-foreground mb-3">Почему это хорошая рекомендация</h2>
+              <p className="text-muted-foreground leading-normal text-sm md:text-base font-medium">
+                {bookInfo.whyMatch}
+              </p>
+            </div>
           </div>
 
-          {/* Жанры */}
-          <div className="mb-3 md:mb-4">
-            <h4 className="font-semibold text-card-foreground mb-1 md:mb-2 text-sm md:text-base flex items-center space-x-2">
-              <span className="w-2 h-2 bg-primary rounded-full"></span>
-              <span>Жанры:</span>
-            </h4>
-            <div className="flex flex-wrap gap-1">
-              {book.book.genre.map((genre, index) => (
-                <span key={index} className="bg-muted text-muted-foreground px-2 py-1 rounded-lg text-xs">
-                  {genre}
-                </span>
+          {/* Кнопки действий - АДАПТИВНЫЕ - ИДЕНТИЧНО MovieResult */}
+          <div className="bg-card rounded-2xl shadow-lg p-4 md:p-6">
+            <div className="flex flex-col sm:flex-row gap-3">
+              {/* Кнопки сохранить и поделиться */}
+              <div className="flex flex-col xs:flex-row gap-3 flex-1">
+                <button
+                  onClick={handleSave}
+                  disabled={saved}
+                  className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl transition-colors flex-1 min-w-0 ${
+                    saved
+                      ? 'bg-green-500 text-white cursor-not-allowed'
+                      : 'bg-primary text-primary-foreground hover:bg-primary/90'
+                  }`}
+                >
+                  {saved ? <Check size={18} className="flex-shrink-0" /> : <Heart size={18} className="flex-shrink-0" />}
+                  <span className="font-semibold text-sm sm:text-base truncate">
+                    {saved ? 'Сохранено!' : 'Сохранить книгу'}
+                  </span>
+                </button>
+                <button className="flex items-center justify-center gap-2 py-3 px-4 bg-secondary text-secondary-foreground rounded-xl font-semibold hover:bg-secondary/90 transition-colors flex-1 min-w-0">
+                  <Share2 size={18} className="flex-shrink-0" />
+                  <span className="text-sm sm:text-base truncate">Поделиться</span>
+                </button>
+              </div>
+
+              {/* Кнопка другой вариант */}
+              <button
+                onClick={onGenerateAnother}
+                className="flex items-center justify-center gap-2 py-3 px-4 border border-border text-foreground rounded-xl font-semibold hover:bg-accent transition-colors min-w-0"
+              >
+                <RotateCw size={18} className="flex-shrink-0" />
+                <span className="text-sm sm:text-base truncate">Другой вариант</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Блок маркетплейсов */}
+          {/* <div className="bg-card rounded-2xl shadow-lg p-4 md:p-6">
+            <h3 className="text-lg font-semibold text-foreground mb-4">Где купить</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {[
+                { name: 'Литрес', key: 'litres' },
+                { name: 'Book24', key: 'book24' },
+                { name: 'Лабиринт', key: 'labyrinth' },
+                { name: 'Читай-город', key: 'chitai-gorod' },
+                { name: 'MyBook', key: 'mybook' },
+                { name: 'Bookmate', key: 'bookmate' },
+                { name: 'Амазон', key: 'amazon' },
+                { name: 'OZON', key: 'ozon' }
+              ].map(({ name, key }) => (
+                <button
+                  key={key}
+                  onClick={() => handleBuyClick(key)}
+                  className="p-3 bg-muted border border-border rounded-lg hover:border-primary hover:bg-accent transition-all text-sm font-medium text-center"
+                >
+                  {name}
+                </button>
               ))}
             </div>
-          </div>
-
-          {/* Описание */}
-          <div className="mb-3 md:mb-4">
-            <p className="text-sm md:text-base text-card-foreground leading-relaxed">
-              {book.book.description}
-            </p>
-          </div>
-
-          {/* Особенности */}
-          {book.book.features && book.book.features.length > 0 && (
-            <div className="mb-3 md:mb-4">
-              <h4 className="font-semibold text-card-foreground mb-1 md:mb-2 text-sm md:text-base flex items-center space-x-2">
-                <span className="w-2 h-2 bg-primary rounded-full"></span>
-                <span>Особенности:</span>
-              </h4>
-              <div className="flex flex-wrap gap-1">
-                {book.book.features.map((feature, index) => (
-                  <span key={index} className="bg-blue-100 text-blue-800 px-2 py-1 rounded-lg text-xs">
-                    {feature}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Почему подходит */}
-          <div className="
-            bg-accent
-            rounded-lg
-            p-3 md:p-4
-            border border-border
-          ">
-            <h4 className="font-semibold text-accent-foreground mb-1 md:mb-2 text-sm md:text-base flex items-center space-x-2">
-              <span className="w-2 h-2 bg-secondary rounded-full"></span>
-              <span>Почему вам подойдет:</span>
-            </h4>
-            <p className="text-xs md:text-sm text-accent-foreground leading-relaxed">
-              {book.book.whyMatch}
-            </p>
-          </div>
-        </div>
-
-        {/* Кнопки действий */}
-        <div className="flex flex-col sm:flex-row gap-2 md:gap-3 justify-center">
-          <button
-            onClick={handleBuyClick}
-            className="
-              px-3 py-2 md:px-4 md:py-2 lg:px-6 lg:py-3
-              rounded-lg md:rounded-xl
-              font-semibold
-              bg-green-600 hover:bg-green-700
-              text-white
-              transition-all
-              shadow-lg hover:shadow-xl
-              hover:scale-105
-              flex items-center justify-center space-x-2
-              text-xs md:text-sm lg:text-base
-              flex-1 sm:flex-none
-            "
-          >
-            <span>🛒 Купить на Литрес</span>
-          </button>
-
-          <button
-            onClick={handleSave}
-            disabled={saved}
-            className={`
-              px-3 py-2 md:px-4 md:py-2 lg:px-6 lg:py-3
-              rounded-lg md:rounded-xl
-              font-semibold
-              transition-all
-              flex items-center justify-center space-x-2
-              text-xs md:text-sm lg:text-base
-              flex-1 sm:flex-none
-              shadow-lg
-              ${saved
-                ? 'bg-green-500 text-white cursor-not-allowed'
-                : 'bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105'
-              }
-            `}
-          >
-            {saved ? <Check size={14} className="md:size-4" /> : <Save size={14} className="md:size-4" />}
-            <span className="truncate">{saved ? 'Сохранено!' : 'Сохранить книгу'}</span>
-          </button>
-
-          <button
-            onClick={onGenerateAnother}
-            className="
-              px-3 py-2 md:px-4 md:py-2 lg:px-6 lg:py-3
-              rounded-lg md:rounded-xl
-              font-semibold
-              bg-secondary
-              hover:bg-secondary/90
-              text-secondary-foreground
-              transition-all
-              shadow-lg hover:shadow-xl
-              hover:scale-105
-              flex items-center justify-center space-x-2
-              text-xs md:text-sm lg:text-base
-              flex-1 sm:flex-none
-            "
-          >
-            <RotateCw size={14} className="md:size-4" />
-            <span>Другой вариант</span>
-          </button>
-        </div>
-
-        {/* Интеграция с маркетплейсами */}
-        <div className="mt-4 md:mt-6 pt-4 md:pt-6 border-t border-border">
-          <h4 className="font-semibold text-foreground mb-2 md:mb-3 text-sm md:text-base flex items-center space-x-2">
-            <span className="w-2 h-2 bg-primary rounded-full"></span>
-            <span>Где купить:</span>
-          </h4>
-          <div className="flex flex-wrap gap-1 md:gap-2">
-            {['Литрес', 'Book24', 'Лабиринт', 'MyBook', 'Читай-город'].map(market => (
-              <button
-                key={market}
-                className="
-                  px-2 py-1 md:px-3 md:py-2
-                  rounded-lg
-                  bg-card
-                  border border-border
-                  hover:border-primary
-                  hover:bg-accent
-                  transition-all
-                  text-xs md:text-sm
-                  flex-shrink-0
-                  shadow-sm
-                  hover:shadow-md
-                  hover:scale-105
-                "
-                onClick={() => console.log(`Открываем ${market}`)}
-              >
-                {market}
-              </button>
-            ))}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

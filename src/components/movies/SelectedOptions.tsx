@@ -72,7 +72,7 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
         {/* Контекст */}
         {request.context && (
           <span className="
-            bg-primary/20 text-primary
+            bg-section-development/20 text-section-development
             px-2 py-1 md:px-3 md:py-1
             rounded-full
             text-xs md:text-sm

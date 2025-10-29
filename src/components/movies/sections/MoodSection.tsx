@@ -7,7 +7,7 @@ interface MoodSectionProps {
   onChange: (updates: Partial<MovieRequest>) => void;
 }
 
-const moodOptions = [
+export const moodOptions = [
   { 
     id: 'funny', 
     label: 'Посмеяться', 

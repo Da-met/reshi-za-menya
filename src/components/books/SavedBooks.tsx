@@ -17,18 +17,18 @@ const mockSavedBooks: SavedBook[] = [
         author: 'Михаил Булгаков',
         description: 'Великий роман о добре и зле, любви и творчестве, где реальность переплетается с фантастикой.',
         whyMatch: 'Идеально подходит для любителей глубокой прозы с философским подтекстом и элементами мистики.',
-        genre: ['классика', 'мистика', 'роман'],
+        genres: ['классика', 'мистика', 'роман'],
         length: '480 страниц',
-        complexity: 'Средняя',
+        readingComplexity: 'Средняя',
         year: 1967,
         country: 'Россия'
       },
       generationId: 'gen-1'
     },
     requestData: {
-      mood: 'think',
-      interests: ['classic', 'fiction'],
-      volume: 'single'
+      readingMood: 'think',
+      preferredGenres: ['classic', 'fiction'],
+      bookLength: 'single'
     },
     createdAt: new Date('2024-01-15'),
     userComment: 'Невероятно глубокая книга, перечитываю каждый год и каждый раз нахожу что-то новое.',
@@ -45,18 +45,18 @@ const mockSavedBooks: SavedBook[] = [
         author: 'Джоан Роулинг',
         description: 'Первая книга знаменитой серии о юном волшебнике Гарри Поттере.',
         whyMatch: 'Отлично подходит для семейного чтения или для погружения в мир магии и приключений.',
-        genre: ['фэнтези', 'приключения', 'детская'],
+        genres: ['фэнтези', 'приключения', 'детская'],
         length: '320 страниц',
-        complexity: 'Легкая',
+        readingComplexity: 'Легкая',
         year: 1997,
         country: 'Великобритания'
       },
       generationId: 'gen-2'
     },
     requestData: {
-      mood: 'entertain',
-      interests: ['fantasy', 'adventure'],
-      volume: 'long_series'
+      readingMood: 'entertain',
+      preferredGenres: ['fantasy', 'adventure'],
+      bookLength: 'long_series'
     },
     createdAt: new Date('2024-01-10')
   }
@@ -204,7 +204,7 @@ export function SavedBooks() {
 
                 {/* Жанры */}
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {book.genre.slice(0, 3).map((genre) => (
+                  {book.genres.slice(0, 3).map((genre) => (
                     <span key={genre} className="px-2 py-1 bg-primary-foreground text-primary rounded text-sm">
                       {genre}
                     </span>

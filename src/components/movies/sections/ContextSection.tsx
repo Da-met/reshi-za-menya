@@ -1,6 +1,8 @@
 'use client';
 
+
 import { MovieRequest, MovieOption } from '@/types/movies';
+import { moodOptions } from './MoodSection';
 
 interface ContextSectionProps {
   request: MovieRequest;
@@ -98,7 +100,8 @@ export function ContextSection({ request, onChange }: ContextSectionProps) {
       {request.context && (
         <div className="mt-3 md:mt-4 p-2 md:p-3 bg-accent rounded-lg">
           <p className="text-xs md:text-sm text-accent-foreground">
-            💡 Часто выбирают: {contextOptions.find(c => c.id === request.context)?.hints?.join(', ')}
+            ✅ Автоматически установлено: {contextOptions.find(c => c.id === request.context)?.label}
+            {request.mood && `, Настроение: ${moodOptions.find(m => m.id === request.mood)?.label || 'не найдено'}`}
           </p>
         </div>
       )}

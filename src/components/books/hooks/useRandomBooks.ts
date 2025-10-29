@@ -6,40 +6,40 @@ export function useRandomBooks() {
   const generateRandomRequest = (): BookRequest => {
     const popularCombinations = [
       { 
-        mood: 'relax', 
-        interests: ['Детектив', 'Юмор', 'Современная проза'],
-        volume: 'single',
-        pace: 'moderate',
-        emotional: 'light',
-        features: ['бестселлер', 'современный автор'],
-        region: 'russian',
-        period: 'modern',
-        audience: 'adult',
-        popularity: 'bestseller'
+        readingMood: 'relax', 
+        preferredGenres: ['Детектив', 'Юмор', 'Современная проза'],
+        bookLength: 'single',
+        narrativePace: 'moderate',
+        emotionalIntensity: 'light',
+        specialFeatures: ['бестселлер', 'современный автор'],
+        authorRegion: 'russian',
+        publicationPeriod: 'modern',
+        targetAudience: 'adult',
+        popularityLevel: 'bestseller'
       },
       { 
-        mood: 'inspire', 
-        interests: ['Биографии', 'Саморазвитие', 'Психология'],
-        volume: 'single',
-        pace: 'moderate',
-        emotional: 'emotional',
-        features: ['интеллектуальная', 'практическая польза'],
-        region: 'europe_america',
-        period: 'recent',
-        audience: 'adult',
-        popularity: 'bestseller'
+        readingMood: 'inspire', 
+        preferredGenres: ['Биографии', 'Саморазвитие', 'Психология'],
+        bookLength: 'single',
+        narrativePace: 'moderate',
+        emotionalIntensity: 'emotional',
+        specialFeatures: ['интеллектуальная', 'практическая польза'],
+        authorRegion: 'europe_america',
+        publicationPeriod: 'recent',
+        targetAudience: 'adult',
+        popularityLevel: 'bestseller'
       },
       { 
-        mood: 'think', 
-        interests: ['Философия', 'Наука', 'История'],
-        volume: 'single',
-        pace: 'leisurely',
-        emotional: 'emotional',
-        features: ['интеллектуальная', 'философская глубина'],
-        region: 'europe_america',
-        period: '20th',
-        audience: 'adult',
-        popularity: 'average'
+        readingMood: 'think', 
+        preferredGenres: ['Философия', 'Наука', 'История'],
+        bookLength: 'single',
+        narrativePace: 'leisurely',
+        emotionalIntensity: 'emotional',
+        specialFeatures: ['интеллектуальная', 'философская глубина'],
+        authorRegion: 'europe_america',
+        publicationPeriod: '20th',
+        targetAudience: 'adult',
+        popularityLevel: 'average'
       }
       // ... остальные комбинации
     ];
@@ -50,16 +50,16 @@ export function useRandomBooks() {
 
     // Возвращаем ВСЕ поля, даже если некоторые undefined
     return {
-      mood: randomCombination.mood,
-      interests: randomCombination.interests,
-      volume: randomCombination.volume,
-      pace: randomCombination.pace,
-      emotional: randomCombination.emotional,
-      features: randomCombination.features,
-      region: randomCombination.region,
-      period: randomCombination.period,
-      audience: randomCombination.audience,
-      popularity: randomCombination.popularity
+      readingMood: randomCombination.readingMood,
+      preferredGenres: randomCombination.preferredGenres,
+      bookLength: randomCombination.bookLength,
+      narrativePace: randomCombination.narrativePace,
+      emotionalIntensity: randomCombination.emotionalIntensity,
+      specialFeatures: randomCombination.specialFeatures,
+      authorRegion: randomCombination.authorRegion,
+      publicationPeriod: randomCombination.publicationPeriod,
+      targetAudience: randomCombination.targetAudience,
+      popularityLevel: randomCombination.popularityLevel
     };
   };
 

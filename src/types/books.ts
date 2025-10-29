@@ -1,19 +1,19 @@
 export interface BookRequest {
   // Основные параметры
-  mood?: string;           // "relax" | "inspire" | "think" | "entertain" | "learn" | "emotions" | "escape" | "any"
-  interests?: string[];    // массив жанров и тем
-  volume?: string;         // "single" | "short_series" | "long_series" | "any"
+  readingMood?: string;           // ~ mood ~     "relax" | "inspire" | "think" | "entertain" | "learn" | "emotions" | "escape" | "any"
+  preferredGenres?: string[];    // ~ interests ~       массив жанров и тем
+  bookLength?: string;           // ~ volume ~       "single" | "short_series" | "long_series" | "any"
   
   // Характеристики
-  pace?: string;           // "dynamic" | "moderate" | "leisurely" | "any"
-  emotional?: string;      // "light" | "emotional" | "dramatic" | "any"
-  features?: string[];     // особенности книги
+  narrativePace?: string;        // ~ pace ~        "dynamic" | "moderate" | "leisurely" | "any"
+  emotionalIntensity?: string;   // ~ emotional ~         "light" | "emotional" | "dramatic" | "any"
+  specialFeatures?: string[];    // ~ features ~          особенности книги
   
   // Фильтры
-  region?: string;         // "russian" | "europe_america" | "asia" | "other" | "any"
-  period?: string;         // "modern" | "recent" | "20th" | "classic" | "any"
-  audience?: string;       // "child" | "teen" | "adult" | "any"
-  popularity?: string;     // "bestseller" | "average" | "hidden_gem" | "any"
+  authorRegion?: string;         // ~ region ~           "russian" | "europe_america" | "asia" | "other" | "any"
+  publicationPeriod?: string;    // ~ period ~            "modern" | "recent" | "20th" | "classic" | "any"
+  targetAudience?: string;       // ~ audience ~             "child" | "teen" | "adult" | "any"
+  popularityLevel?: string;     // ~ popularity ~           "bestseller" | "average" | "hidden_gem" | "any"
 }
 
 export interface BookResponse {
@@ -23,13 +23,30 @@ export interface BookResponse {
     author: string;
     description: string;
     whyMatch: string;
-    genre: string[];
+    genres: string[];             // ~ genre ~ 
     length: string;
-    complexity: string;
+    readingComplexity: string;    // ~ complexity ~ 
     year?: number;
     country?: string;
     features?: string[];
-    cover?: string; //  обложка книги
+    coverImage?: string;          // ~ cover ~ 
+
+    // Дополнительные поля ТОЛЬКО для ответа
+    pages?: number;
+    language?: string;
+    publisher?: string;
+    isbn?: string;
+    rating?: number;
+    awards?: string[];
+
+    // Партнерские ссылки
+    affiliateLinks?: {
+      litres?: string;
+      book24?: string;
+      labyrinth?: string;
+      mybook?: string;
+      bookmate?: string;
+    };
   };
   generationId: string;
 }

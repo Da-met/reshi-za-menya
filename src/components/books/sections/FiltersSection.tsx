@@ -67,12 +67,12 @@ const popularityOptions = [
 
 export function FiltersSection({ request, onChange }: FiltersSectionProps) {
   const toggleFeature = (feature: string) => {
-    const currentFeatures = request.features || [];
+    const currentFeatures = request.specialFeatures || [];
     const newFeatures = currentFeatures.includes(feature)
       ? currentFeatures.filter(f => f !== feature)
       : [...currentFeatures, feature];
     
-    onChange({ features: newFeatures });
+    onChange({ specialFeatures: newFeatures });
   };
 
   const handleSingleSelect = (field: keyof BookRequest, value: string) => {
@@ -104,9 +104,9 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
           {volumeOptions.map((volume) => (
             <button
               key={volume.id}
-              onClick={() => handleSingleSelect('volume', volume.id)}
+              onClick={() => handleSingleSelect('bookLength', volume.id)}
               className={`p-3 rounded-lg border text-center transition-all ${
-                request.volume === volume.id
+                request.bookLength === volume.id
                   ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                   : 'bg-card border-border hover:border-primary hover:bg-accent'
               }`}
@@ -124,9 +124,9 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
           {paceOptions.map((pace) => (
             <button
               key={pace.id}
-              onClick={() => handleSingleSelect('pace', pace.id)}
+              onClick={() => handleSingleSelect('narrativePace', pace.id)}
               className={`p-3 rounded-lg border text-center transition-all ${
-                request.pace === pace.id
+                request.narrativePace === pace.id
                   ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                   : 'bg-card border-border hover:border-primary hover:bg-accent'
               }`}
@@ -144,9 +144,9 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
           {emotionalOptions.map((emotional) => (
             <button
               key={emotional.id}
-              onClick={() => handleSingleSelect('emotional', emotional.id)}
+              onClick={() => handleSingleSelect('emotionalIntensity', emotional.id)}
               className={`p-3 rounded-lg border text-center transition-all ${
-                request.emotional === emotional.id
+                request.emotionalIntensity === emotional.id
                   ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                   : 'bg-card border-border hover:border-primary hover:bg-accent'
               }`}
@@ -160,7 +160,7 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
       {/* Особенности */}
       <div>
         <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">
-          🌟 Особенности {request.features && <span className="text-primary">({request.features.length})</span>}
+          🌟 Особенности {request.specialFeatures && <span className="text-primary">({request.specialFeatures.length})</span>}
         </h4>
         <div className="flex flex-wrap gap-2">
           {featureOptions.map((feature) => (
@@ -168,7 +168,7 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
               key={feature}
               onClick={() => toggleFeature(feature)}
               className={`px-3 py-2 rounded-lg border transition-all text-sm ${
-                request.features?.includes(feature)
+                request.specialFeatures?.includes(feature)
                   ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                   : 'bg-card border-border hover:border-primary hover:bg-accent'
               }`}
@@ -186,9 +186,9 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
           {regionOptions.map((region) => (
             <button
               key={region.id}
-              onClick={() => handleSingleSelect('region', region.id)}
+              onClick={() => handleSingleSelect('authorRegion', region.id)}
               className={`p-3 rounded-lg border text-center transition-all ${
-                request.region === region.id
+                request.authorRegion === region.id
                   ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                   : 'bg-card border-border hover:border-primary hover:bg-accent'
               }`}
@@ -206,9 +206,9 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
           {periodOptions.map((period) => (
             <button
               key={period.id}
-              onClick={() => handleSingleSelect('period', period.id)}
+              onClick={() => handleSingleSelect('publicationPeriod', period.id)}
               className={`p-3 rounded-lg border text-center transition-all ${
-                request.period === period.id
+                request.publicationPeriod === period.id
                   ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                   : 'bg-card border-border hover:border-primary hover:bg-accent'
               }`}
@@ -226,9 +226,9 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
           {audienceOptions.map((audience) => (
             <button
               key={audience.id}
-              onClick={() => handleSingleSelect('audience', audience.id)}
+              onClick={() => handleSingleSelect('targetAudience', audience.id)}
               className={`p-3 rounded-lg border text-center transition-all ${
-                request.audience === audience.id
+                request.targetAudience === audience.id
                   ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                   : 'bg-card border-border hover:border-primary hover:bg-accent'
               }`}
@@ -246,9 +246,9 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
           {popularityOptions.map((popularity) => (
             <button
               key={popularity.id}
-              onClick={() => handleSingleSelect('popularity', popularity.id)}
+              onClick={() => handleSingleSelect('popularityLevel', popularity.id)}
               className={`p-3 rounded-lg border text-center transition-all ${
-                request.popularity === popularity.id
+                request.popularityLevel === popularity.id
                   ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                   : 'bg-card border-border hover:border-primary hover:bg-accent'
               }`}

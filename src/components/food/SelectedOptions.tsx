@@ -53,7 +53,7 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
       
       <div className="flex flex-wrap gap-1 md:gap-2">
         {/* Режим ввода */}
-        <span className="bg-primary/20 text-primary px-2 py-1 md:px-3 md:py-1 rounded-full text-xs md:text-sm font-medium flex items-center space-x-1 flex-shrink-0">
+        <span className="bg-section-development/20 text-section-development px-2 py-1 md:px-3 md:py-1 rounded-full text-xs md:text-sm font-medium flex items-center space-x-1 flex-shrink-0">
           {request.mode === 'products' ? <Utensils size={12} /> : <Search size={12} />}
           <span>{request.mode === 'products' ? 'По продуктам' : 'По названию'}</span>
         </span>

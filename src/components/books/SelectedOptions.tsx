@@ -71,16 +71,16 @@ const popularityLabels: Record<string, string> = {
 
 export function SelectedOptions({ request }: SelectedOptionsProps) {
   const hasSelections =
-    request.mood ||
-    request.interests?.length ||
-    request.volume ||
-    request.pace ||
-    request.emotional ||
-    request.features?.length ||
-    request.region ||
-    request.period ||
-    request.audience ||
-    request.popularity;
+    request.readingMood ||
+    request.preferredGenres?.length ||
+    request.bookLength ||
+    request.narrativePace ||
+    request.emotionalIntensity ||
+    request.specialFeatures?.length ||
+    request.authorRegion ||
+    request.publicationPeriod ||
+    request.targetAudience ||
+    request.popularityLevel;
 
   if (!hasSelections) {
     return null;
@@ -88,16 +88,16 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
 
   // Считаем общее количество выбранных параметров
   const totalSelections =
-    (request.mood ? 1 : 0) +
-    (request.interests?.length || 0) +
-    (request.volume ? 1 : 0) +
-    (request.pace ? 1 : 0) +
-    (request.emotional ? 1 : 0) +
-    (request.features?.length || 0) +
-    (request.region ? 1 : 0) +
-    (request.period ? 1 : 0) +
-    (request.audience ? 1 : 0) +
-    (request.popularity ? 1 : 0);
+    (request.readingMood ? 1 : 0) +
+    (request.preferredGenres?.length || 0) +
+    (request.bookLength ? 1 : 0) +
+    (request.narrativePace ? 1 : 0) +
+    (request.emotionalIntensity ? 1 : 0) +
+    (request.specialFeatures?.length || 0) +
+    (request.authorRegion ? 1 : 0) +
+    (request.publicationPeriod ? 1 : 0) +
+    (request.targetAudience ? 1 : 0) +
+    (request.popularityLevel ? 1 : 0);
 
   return (
     <div className="bg-card rounded-xl md:rounded-2xl shadow-lg p-4 md:p-6 border-l-4 border-primary">
@@ -108,9 +108,9 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
       {/* Контейнер для выбранных опций */}
       <div className="flex flex-wrap gap-1 md:gap-2">
         {/* Настроение */}
-        {request.mood && request.mood !== 'any' && (
+        {request.readingMood && request.readingMood !== 'any' && (
           <span className="
-            bg-primary/20 text-primary
+            bg-section-development/20 text-section-development
             px-2 py-1 md:px-3 md:py-1
             rounded-full
             text-xs md:text-sm
@@ -119,13 +119,13 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
             flex-shrink-0
           ">
             <Heart size={10} className="md:size-[14px] flex-shrink-0" />
-            <span className="truncate">{moodLabels[request.mood]}</span>
+            <span className="truncate">{moodLabels[request.readingMood]}</span>
           </span>
         )}
 
         {/* Жанры и интересы */}
-        {request.interests?.map(interest => (
-          <span key={interest} className="
+        {request.preferredGenres?.map(preferredGenres => (
+          <span key={preferredGenres} className="
             bg-blue-100 text-blue-800
             px-2 py-1 md:px-3 md:py-1
             rounded-full
@@ -134,12 +134,12 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
             flex-shrink-0
           ">
             <BookOpen size={10} className="md:size-[14px] flex-shrink-0" />
-            <span className="truncate">{interest}</span>
+            <span className="truncate">{preferredGenres}</span>
           </span>
         ))}
 
         {/* Объем */}
-        {request.volume && request.volume !== 'any' && (
+        {request.bookLength && request.bookLength !== 'any' && (
           <span className="
             bg-green-100 text-green-800
             px-2 py-1 md:px-3 md:py-1
@@ -149,12 +149,12 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
             flex-shrink-0
           ">
             <Clock size={10} className="md:size-[14px] flex-shrink-0" />
-            <span className="truncate">{volumeLabels[request.volume]}</span>
+            <span className="truncate">{volumeLabels[request.bookLength]}</span>
           </span>
         )}
 
         {/* Темп */}
-        {request.pace && request.pace !== 'any' && (
+        {request.narrativePace && request.narrativePace !== 'any' && (
           <span className="
             bg-purple-100 text-purple-800
             px-2 py-1 md:px-3 md:py-1
@@ -163,12 +163,12 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
             flex items-center space-x-1
             flex-shrink-0
           ">
-            <span className="truncate">🏃 {paceLabels[request.pace]}</span>
+            <span className="truncate">🏃 {paceLabels[request.narrativePace]}</span>
           </span>
         )}
 
         {/* Эмоциональная насыщенность */}
-        {request.emotional && request.emotional !== 'any' && (
+        {request.emotionalIntensity && request.emotionalIntensity !== 'any' && (
           <span className="
             bg-pink-100 text-pink-800
             px-2 py-1 md:px-3 md:py-1
@@ -177,12 +177,12 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
             flex items-center space-x-1
             flex-shrink-0
           ">
-            <span className="truncate">💫 {emotionalLabels[request.emotional]}</span>
+            <span className="truncate">💫 {emotionalLabels[request.emotionalIntensity]}</span>
           </span>
         )}
 
         {/* Особенности */}
-        {request.features?.map(feature => (
+        {request.specialFeatures?.map(feature => (
           <span key={feature} className="
             bg-yellow-100 text-yellow-800
             px-2 py-1 md:px-3 md:py-1
@@ -197,7 +197,7 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
         ))}
 
         {/* Регион */}
-        {request.region && request.region !== 'any' && (
+        {request.authorRegion && request.authorRegion !== 'any' && (
           <span className="
             bg-indigo-100 text-indigo-800
             px-2 py-1 md:px-3 md:py-1
@@ -207,12 +207,12 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
             flex-shrink-0
           ">
             <Globe size={10} className="md:size-[14px] flex-shrink-0" />
-            <span className="truncate">{regionLabels[request.region]}</span>
+            <span className="truncate">{regionLabels[request.authorRegion]}</span>
           </span>
         )}
 
         {/* Период */}
-        {request.period && request.period !== 'any' && (
+        {request.publicationPeriod && request.publicationPeriod !== 'any' && (
           <span className="
             bg-orange-100 text-orange-800
             px-2 py-1 md:px-3 md:py-1
@@ -222,12 +222,12 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
             flex-shrink-0
           ">
             <Calendar size={10} className="md:size-[14px] flex-shrink-0" />
-            <span className="truncate">{periodLabels[request.period]}</span>
+            <span className="truncate">{periodLabels[request.publicationPeriod]}</span>
           </span>
         )}
 
         {/* Аудитория */}
-        {request.audience && request.audience !== 'any' && (
+        {request.targetAudience && request.targetAudience !== 'any' && (
           <span className="
             bg-teal-100 text-teal-800
             px-2 py-1 md:px-3 md:py-1
@@ -237,12 +237,12 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
             flex-shrink-0
           ">
             <Users size={10} className="md:size-[14px] flex-shrink-0" />
-            <span className="truncate">{audienceLabels[request.audience]}</span>
+            <span className="truncate">{audienceLabels[request.targetAudience]}</span>
           </span>
         )}
 
         {/* Популярность */}
-        {request.popularity && request.popularity !== 'any' && (
+        {request.popularityLevel && request.popularityLevel !== 'any' && (
           <span className="
             bg-red-100 text-red-800
             px-2 py-1 md:px-3 md:py-1
@@ -252,7 +252,7 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
             flex-shrink-0
           ">
             <Star size={10} className="md:size-[14px] flex-shrink-0" />
-            <span className="truncate">{popularityLabels[request.popularity]}</span>
+            <span className="truncate">{popularityLabels[request.popularityLevel]}</span>
           </span>
         )}
       </div>

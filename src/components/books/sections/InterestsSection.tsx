@@ -11,7 +11,7 @@ const fictionGenres = [
   'Фантастика', 'Фэнтези', 'Детектив', 'Триллер', 'Ужасы', 'Роман',
   'Приключения', 'Исторический', 'Современная проза', 'Классика',
   'Поэзия', 'Драма', 'Юмор', 'Мистика', 'Киберпанк', 'Постапокалипсис',
-  'Стимпанк', 'Магический реализм',
+  'Стимпанк', 'Магический реализм'
 ];
 
 const nonfictionGenres = [
@@ -23,25 +23,25 @@ const nonfictionGenres = [
 
 export function InterestsSection({ request, onChange }: InterestsSectionProps) {
   const toggleGenre = (genre: string) => {
-    const currentGenres = request.interests || [];
+    const currentGenres = request.preferredGenres || [];
     const newGenres = currentGenres.includes(genre)
       ? currentGenres.filter(g => g !== genre)
       : [...currentGenres, genre];
     
-    onChange({ interests: newGenres });
+    onChange({ preferredGenres: newGenres });
   };
 
   return (
     <div className="space-y-6 md:space-y-8">
       <div>
         <h3 className="
-          text-xl md:text-2xl lg:text-3xl font-accent 
+          text-xl md:text-2xl lg:text-3xl font-accent
           mb-3 md:mb-4 text-foreground
         ">
           Какие жанры и темы интересуют?
         </h3>
         <p className="text-sm md:text-base text-muted-foreground mb-4 md:mb-6">
-          Выберите любимые жанры — чем больше, тем точнее рекомендация
+          Мы уже подобрали 2 жанра под ваше настроение. Можете добавить ещё или изменить
         </p>
       </div>
       
@@ -56,7 +56,7 @@ export function InterestsSection({ request, onChange }: InterestsSectionProps) {
               key={genre}
               onClick={() => toggleGenre(genre)}
               className={`px-2 py-1 md:px-3 md:py-2 rounded-lg border transition-all text-xs md:text-sm ${
-                request.interests?.includes(genre)
+                request.preferredGenres?.includes(genre)
                   ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                   : 'bg-card border-border hover:border-primary hover:bg-accent'
               }`}
@@ -78,7 +78,7 @@ export function InterestsSection({ request, onChange }: InterestsSectionProps) {
               key={genre}
               onClick={() => toggleGenre(genre)}
               className={`px-2 py-1 md:px-3 md:py-2 rounded-lg border transition-all text-xs md:text-sm ${
-                request.interests?.includes(genre)
+                request.preferredGenres?.includes(genre)
                   ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                   : 'bg-card border-border hover:border-primary hover:bg-accent'
               }`}
@@ -89,17 +89,15 @@ export function InterestsSection({ request, onChange }: InterestsSectionProps) {
         </div>
       </div>
 
-      {/* Счетчик выбранных жанров */}
-      {request.interests && request.interests.length > 0 && (
-        <div className="p-3 bg-accent rounded-lg">
-          <p className="text-sm text-accent-foreground">
-            ✅ Выбрано жанров: <span className="font-bold">{request.interests.length}</span>
-            {request.interests.length < 2 && (
-              <span className="text-orange-600 ml-2">— добавьте ещё для лучших рекомендаций</span>
-            )}
-          </p>
-        </div>
-      )}
+      {/* Блок "Уже выбрано" - ПЕРЕНОСИМ ВНИЗ */}
+      <div className="p-3 bg-accent rounded-lg">
+        <p className="text-sm text-accent-foreground">
+          ✅ Уже выбрано жанров: <span className="font-bold">{request.preferredGenres?.length || 0}</span>
+          {request.preferredGenres && request.preferredGenres.length > 0 && (
+            <span>: {request.preferredGenres.join(', ')}</span>
+          )}
+        </p>
+      </div>
     </div>
   );
 }

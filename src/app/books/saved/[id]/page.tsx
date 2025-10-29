@@ -16,24 +16,24 @@ const mockBookData: SavedBook = {
       author: 'Михаил Булгаков',
       description: 'Великий роман о добре и зле, любви и творчестве, где реальность переплетается с фантастикой. Действие происходит в Москве 1930-х годов и в древнем Ершалаиме, где происходит история Понтия Пилата и Иешуа Га-Ноцри.',
       whyMatch: 'Идеально подходит для любителей глубокой прозы с философским подтекстом и элементами мистики. Книга заставляет задуматься о вечных вопросах добра и зла, свободы и ответственности.',
-      genre: ['классика', 'мистика', 'роман', 'философская проза'],
+      genres: ['классика', 'мистика', 'роман', 'философская проза'],
       length: '480 страниц',
-      complexity: 'Средняя',
+      readingComplexity: 'Средняя',
       year: 1967,
       country: 'Россия',
       features: ['Глубокий философский подтекст', 'Многослойный сюжет', 'Яркие персонажи', 'Сатирические элементы'],
-        cover: '/images/books/master-i-margarita.png'
+        coverImage: '/images/books/master-i-margarita.png'
     },
     generationId: 'gen-1'
   },
   requestData: {
-    mood: 'think',
-    interests: ['classic', 'fiction'],
-    volume: 'single',
-    pace: 'moderate',
-    emotional: 'dramatic',
-    period: 'classic',
-    audience: 'adult'
+    readingMood: 'think',
+    preferredGenres: ['classic', 'fiction'],
+    bookLength: 'single',
+    narrativePace: 'moderate',
+    emotionalIntensity: 'dramatic',
+    publicationPeriod: 'classic',
+    targetAudience: 'adult'
   },
   createdAt: new Date('2024-01-15'),
   userComment: 'Невероятно глубокая книга, перечитываю каждый год и каждый раз нахожу что-то новое. Особенно впечатляет образ Воланда и его свиты - гениальное воплощение сил зла, которые на самом деле восстанавливают справедливость.',
@@ -217,7 +217,7 @@ export default function BookDetailPage({ }: { params: Promise<{ id: string }> })
             {/* Чипы */}
             <div className="flex flex-wrap gap-2 mb-6">
               <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-primary/10 text-primary rounded-full text-xs sm:text-sm">
-                {bookInfo.complexity} сложность
+                {bookInfo.readingComplexity} сложность
               </span>
               <span className="inline-flex items-center px-2 sm:px-3 py-1 bg-muted text-muted-foreground rounded-full text-xs sm:text-sm">
                 <Calendar size={12} className="sm:size-[14px] mr-1" />
@@ -237,11 +237,11 @@ export default function BookDetailPage({ }: { params: Promise<{ id: string }> })
             <div className="flex flex-col lg:flex-row gap-8 mb-6">
               {/* Обложка */}
               <div className="lg:w-2/5">
-                {bookInfo.cover ? (
+                {bookInfo.coverImage ? (
                     <div className="w-full max-w-sm mx-auto lg:max-w-full relative rounded-lg overflow-hidden shadow-lg">
                     <div className="aspect-[3/4] relative">
                         <Image
-                        src={bookInfo.cover}
+                        src={bookInfo.coverImage}
                         alt={`Обложка книги "${bookInfo.title}"`}
                         fill
                         className="object-cover"
@@ -284,7 +284,7 @@ export default function BookDetailPage({ }: { params: Promise<{ id: string }> })
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Сложность:</span>
-                        <span className="text-foreground">{bookInfo.complexity}</span>
+                        <span className="text-foreground">{bookInfo.readingComplexity}</span>
                       </div>
                     </div>
                   </div>
@@ -293,7 +293,7 @@ export default function BookDetailPage({ }: { params: Promise<{ id: string }> })
                   <div>
                     <h3 className="text-lg text-foreground mb-2">Жанры</h3>
                     <div className="flex flex-wrap gap-2">
-                      {bookInfo.genre.map((genre, index) => (
+                      {bookInfo.genres.map((genre, index) => (
                         <span key={index} className="px-2 py-1 bg-primary-foreground text-primary rounded text-sm">
                           {genre}
                         </span>
@@ -364,39 +364,39 @@ export default function BookDetailPage({ }: { params: Promise<{ id: string }> })
             <h2 className="text-xl text-foreground mb-4">Детали запроса</h2>
 
             <div className="flex flex-wrap gap-2 mb-6">
-              {book.requestData.mood && (
+              {book.requestData.readingMood && (
                 <span className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">
                   <Heart size={12} className="mr-1" />
-                  {getMoodLabel(book.requestData.mood)}
+                  {getMoodLabel(book.requestData.readingMood)}
                 </span>
               )}
 
-              {book.requestData.pace && (
+              {book.requestData.narrativePace && (
                 <span className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
                   <Clock size={12} className="mr-1" />
-                  {getPaceLabel(book.requestData.pace)}
+                  {getPaceLabel(book.requestData.narrativePace)}
                 </span>
               )}
 
-              {book.requestData.audience && (
+              {book.requestData.targetAudience && (
                 <span className="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
                   <Users size={12} className="mr-1" />
-                  {getAudienceLabel(book.requestData.audience)}
+                  {getAudienceLabel(book.requestData.targetAudience)}
                 </span>
               )}
 
-              {book.requestData.volume && (
+              {book.requestData.bookLength && (
                 <span className="inline-flex items-center px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm">
                   <Book size={12} className="mr-1" />
-                  {book.requestData.volume === 'single' ? 'Одна книга' : 
-                   book.requestData.volume === 'short_series' ? 'Короткая серия' : 
+                  {book.requestData.bookLength === 'single' ? 'Одна книга' : 
+                   book.requestData.bookLength === 'short_series' ? 'Короткая серия' : 
                    'Длинная серия'}
                 </span>
               )}
 
-              {book.requestData.interests?.map((interest, index) => (
+              {book.requestData.preferredGenres?.map((preferredGenres, index) => (
                 <span key={index} className="px-3 py-1 bg-primary-foreground text-primary rounded-full text-sm">
-                  {interest}
+                  {preferredGenres}
                 </span>
               ))}
             </div>
