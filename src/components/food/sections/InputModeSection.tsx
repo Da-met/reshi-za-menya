@@ -132,14 +132,20 @@ export function InputModeSection({ request, onChange }: InputModeSectionProps) {
       setValidationError('Введите название блюда');
       return;
     }
-
+    
     const validation = validateDishName(dishInput);
     if (!validation.isValid) {
       setValidationError(validation.error || 'Некорректное название блюда');
       return;
     }
 
-    onChange({ dishName: dishInput.trim() });
+    onChange({ 
+      dishName: dishInput.trim(),
+      // Очищаем только фильтры, исключения оставляем
+      filters: {}
+      // excludeIngredients не трогаем!
+    });
+    
     setValidationError('');
     setShowDishSuggestions(false);
   };

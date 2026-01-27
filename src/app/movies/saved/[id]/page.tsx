@@ -241,6 +241,7 @@ export default function MovieDetailPage({ }: { params: Promise<{ id: string }> }
                   <div className="w-full max-w-sm mx-auto lg:max-w-full relative rounded-lg overflow-hidden shadow-lg">
                     <div className="aspect-[3/4] relative">
                     <Image
+                      fill
                       src={movie.movieData.recommendation.poster}
                       alt={movie.movieData.recommendation.title}
                       className="w-full h-full object-cover"
@@ -534,7 +535,7 @@ export default function MovieDetailPage({ }: { params: Promise<{ id: string }> }
           {/* Блок комментария - ИСПРАВЛЕННАЯ ВЕРСИЯ */}
           <div className="bg-card rounded-2xl shadow-lg p-4 md:p-8">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-xl font-medium">Мой комментарий</h2>
+              <h2 className="text-xl font-medium">Моя заметка</h2>
               {!isEditingComment && movie.userComment && (
                 <button
                   onClick={handleEditComment}

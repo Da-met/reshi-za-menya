@@ -24,6 +24,22 @@ export interface IngredientItem {
   category?: string;
 }
 
+
+// НОВЫЕ ТИПЫ ДЛЯ АДАПТАЦИОННЫХ ЗАМЕТОК
+export interface AdaptationNote {
+  type: 'key_ingredient_excluded' | 'ingredient_substitution' | 'diet_adaptation' | 'cooking_time_adjusted';
+  message: string;
+  original_ingredient?: string;
+  suggested_alternatives?: string[];
+  substituted_with?: string;
+}
+
+// НОВЫЙ ТИП ДЛЯ ЭФФЕКТИВНОСТИ ИНГРЕДИЕНТОВ
+export interface IngredientEfficiency {
+  available_used: string; // "85%"
+  minimal_additional: string; // "только соль и перец"
+}
+
 export interface FoodResponse {
   recipe: {
     id: string;
@@ -44,6 +60,13 @@ export interface FoodResponse {
       fats?: string;
     };
     tips?: string[];
+    // НОВЫЕ ПОЛЯ ↓
+    cuisine?: string;
+    dishType?: string;
+    servings?: string;
+    adaptationNotes?: AdaptationNote[];
+    ingredientEfficiency?: IngredientEfficiency;
+    whyPerfect?: string;
   };
   generationId: string;
 }

@@ -1,0 +1,149 @@
+'use client';
+
+import { SkincareRequest } from '@/types/skincare';
+
+interface FiltersSectionProps {
+  request: SkincareRequest;
+  onChange: (updates: Partial<SkincareRequest>) => void;
+}
+
+const budgets = [
+  'до 500₽',
+  '500-1000₽',
+  '1000-2000₽',
+  '2000-3000₽',
+  '3000-5000₽',
+  '5000-10000₽',
+  '10000+₽'
+];
+
+const ageGroups = [
+  { id: 'teen', label: 'Подросток (13-19)' },
+  { id: 'young', label: 'Молодая кожа (20-30)' },
+  { id: 'mature', label: 'Зрелая кожа (30-45)' },
+  { id: '40plus', label: '40+' },
+  { id: '50plus', label: '50+' }
+];
+
+const brands = [
+  'La Roche-Posay', 'Avene', 'Vichy', 'CeraVe', 'The Ordinary',
+  'Bioderma', 'Eucerin', 'L\'Oreal', 'Garnier', 'Nivea',
+  'Neutrogena', 'Clinique', 'Estee Lauder', 'Lancome', 'Shiseido'
+];
+
+export function FiltersSection({ request, onChange }: FiltersSectionProps) {
+  const toggleArrayItem = (array: string[] | undefined, item: string) => {
+    const current = array || [];
+    return current.includes(item)
+      ? current.filter(i => i !== item)
+      : [...current, item];
+  };
+
+  const handleSingleSelect = (field: keyof SkincareRequest, value: string) => {
+    if (request[field] === value) {
+      onChange({ [field]: undefined });
+    } else {
+      onChange({ [field]: value });
+    }
+  };
+
+  return (
+    <div className="space-y-6 md:space-y-8">
+      <div>
+        <h3 className="text-xl md:text-2xl lg:text-3xl font-accent mb-3 md:mb-4 text-foreground">
+          Дополнительные фильтры
+        </h3>
+        <p className="text-sm md:text-base text-muted-foreground mb-4 md:mb-6">
+          Уточните параметры для более точного поиска
+        </p>
+      </div>
+
+      {/* Бюджет */}
+      <div>
+        <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">💰 Бюджет</h4>
+        <div className="flex flex-wrap gap-1 md:gap-2">
+          {budgets.map((budget) => (
+            <button
+              key={budget}
+              onClick={() => handleSingleSelect('budget', budget)}
+              className={`px-2 py-1 md:px-4 md:py-2 rounded-lg border transition-all text-xs md:text-sm ${
+                request.budget === budget
+                  ? 'bg-primary text-primary-foreground border-primary shadow-sm'
+                  : 'bg-card border-border hover:border-primary hover:bg-accent'
+              }`}
+            >
+              {budget}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Возрастная группа */}
+      <div>
+        <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">👵 Возрастная группа</h4>
+        <div className="flex flex-wrap gap-1 md:gap-2">
+          {ageGroups.map((age) => (
+            <button
+              key={age.id}
+              onClick={() => handleSingleSelect('age_group', age.id)}
+              className={`px-2 py-1 md:px-4 md:py-2 rounded-lg border transition-all text-xs md:text-sm ${
+                request.age_group === age.id
+                  ? 'bg-primary text-primary-foreground border-primary shadow-sm'
+                  : 'bg-card border-border hover:border-primary hover:bg-accent'
+              }`}
+            >
+              {age.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Предпочитаемые бренды */}
+      <div>
+        <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">🏷️ Предпочитаемые бренды</h4>
+        <div className="flex flex-wrap gap-1 md:gap-2">
+          {brands.map((brand) => (
+            <button
+              key={brand}
+              onClick={() => {
+                onChange({ brand_preference: toggleArrayItem(request.brand_preference, brand) });
+              }}
+              className={`px-2 py-1 md:px-4 md:py-2 rounded-lg border transition-all text-xs md:text-sm ${
+                request.brand_preference?.includes(brand)
+                  ? 'bg-primary text-primary-foreground border-primary shadow-sm'
+                  : 'bg-card border-border hover:border-primary hover:bg-accent'
+              }`}
+            >
+              {brand}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* SPF */}
+      <div>
+        <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">☀️ Солнцезащита</h4>
+        <div className="flex gap-2">
+          <button
+            onClick={() => onChange({ spf_needed: true })}
+            className={`px-4 py-2 rounded-lg border transition-all ${request.spf_needed === true ? 'bg-primary text-primary-foreground border-primary' : 'bg-card border-border'}`}
+          >
+            Нужен SPF
+          </button>
+          <button
+            onClick={() => onChange({ spf_needed: false })}
+            className={`px-4 py-2 rounded-lg border transition-all ${request.spf_needed === false ? 'bg-primary text-primary-foreground border-primary' : 'bg-card border-border'}`}
+          >
+            Без SPF
+          </button>
+          <button
+            onClick={() => onChange({ spf_needed: undefined })}
+            className="px-4 py-2 rounded-lg border border-border bg-card"
+          >
+            Не важно
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

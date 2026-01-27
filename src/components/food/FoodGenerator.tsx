@@ -35,6 +35,7 @@ export function FoodGenerator({
 }: FoodGeneratorProps) {
   const [foodRequest, setFoodRequest] = useState<FoodRequest>(currentRequest);
   const [activeSection, setActiveSection] = useState<'input' | 'filters' | 'exclude'>('input');
+  const isFiltersDisabled = foodRequest.mode === 'dish' && !!foodRequest.dishName;
 
   // Синхронизируем с родительским состоянием
   useEffect(() => {
@@ -133,24 +134,42 @@ export function FoodGenerator({
       
       {/* Основной генератор */}
       <div className="bg-card rounded-2xl shadow-lg p-6">
+
         {/* Навигация по секциям */}
         <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-1 mb-6 md:mb-8 p-2 sm:p-1 bg-muted rounded-xl">
           {[
             { id: 'input' as const, label: 'Режим ввода', icon: <Edit3 size={16} /> },
-            { id: 'filters' as const, label: 'Фильтры', icon: <Filter size={16} /> },
-            { id: 'exclude' as const, label: 'Исключить', icon: <XCircle size={16} /> }
+            { 
+              id: 'filters' as const, 
+              label: 'Фильтры', 
+              icon: <Filter size={16} />,
+              disabled: isFiltersDisabled 
+            },
+            { 
+              id: 'exclude' as const, 
+              label: 'Исключить', 
+              icon: <XCircle size={16} />
+            }
           ].map((section) => (
             <button
               key={section.id}
-              onClick={() => setActiveSection(section.id)}
+              onClick={() => !section.disabled && setActiveSection(section.id)}
+              disabled={section.disabled}
               className={`flex items-center space-x-2 px-3 py-2 sm:px-4 sm:py-3 rounded-lg transition-all flex-1 justify-center text-sm sm:text-base ${
                 activeSection === section.id
                   ? 'bg-background text-foreground shadow-sm'
+                  : section.disabled
+                  ? 'text-muted-foreground/50 cursor-not-allowed opacity-50'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               {section.icon}
               <span className="font-medium">{section.label}</span>
+              {section.disabled && (
+                <span className="text-xs bg-muted-foreground/20 text-muted-foreground px-1.5 py-0.5 rounded ml-1">
+                  заблокировано
+                </span>
+              )}
             </button>
           ))}
         </div>
@@ -165,12 +184,24 @@ export function FoodGenerator({
           )}
           
           {activeSection === 'filters' && (
-            <FiltersSection
-              request={foodRequest}
-              onChange={handleRequestChange}
-            />
+            <div>
+              <FiltersSection
+                request={foodRequest}
+                onChange={handleRequestChange}
+              />
+              {isFiltersDisabled && (
+                <div className="text-center p-4 bg-yellow-50 border border-yellow-200 rounded-lg mt-4">
+                  <p className="text-yellow-800 text-sm">
+                    ⚠️ Фильтры недоступны при поиске по конкретному блюду
+                  </p>
+                  <p className="text-yellow-700 text-xs mt-1">
+                    Используйте режим &quot;по продуктам&quot; для применения фильтров
+                  </p>
+                </div>
+              )}
+            </div>
           )}
-          
+
           {activeSection === 'exclude' && (
             <ExcludeSection
               request={foodRequest}

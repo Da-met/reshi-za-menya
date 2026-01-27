@@ -74,6 +74,7 @@ function BooksContent() {
                 font-medium
                 transition-all
                 text-sm md:text-base
+                cursor-pointer
                 ${currentView === 'generator'
                   ? 'bg-primary text-primary-foreground shadow-lg'
                   : 'bg-muted text-muted-foreground hover:bg-accent'
@@ -90,6 +91,7 @@ function BooksContent() {
                 font-medium
                 transition-all
                 text-sm md:text-base
+                cursor-pointer
                 ${currentView === 'saved'
                   ? 'bg-primary text-primary-foreground shadow-lg'
                   : 'bg-muted text-muted-foreground hover:bg-accent'

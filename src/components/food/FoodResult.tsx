@@ -2,7 +2,8 @@
 
 import { FoodResponse } from '@/types/food';
 import { useState } from 'react';
-import { Save, RotateCw, Check, Sparkles, Clock, Zap, ShoppingCart, ChefHat } from 'lucide-react';
+import { Save, RotateCw, Check, Sparkles, Clock, Zap, ShoppingCart, ChefHat, Share2 } from 'lucide-react';
+import Image from 'next/image';
 
 interface FoodResultProps {
   recipe: FoodResponse;
@@ -12,6 +13,7 @@ interface FoodResultProps {
 
 export function FoodResult({ recipe, onSave, onGenerateAnother }: FoodResultProps) {
   const [saved, setSaved] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const handleSave = () => {
     onSave();
@@ -20,7 +22,6 @@ export function FoodResult({ recipe, onSave, onGenerateAnother }: FoodResultProp
 
   const handleAddToCart = (ingredient: string) => {
     console.log('Добавлено в корзину:', ingredient);
-    // Здесь будет логика добавления в корзину
   };
 
   const handleAddAllToCart = () => {
@@ -30,321 +31,283 @@ export function FoodResult({ recipe, onSave, onGenerateAnother }: FoodResultProp
   };
 
   return (
-    <div className="
-      bg-gradient-to-br from-primary/10 to-secondary/10
-      rounded-xl md:rounded-2xl 
-      shadow-2xl
-      p-4 md:p-6 
-      mb-6 md:mb-8 
-      border-2 border-primary/30
-      mt-6 md:mt-8
-      relative
-      overflow-hidden
-    ">
-      {/* Декоративные элементы */}
-      <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 rounded-full -translate-y-12 translate-x-12" />
-      <div className="absolute bottom-0 left-0 w-20 h-20 bg-secondary/10 rounded-full translate-y-10 -translate-x-10" />
-      
-      <div className="relative z-10">
-        {/* Заголовок результата */}
-        <div className="text-center mb-4 md:mb-6">
-          <div className="flex items-center justify-center space-x-2 mb-2">
-            <Sparkles size={20} className="text-primary" />
-            <h2 className="text-lg md:text-xl lg:text-2xl font-accent font-bold text-foreground">
-              Ваш идеальный рецепт!
-            </h2>
-            <Sparkles size={20} className="text-secondary" />
+    <div className="min-h-screen bg-background py-6 md:py-8">
+      <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
+        
+        {/* Блок "ВАШ ИДЕАЛЬНЫЙ РЕЦЕПТ" */}
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center space-x-3 mb-3">
+            <Sparkles size={24} className="text-primary" />
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-accent text-foreground">
+              ВАШ ИДЕАЛЬНЫЙ РЕЦЕПТ!
+            </h1>
+            <Sparkles size={24} className="text-secondary" />
           </div>
-          <p className="text-xs md:text-sm text-muted-foreground">
-            Мы подобрали рецепт специально для вас
+          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
+            Вот что мы предлагаем приготовить из ваших продуктов
           </p>
         </div>
 
-        {/* Карточка рецепта */}
-        <div className="
-          bg-card
-          rounded-lg md:rounded-xl 
-          p-4 md:p-6 
-          mb-4 md:mb-6 
-          border-2 border-primary/20
-          shadow-lg
-          relative
-          overflow-hidden
-        ">
-          {/* Акцентная полоска */}
-          <div className="absolute top-0 left-0 w-full h-1 bg-primary" />
+        {/* Основной контент */}
+        <div className="space-y-8">
           
-          {/* Заголовок рецепта и мета-информация */}
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-3 md:mb-4 gap-2">
-            <div className="flex items-start space-x-2">
-              <ChefHat size={18} className="md:size-5 flex-shrink-0 text-primary mt-1" />
-              <div>
-                <h3 className="text-base md:text-lg lg:text-xl font-bold text-card-foreground mb-1">
-                  {recipe.recipe.title}
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  <span className="inline-flex items-center space-x-1 bg-primary text-primary-foreground px-2 py-1 rounded-full text-xs font-medium shadow-md">
-                    <Clock size={12} />
-                    <span>{recipe.recipe.cookingTime}</span>
-                  </span>
-                  <span className="inline-flex items-center space-x-1 bg-secondary text-secondary-foreground px-2 py-1 rounded-full text-xs font-medium shadow-md">
-                    <Zap size={12} />
-                    <span>{recipe.recipe.difficulty}</span>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Описание */}
-          <p className="text-sm md:text-base text-card-foreground mb-3 md:mb-4 leading-relaxed">
-            {recipe.recipe.description}
-          </p>
-
-          {/* Ингредиенты */}
-          <div className="grid md:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-6">
-            {/* Что есть */}
-            <div>
-              <h4 className="font-semibold text-green-600 mb-2 md:mb-3 text-sm md:text-base flex items-center space-x-2">
-                <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                <span>✅ Что у вас есть</span>
-              </h4>
-              <ul className="space-y-1 md:space-y-2">
-                {recipe.recipe.ingredients.available.map((ingredient, index) => (
-                  <li key={index} className="text-xs md:text-sm text-card-foreground flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full flex-shrink-0"></div>
-                    <span className="first-letter:uppercase">
-                      {ingredient.name}
-                      {ingredient.quantity && ` (${ingredient.quantity})`}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          {/* Основной блок с рецептом */}
+          <div className="bg-card rounded-2xl shadow-lg p-4 md:p-6 lg:p-8 border border-border">
             
-            {/* Что купить */}
-            <div>
-              <h4 className="font-semibold text-blue-600 mb-2 md:mb-3 text-sm md:text-base flex items-center space-x-2">
-                <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                <span>🛒 Что нужно купить</span>
-              </h4>
-              <ul className="space-y-1 md:space-y-2">
-                {recipe.recipe.ingredients.toBuy.map((item, index) => (
-                  <li key={index} className="text-xs md:text-sm text-card-foreground flex items-center justify-between group">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-1.5 h-1.5 bg-blue-500 rounded-full flex-shrink-0"></div>
-                      <span className="first-letter:uppercase">
-                        {item.name}
-                        {item.quantity && <span className="text-muted-foreground ml-1">({item.quantity})</span>}
-                      </span>
-                    </div>
-                    <button
-                      onClick={() => handleAddToCart(item.name)}
-                      className="
-                        opacity-0 group-hover:opacity-100
-                        p-1 
-                        bg-blue-500 text-white 
-                        rounded 
-                        hover:bg-blue-600
-                        transition-all
-                        flex-shrink-0
-                      "
-                    >
-                      <ShoppingCart size={12} />
-                    </button>
-                  </li>
-                ))}
-              </ul>
+            {/* Заголовок и мета-информация */}
+            <div className="mb-6">
+              <h1 className="text-xl md:text-2xl lg:text-3xl text-foreground mb-3">
+                {recipe.recipe.title}
+              </h1>
+              <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
+                {recipe.recipe.description}
+              </p>
             </div>
-          </div>
 
-          {/* Шаги приготовления */}
-          <div className="mb-4 md:mb-6">
-            <h4 className="font-semibold text-card-foreground mb-2 md:mb-3 text-sm md:text-base flex items-center space-x-2">
-              <span className="w-2 h-2 bg-primary rounded-full"></span>
-              <span>📝 Способ приготовления</span>
-            </h4>
-            <div className="space-y-2 md:space-y-3">
-              {recipe.recipe.steps.map((step, index) => (
-                <div key={index} className="flex space-x-3 md:space-x-4">
-                  <div className="
-                    flex-shrink-0 
-                    w-6 h-6 md:w-7 md:h-7
-                    bg-primary text-primary-foreground 
-                    rounded-full 
-                    flex items-center justify-center 
-                    font-bold 
-                    text-xs md:text-sm
-                    shadow-md
-                  ">
-                    {index + 1}
+            {/* Чипы */}
+            <div className="flex flex-wrap gap-2 mb-6">
+              <span className="inline-flex items-center px-3 py-1 bg-primary/10 text-primary rounded-full text-xs md:text-sm">
+                <Clock size={12} className="md:size-[14px] mr-1" />
+                {recipe.recipe.cookingTime}
+              </span>
+              <span className="inline-flex items-center px-3 py-1 bg-primary/10 text-primary rounded-full text-xs md:text-sm">
+                <Zap size={12} className="md:size-[14px] mr-1" />
+                {recipe.recipe.difficulty}
+              </span>
+            </div>
+
+            {/* Изображение блюда */}
+            <div className="mb-6">
+              {recipe.recipe.imageUrl && !imageError ? (
+                <div className="w-full relative rounded-xl overflow-hidden shadow-lg">
+                  <div className="aspect-[4/3] relative">
+                    <Image 
+                      src={recipe.recipe.imageUrl}
+                      alt={recipe.recipe.title}
+                      fill
+                      className="object-cover"
+                      onError={() => setImageError(true)}
+                      priority
+                    />
                   </div>
-                  <p className="text-xs md:text-sm text-card-foreground pt-0.5 flex-1 leading-relaxed">
-                    {step}
-                  </p>
                 </div>
-              ))}
+              ) : (
+                <div className="w-full aspect-[4/3] bg-muted rounded-xl flex items-center justify-center shadow-lg">
+                  <ChefHat size={32} className="md:size-12 text-muted-foreground/50" />
+                </div>
+              )}
             </div>
-          </div>
 
-          {/* Пищевая ценность */}
-          {recipe.recipe.nutritionInfo && (
-            <div className="
-              bg-accent
-              rounded-lg 
-              p-3 md:p-4 
-              border border-border
-              mb-4 md:mb-6
-            ">
-              <h4 className="font-semibold text-accent-foreground mb-2 md:mb-3 text-sm md:text-base flex items-center space-x-2">
-                <span className="w-2 h-2 bg-secondary rounded-full"></span>
-                <span>🥗 Пищевая ценность</span>
-              </h4>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
-                {recipe.recipe.nutritionInfo.calories && (
-                  <div className="text-center p-2 bg-card rounded-lg border border-border">
-                    <div className="font-bold text-accent-foreground text-sm">{recipe.recipe.nutritionInfo.calories}</div>
-                    <div className="text-xs text-muted-foreground">Калории</div>
+            {/* Ингредиенты */}
+            <div className="mb-6">
+              <h2 className="text-lg md:text-xl text-foreground mb-4">Ингредиенты</h2>
+              
+              <div className="flex flex-col lg:flex-row gap-6">
+                {/* У вас есть */}
+                <div className="flex-1 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-base md:text-lg text-foreground font-medium">У вас есть</h3>
+                    <span className="text-xs md:text-sm text-muted-foreground font-medium px-2 py-1 rounded bg-green-50">
+                      {recipe.recipe.ingredients.available.length} шт
+                    </span>
                   </div>
-                )}
-                {recipe.recipe.nutritionInfo.protein && (
-                  <div className="text-center p-2 bg-card rounded-lg border border-border">
-                    <div className="font-bold text-accent-foreground text-sm">{recipe.recipe.nutritionInfo.protein}</div>
-                    <div className="text-xs text-muted-foreground">Белки</div>
+                  
+                  <div className="space-y-2">
+                    {recipe.recipe.ingredients.available.map((ingredient, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-3 border border-border rounded-lg group hover:shadow-sm transition-all"
+                      >
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></div>
+                          <div className="min-w-0">
+                            <span className="text-sm md:text-base text-foreground font-medium block truncate">
+                              {ingredient.name}
+                            </span>
+                            {ingredient.quantity && (
+                              <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                                <span>{ingredient.quantity}</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                )}
-                {recipe.recipe.nutritionInfo.carbs && (
-                  <div className="text-center p-2 bg-card rounded-lg border border-border">
-                    <div className="font-bold text-accent-foreground text-sm">{recipe.recipe.nutritionInfo.carbs}</div>
-                    <div className="text-xs text-muted-foreground">Углеводы</div>
+                </div>
+
+                {/* Нужно купить */}
+                <div className="flex-1 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-base md:text-lg text-foreground font-medium">Нужно купить</h3>
+                    <span className="text-xs md:text-sm text-muted-foreground font-medium px-2 py-1 rounded bg-blue-50">
+                      {recipe.recipe.ingredients.toBuy.length} шт
+                    </span>
                   </div>
-                )}
-                {recipe.recipe.nutritionInfo.fats && (
-                  <div className="text-center p-2 bg-card rounded-lg border border-border">
-                    <div className="font-bold text-accent-foreground text-sm">{recipe.recipe.nutritionInfo.fats}</div>
-                    <div className="text-xs text-muted-foreground">Жиры</div>
+                  
+                  <div className="space-y-2">
+                    {recipe.recipe.ingredients.toBuy.map((item, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-3 border border-border rounded-lg group hover:shadow-sm transition-all"
+                      >
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></div>
+                          <div className="min-w-0">
+                            <span className="text-sm md:text-base text-foreground font-medium block truncate">
+                              {item.name}
+                            </span>
+                            {item.quantity && (
+                              <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                                <span>{item.quantity}</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <button
+                          onClick={() => handleAddToCart(item.name)}
+                          className="px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:bg-accent rounded border border-border transition-all flex-shrink-0 ml-2 whitespace-nowrap"
+                          title="Добавить в корзину"
+                        >
+                          В корзину
+                        </button>
+                      </div>
+                    ))}
                   </div>
-                )}
+                </div>
               </div>
             </div>
-          )}
 
-          {/* Советы */}
-          {recipe.recipe.tips && recipe.recipe.tips.length > 0 && (
-            <div className="
-              bg-blue-50 border border-blue-200 
-              rounded-lg p-3 md:p-4
-            ">
-              <h4 className="font-semibold text-blue-800 mb-1 md:mb-2 text-sm md:text-base flex items-center space-x-2">
-                <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                <span>💡 Советы</span>
-              </h4>
-              <ul className="space-y-1 text-blue-700">
-                {recipe.recipe.tips.map((tip, index) => (
-                  <li key={index} className="text-xs md:text-sm">• {tip}</li>
+            {/* Кнопка "Купить ингредиенты" */}
+            {recipe.recipe.ingredients.toBuy.length > 0 && (
+              <div className="mb-6 p-4 bg-gradient-to-r from-primary/20 to-primary/30 rounded-xl border border-primary/20">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div className="text-center sm:text-left">
+                    <p className="text-xs md:text-sm text-muted-foreground">Все ингредиенты в одном заказе</p>
+                    <p className="text-lg md:text-xl font-bold text-primary">СберМаркет, Яндекс.Лавка</p>
+                  </div>
+                  <button 
+                    onClick={handleAddAllToCart}
+                    className="
+                      flex items-center justify-center gap-2
+                      px-4 py-3
+                      bg-primary text-primary-foreground
+                      rounded-lg
+                      font-medium
+                      hover:bg-primary/90
+                      transition-colors
+                      w-full sm:w-auto
+                      text-sm md:text-base
+                    "
+                  >
+                    <ShoppingCart size={18} className="md:size-5" />
+                    <span>Купить ингредиенты</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Пищевая ценность */}
+            {recipe.recipe.nutritionInfo && (
+              <div className="mb-6">
+                <h2 className="text-lg md:text-xl text-foreground mb-4">Пищевая ценность</h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+                  {recipe.recipe.nutritionInfo.calories && (
+                    <div className="text-center p-3 bg-accent rounded-lg border border-border">
+                      <div className="font-bold text-foreground text-sm md:text-base">{recipe.recipe.nutritionInfo.calories}</div>
+                      <div className="text-xs text-muted-foreground">Калории</div>
+                    </div>
+                  )}
+                  {recipe.recipe.nutritionInfo.protein && (
+                    <div className="text-center p-3 bg-accent rounded-lg border border-border">
+                      <div className="font-bold text-foreground text-sm md:text-base">{recipe.recipe.nutritionInfo.protein}</div>
+                      <div className="text-xs text-muted-foreground">Белки</div>
+                    </div>
+                  )}
+                  {recipe.recipe.nutritionInfo.carbs && (
+                    <div className="text-center p-3 bg-accent rounded-lg border border-border">
+                      <div className="font-bold text-foreground text-sm md:text-base">{recipe.recipe.nutritionInfo.carbs}</div>
+                      <div className="text-xs text-muted-foreground">Углеводы</div>
+                    </div>
+                  )}
+                  {recipe.recipe.nutritionInfo.fats && (
+                    <div className="text-center p-3 bg-accent rounded-lg border border-border">
+                      <div className="font-bold text-foreground text-sm md:text-base">{recipe.recipe.nutritionInfo.fats}</div>
+                      <div className="text-xs text-muted-foreground">Жиры</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Шаги приготовления */}
+            <div className="mb-6">
+              <h2 className="text-lg md:text-xl text-foreground mb-4">Шаги приготовления</h2>
+              <div className="space-y-3 md:space-y-4">
+                {recipe.recipe.steps.map((step, index) => (
+                  <div key={index} className="flex gap-3 md:gap-4 p-3 md:p-4 bg-primary/10 rounded-lg">
+                    <div className="flex-shrink-0 w-6 h-6 md:w-8 md:h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-semibold text-xs md:text-sm">
+                      {index + 1}
+                    </div>
+                    <p className="text-foreground text-sm md:text-base leading-relaxed flex-1">{step}</p>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
-          )}
-        </div>
 
-        {/* Кнопки действий */}
-        <div className="flex flex-col sm:flex-row gap-2 md:gap-3 justify-center">
-          <button
-            onClick={handleSave}
-            disabled={saved}
-            className={`
-              px-3 py-2 md:px-4 md:py-2 lg:px-6 lg:py-3 
-              rounded-lg md:rounded-xl 
-              font-semibold 
-              transition-all 
-              flex items-center justify-center space-x-2
-              text-xs md:text-sm lg:text-base
-              flex-1 sm:flex-none
-              shadow-lg
-              ${saved
-                ? 'bg-green-500 text-white cursor-not-allowed'
-                : 'bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105'
-              }
-            `}
-          >
-            {saved ? <Check size={14} className="md:size-4" /> : <Save size={14} className="md:size-4" />}
-            <span className="truncate">{saved ? 'Сохранено!' : 'Сохранить рецепт'}</span>
-          </button>
+            {/* Советы */}
+            {recipe.recipe.tips && recipe.recipe.tips.length > 0 && (
+              <div className="mb-2">
+                <h2 className="text-lg md:text-xl text-foreground mb-3">Полезные советы</h2>
+                <ul className="space-y-2">
+                  {recipe.recipe.tips.map((tip, index) => (
+                    <li key={index} className="flex items-start text-xs md:text-sm text-muted-foreground">
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full mt-1.5 md:mt-2 mr-2 md:mr-3 flex-shrink-0"></div>
+                      <span className="leading-relaxed">{tip}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
 
-          <button
-            onClick={onGenerateAnother}
-            className="
-              px-3 py-2 md:px-4 md:py-2 lg:px-6 lg:py-3 
-              rounded-lg md:rounded-xl 
-              font-semibold 
-              bg-secondary 
-              hover:bg-secondary/90 
-              text-secondary-foreground
-              transition-all 
-              shadow-lg hover:shadow-xl 
-              hover:scale-105
-              flex items-center justify-center space-x-2
-              text-xs md:text-sm lg:text-base
-              flex-1 sm:flex-none
-            "
-          >
-            <RotateCw size={14} className="md:size-4" />
-            <span>Другой вариант</span>
-          </button>
+          {/* Кнопки действий */}
+          <div className="bg-card rounded-2xl shadow-lg p-4 md:p-6">
+            <div className="flex flex-col sm:flex-row gap-3">
+              
+              {/* Кнопки сохранить и поделиться */}
+              <div className="flex flex-col xs:flex-row gap-3 flex-1">
+                <button
+                  onClick={handleSave}
+                  disabled={saved}
+                  className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl transition-colors flex-1 min-w-0 ${
+                    saved
+                      ? 'bg-green-500 text-white cursor-not-allowed'
+                      : 'bg-primary text-primary-foreground hover:bg-primary/90'
+                  }`}
+                >
+                  {saved ? <Check size={16} className="md:size-[18px] flex-shrink-0" /> : <Save size={16} className="md:size-[18px] flex-shrink-0" />}
+                  <span className="font-semibold text-xs md:text-sm truncate">
+                    {saved ? 'Сохранено!' : 'Сохранить рецепт'}
+                  </span>
+                </button>
+                
+                <button className="flex items-center justify-center gap-2 py-3 px-4 bg-secondary text-secondary-foreground rounded-xl font-semibold hover:bg-secondary/90 transition-colors flex-1 min-w-0">
+                  <Share2 size={16} className="md:size-[18px] flex-shrink-0" />
+                  <span className="text-xs md:text-sm truncate">Поделиться</span>
+                </button>
+              </div>
 
-          {recipe.recipe.ingredients.toBuy.length > 0 && (
-            <button
-              onClick={handleAddAllToCart}
-              className="
-                px-3 py-2 md:px-4 md:py-2 lg:px-6 lg:py-3 
-                rounded-lg md:rounded-xl 
-                font-semibold 
-                bg-green-500 
-                hover:bg-green-600 
-                text-white
-                transition-all 
-                shadow-lg hover:shadow-xl 
-                hover:scale-105
-                flex items-center justify-center space-x-2
-                text-xs md:text-sm lg:text-base
-                flex-1 sm:flex-none
-              "
-            >
-              <ShoppingCart size={14} className="md:size-4" />
-              <span>Добавить все в корзину</span>
-            </button>
-          )}
-        </div>
-
-        {/* Интеграция с маркетплейсами */}
-        <div className="mt-4 md:mt-6 pt-4 md:pt-6 border-t border-border">
-          <h4 className="font-semibold text-foreground mb-2 md:mb-3 text-sm md:text-base flex items-center space-x-2">
-            <span className="w-2 h-2 bg-primary rounded-full"></span>
-            <span>Где купить продукты:</span>
-          </h4>
-          <div className="flex flex-wrap gap-1 md:gap-2">
-            {['СберМаркет', 'Ozon', 'Яндекс.Лавка', 'ВкусВилл'].map(market => (
+              {/* Кнопка другой вариант */}
               <button
-                key={market}
-                className="
-                  px-2 py-1 md:px-3 md:py-2 
-                  rounded-lg 
-                  bg-card
-                  border border-border
-                  hover:border-primary 
-                  hover:bg-accent
-                  transition-all 
-                  text-xs md:text-sm
-                  flex-shrink-0
-                  shadow-sm
-                  hover:shadow-md
-                  hover:scale-105
-                "
+                onClick={onGenerateAnother}
+                className="flex items-center justify-center gap-2 py-3 px-4 border border-border text-foreground rounded-xl font-semibold hover:bg-accent transition-colors min-w-0"
               >
-                {market}
+                <RotateCw size={16} className="md:size-[18px] flex-shrink-0" />
+                <span className="text-xs md:text-sm truncate">Другой вариант</span>
               </button>
-            ))}
+            </div>
           </div>
         </div>
       </div>

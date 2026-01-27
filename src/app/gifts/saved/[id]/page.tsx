@@ -153,12 +153,16 @@ export default function GiftDetailPage({ }: { params: Promise<{ id: string }> })
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 p-6 md:p-8">
               {/* Изображение */}
               <div className="rounded-xl overflow-hidden bg-muted/20">
-                <Image
-                  src={imageSrc}
-                  alt={gift.giftData.title}
-                  className="w-full h-64 md:h-80 object-cover"
-                  onError={() => setImageError(true)}
-                />
+                <div className="aspect-[4/3] relative">
+                  <Image
+                    src={imageSrc}
+                    alt={gift.giftData.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    onError={() => setImageError(true)}
+                  />
+                </div>
               </div>
 
               {/* Информация */}
@@ -181,7 +185,7 @@ export default function GiftDetailPage({ }: { params: Promise<{ id: string }> })
                     )}
                   </div>
                   
-                  <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+                  <h2 className="text-2xl md:text-3xl text-foreground mb-4">
                     {gift.giftData.title}
                   </h2>
                 </div>
@@ -222,7 +226,7 @@ export default function GiftDetailPage({ }: { params: Promise<{ id: string }> })
             {/* Описание */}
             <div className="border-t border-border p-6 md:p-8">
               <div className="space-y-4">
-                <h3 className="text-xl font-semibold text-foreground">Описание</h3>
+                <h3 className="text-xl text-foreground">Описание</h3>
                 <p className="text-muted-foreground leading-relaxed">
                   {gift.giftData.description}
                 </p>
@@ -234,7 +238,7 @@ export default function GiftDetailPage({ }: { params: Promise<{ id: string }> })
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 md:p-8">
                 {/* Особенности */}
                 <div className="space-y-4">
-                  <h3 className="text-xl font-semibold text-foreground">Особенности</h3>
+                  <h3 className="text-xl font text-foreground">Особенности</h3>
                   <div className="space-y-3">
                     {displayFeatures.map((feature: string, index: number) => (
                       <div key={index} className="flex items-center gap-3">
@@ -248,7 +252,7 @@ export default function GiftDetailPage({ }: { params: Promise<{ id: string }> })
                 {/* Почему хороший подарок */}
                 {gift.giftData.reasons && gift.giftData.reasons.length > 0 && (
                   <div className="space-y-4">
-                    <h3 className="text-xl font-semibold text-foreground">Почему это хороший подарок</h3>
+                    <h3 className="text-xl text-foreground">Почему это хороший подарок</h3>
                     <div className="space-y-3">
                       {gift.giftData.reasons.map((reason: string, index: number) => (
                         <div key={index} className="flex items-center gap-3">
@@ -266,7 +270,7 @@ export default function GiftDetailPage({ }: { params: Promise<{ id: string }> })
             {gift.giftData.reasoning && (
               <div className="border-t border-border p-6 md:p-8 bg-primary/5">
                 <div className="space-y-4">
-                  <h3 className="text-xl font-semibold text-foreground flex items-center gap-2">
+                  <h3 className="text-xl text-foreground flex items-center gap-2">
                     <Sparkles size={20} className="text-primary" />
                     Почему подходит именно вам
                   </h3>
@@ -296,7 +300,7 @@ export default function GiftDetailPage({ }: { params: Promise<{ id: string }> })
 
           {/* Блок с деталями запроса */}
           <div className="bg-card rounded-2xl shadow-lg p-6 md:p-8">
-            <h2 className="text-xl font-semibold text-foreground mb-4">Детали запроса</h2>
+            <h2 className="text-xl text-foreground mb-4">Детали запроса</h2>
             
             <div className="flex flex-wrap gap-2 mb-6">
               {/* Категория */}
@@ -375,7 +379,7 @@ export default function GiftDetailPage({ }: { params: Promise<{ id: string }> })
           {/* Блок комментария */}
           <div className="bg-card rounded-2xl shadow-lg p-6 md:p-8">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-xl font-semibold text-foreground">Мой комментарий</h2>
+              <h2 className="text-xl text-foreground">Моя заметка</h2>
               {!isEditingComment && gift.userComment && (
                 <button
                   onClick={handleEditComment}

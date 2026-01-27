@@ -20,7 +20,7 @@ export function ProductChips({ products, onRemove }: ProductChipsProps) {
           <span 
             key={product} 
             className="
-              bg-primary/20 text-primary 
+              bg-section-development/20 text-section-development 
               px-3 py-2 
               rounded-full 
               text-sm font-medium 

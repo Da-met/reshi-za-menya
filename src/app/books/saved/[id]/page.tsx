@@ -536,7 +536,7 @@ export default function BookDetailPage({ }: { params: Promise<{ id: string }> })
           {/* Блок комментария */}
           <div className="bg-card rounded-2xl shadow-lg p-4 md:p-8">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-xl font-medium">Мой комментарий</h2>
+              <h2 className="text-xl font-medium">Моя заметка</h2>
               {!isEditingComment && book.userComment && (
                 <button
                   onClick={handleEditComment}

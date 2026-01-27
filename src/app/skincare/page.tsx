@@ -2,17 +2,18 @@
 
 import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { GiftGenerator } from '@/components/gifts/GiftGenerator';
-import { GiftResult } from '@/components/gifts/GiftResult';
-import { SavedGifts } from '@/components/gifts/SavedGifts';
-import { GiftResponse, GiftRequest } from '@/types/gifts';
+import { SkincareSelector } from '@/components/skincare/SkincareSelector';
 
-function GiftsContent() {
+import { SkincareResponse, SkincareRequest } from '@/types/skincare';
+import { SkincareResult } from '@/components/skincare/SkincareResults';
+import SavedSkincare from '@/components/skincare/SavedSkincare';
+
+function SkincareContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [currentView, setCurrentView] = useState<'generator' | 'saved'>('generator');
-  const [currentGift, setCurrentGift] = useState<GiftResponse | null>(null);
-  const [currentRequest, setCurrentRequest] = useState<GiftRequest>({});
+  const [currentView, setCurrentView] = useState<'selector' | 'saved'>('selector');
+  const [currentProducts, setCurrentProducts] = useState<SkincareResponse | null>(null);
+  const [currentRequest, setCurrentRequest] = useState<SkincareRequest>({});
   const [isGenerating, setIsGenerating] = useState(false);
 
   // При загрузке проверяем параметр URL
@@ -24,7 +25,7 @@ function GiftsContent() {
   }, [searchParams]);
 
   // Функция для переключения вкладок с обновлением URL
-  const handleViewChange = (view: 'generator' | 'saved') => {
+  const handleViewChange = (view: 'selector' | 'saved') => {
     setCurrentView(view);
     const newParams = new URLSearchParams(searchParams.toString());
     if (view === 'saved') {
@@ -32,23 +33,23 @@ function GiftsContent() {
     } else {
       newParams.delete('view');
     }
-    router.replace(`/gifts?${newParams.toString()}`, { scroll: false });
+    router.replace(`/skincare?${newParams.toString()}`, { scroll: false });
   };
 
-  const handleGiftGenerated = (gift: GiftResponse) => {
-    setCurrentGift(gift);
+  const handleProductsGenerated = (response: SkincareResponse) => {
+    setCurrentProducts(response);
   };
 
-  const handleClearGift = () => {
-    setCurrentGift(null);
+  const handleClearProducts = () => {
+    setCurrentProducts(null);
   };
 
-  const handleRequestChange = (request: GiftRequest) => {
+  const handleRequestChange = (request: SkincareRequest) => {
     setCurrentRequest(request);
   };
 
-  const handleSaveGift = () => {
-    console.log('Сохранение подарка:', currentGift);
+  const handleSaveProducts = () => {
+    console.log('Сохранение подборки:', currentProducts);
     // Здесь будет логика сохранения
   };
 
@@ -63,7 +64,7 @@ function GiftsContent() {
             text-foreground 
             mb-3 md:mb-4
           ">
-            Что подарить?
+            Подбор уходовых средств
           </h1>
           <p className="
             text-base md:text-lg lg:text-xl
@@ -72,13 +73,13 @@ function GiftsContent() {
             max-w-2xl
             mx-auto
           ">
-            Найдем идеальный подарок для любого человека и повода
+            Персональные рекомендации косметики по типу кожи и потребностям
           </p>
           
           {/* Переключение между вкладками */}
           <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4 mb-6 md:mb-8">
             <button
-              onClick={() => handleViewChange('generator')}
+              onClick={() => handleViewChange('selector')}
               className={`
                 px-5 py-3 md:px-6 md:py-3 
                 rounded-full 
@@ -86,13 +87,13 @@ function GiftsContent() {
                 transition-all
                 text-sm md:text-base
                 cursor-pointer
-                ${currentView === 'generator'
+                ${currentView === 'selector'
                   ? 'bg-primary text-primary-foreground shadow-lg'
                   : 'bg-muted text-muted-foreground hover:bg-accent'
                 }
               `}
             >
-              🎁 Генератор подарков
+              💄 Подбор средств
             </button>
             <button
               onClick={() => handleViewChange('saved')}
@@ -109,39 +110,39 @@ function GiftsContent() {
                 }
               `}
             >
-              💾 Мои подарки
+              💾 Мои средства
             </button>
           </div>
         </div>
 
-        {currentView === 'generator' ? (
+        {currentView === 'selector' ? (
           <>
-            <GiftGenerator 
-              onGiftGenerated={handleGiftGenerated}
+            <SkincareSelector 
+              onProductsGenerated={handleProductsGenerated}
               isGenerating={isGenerating}
               onGeneratingChange={setIsGenerating}
               onRequestChange={handleRequestChange}
               currentRequest={currentRequest}
-              onClearGift={handleClearGift}
+              onClearProducts={handleClearProducts}
             />
             
-            {currentGift && (
-              <GiftResult
-                gift={currentGift}
-                onSave={handleSaveGift}
-                onGenerateAnother={() => setCurrentGift(null)}
+            {currentProducts && (
+              <SkincareResult
+                response={currentProducts}
+                onSave={handleSaveProducts}
+                onGenerateAnother={() => setCurrentProducts(null)}
               />
             )}
           </>
         ) : (
-          <SavedGifts />
+          <SavedSkincare />
         )}
       </div>
     </div>
   );
 }
 
-export default function GiftsPage() {
+export default function SkincarePage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -151,7 +152,7 @@ export default function GiftsPage() {
         </div>
       </div>
     }>
-      <GiftsContent />
+      <SkincareContent />
     </Suspense>
   );
 }
