@@ -1,12 +1,13 @@
 export interface SkincareRequest {
-  skin_type?: string;           // тип кожи
-  concerns?: string[];          // проблемы кожи
-  product_type?: string;        // тип продукта
-  budget?: string;              // бюджет
-  brand_preference?: string[];  // предпочитаемые бренды
-  exclude_ingredients?: string[]; // исключаемые ингредиенты
-  spf_needed?: boolean;         // нужен ли SPF
-  age_group?: string;          // возрастная группа
+  skin_type?: string;           // 'сухая', 'жирная'
+  concerns?: string[];          // ['акне', 'сухость']
+  desired_product_type?: string; // 'сыворотка', 'крем' (ЧТО ХОЧЕТ)
+  budget?: string;
+  brand_preference?: string[];
+  exclude_ingredients?: string[];
+  spf_needed?: boolean;
+  age_group?: string;
+  exclude_titles?: string[];
 }
 
 export interface SkincareProduct {
@@ -17,12 +18,11 @@ export interface SkincareProduct {
   price: string;
   price_range?: string;
   image?: string;
-  category?: string;
-  type?: string;               // 'face_cream', 'serum', 'toner', etc.
+  recommended_product_type: string; // 'Гиалуроновая сыворотка', 'Увлажняющий крем' (ЧТО AI ПРЕДЛАГАЕТ)
   key_ingredients: string[];
   features: string[];
-  reasons: string[];           // почему хорошее средство
-  reasoning?: string;          // почему подходит под критерии
+  reasons: string[];
+  reasoning?: string;
   purchaseLink?: string;
   where_to_buy?: Array<{
     name: string;
@@ -32,12 +32,14 @@ export interface SkincareProduct {
   tags: string[];
   rating?: number;
   size?: string;
+  image_search_query?: string;
 }
 
 export interface SkincareResponse {
   products: SkincareProduct[];
   recommendations: string;
   generationId: string;
+  alreadySuggested?: string[];
 }
 
 export interface SavedSkincare {

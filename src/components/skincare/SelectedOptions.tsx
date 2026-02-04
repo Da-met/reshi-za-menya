@@ -61,7 +61,7 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
   const totalSelections = 
     (request.skin_type ? 1 : 0) +
     (request.concerns?.length || 0) +
-    (request.product_type ? 1 : 0) +
+    (request.desired_product_type ? 1 : 0) +
     (request.budget ? 1 : 0) +
     (request.age_group ? 1 : 0) +
     (request.spf_needed !== undefined ? 1 : 0) +
@@ -115,7 +115,7 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
         ))}
 
         {/* Тип продукта */}
-        {request.product_type && (
+        {request.desired_product_type && (
           <span className="
             bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
             px-3 py-1 md:px-3 md:py-1.5
@@ -126,7 +126,7 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
             flex-shrink-0
           ">
             <Filter size={14} className="flex-shrink-0" />
-            <span>{productTypeLabels[request.product_type] || request.product_type}</span>
+            <span>{productTypeLabels[request.desired_product_type] || request.desired_product_type}</span>
           </span>
         )}
 

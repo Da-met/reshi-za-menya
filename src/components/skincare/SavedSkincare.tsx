@@ -17,7 +17,7 @@ const mockSavedSkincare: SavedSkincare[] = [
       brand: 'La Roche-Posay',
       description: 'Интенсивное увлажнение и осветление кожи',
       price: '2 890 ₽',
-      type: 'serum',
+      recommended_product_type: 'serum',
       key_ingredients: ['Гиалуроновая кислота', 'Витамин С', 'Ниацинамид'],
       features: ['Увлажнение', 'Осветление', 'Укрепление барьера кожи'],
       reasons: ['Подходит для чувствительной кожи', 'Нежирная текстура', 'Быстро впитывается'],
@@ -28,7 +28,7 @@ const mockSavedSkincare: SavedSkincare[] = [
     requestData: {
       skin_type: 'dry',
       concerns: ['dryness', 'dullness'],
-      product_type: 'serum',
+      desired_product_type: 'serum',
       budget: '2000-3000₽'
     },
     createdAt: new Date('2024-01-15'),
@@ -42,7 +42,7 @@ const mockSavedSkincare: SavedSkincare[] = [
       brand: 'CeraVe',
       description: 'Восстанавливающий крем для сухой и чувствительной кожи',
       price: '1 200 ₽',
-      type: 'moisturizer',
+      recommended_product_type: 'moisturizer',
       key_ingredients: ['Керамиды', 'Гиалуроновая кислота', 'Ниацинамид'],
       features: ['Восстановление барьера', 'Увлажнение 24 часа', 'Не комедогенный'],
       reasons: ['Без отдушек', 'Подходит для чувствительной кожи', 'Доступная цена'],
@@ -53,7 +53,7 @@ const mockSavedSkincare: SavedSkincare[] = [
     requestData: {
       skin_type: 'sensitive',
       concerns: ['sensitivity', 'dryness'],
-      product_type: 'moisturizer',
+      desired_product_type: 'moisturizer',
       budget: '1000-2000₽'
     },
     createdAt: new Date('2024-01-10')
@@ -157,9 +157,9 @@ export default function SavedSkincareComponent() {
                       <span className="text-sm text-muted-foreground bg-muted px-2 py-1 rounded-md">
                         {savedProduct.productData.brand}
                       </span>
-                      {savedProduct.productData.type && (
+                      {savedProduct.productData.recommended_product_type && (
                         <span className="text-sm text-muted-foreground bg-muted px-2 py-1 rounded-md">
-                          {productTypeLabels[savedProduct.productData.type] || savedProduct.productData.type}
+                          {productTypeLabels[savedProduct.productData.recommended_product_type] || savedProduct.productData.recommended_product_type}
                         </span>
                       )}
                     </div>
@@ -209,11 +209,11 @@ export default function SavedSkincareComponent() {
                     />
                   )}
 
-                  {savedProduct.requestData.product_type && (
+                  {savedProduct.requestData.desired_product_type && (
                     <OptionTag
                       type="productType"
-                      label={productTypeLabels[savedProduct.requestData.product_type] || savedProduct.requestData.product_type}
-                      value={savedProduct.requestData.product_type}
+                      label={productTypeLabels[savedProduct.requestData.desired_product_type] || savedProduct.requestData.desired_product_type}
+                      value={savedProduct.requestData.desired_product_type}
                     />
                   )}
 

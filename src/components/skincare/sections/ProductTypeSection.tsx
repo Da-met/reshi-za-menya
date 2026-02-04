@@ -19,7 +19,7 @@ const productTypes = [
   { id: 'treatment', label: 'Лечение', emoji: '🩹', description: 'Средства для проблемной кожи' },
   { id: 'oil', label: 'Масло', emoji: '🛢️', description: 'Фейс-масла' },
   { id: 'mist', label: 'Спрей', emoji: '🌫️', description: 'Термальная вода, спреи' },
-  { id: 'set', label: 'Набор', emoji: '🎁', description: 'Наборы средств' },
+  { id: 'balm', label: 'Бальзам', emoji: '💄', description: 'Для губ и сухих участков' },
 ];
 
 export function ProductTypeSection({ request, onChange }: ProductTypeSectionProps) {
@@ -36,9 +36,9 @@ export function ProductTypeSection({ request, onChange }: ProductTypeSectionProp
         {productTypes.map((type) => (
           <button
             key={type.id}
-            onClick={() => onChange({ product_type: type.id })}
+            onClick={() => onChange({ desired_product_type: type.id })}
             className={`p-3 md:p-4 rounded-xl border-2 transition-all duration-200 flex flex-col items-center justify-center space-y-1 md:space-y-2 ${
-              request.product_type === type.id
+              request.desired_product_type === type.id
                 ? 'bg-primary border-primary text-primary-foreground shadow-md scale-105'
                 : 'bg-card border-border text-foreground hover:border-primary hover:shadow-md'
             }`}
@@ -50,10 +50,10 @@ export function ProductTypeSection({ request, onChange }: ProductTypeSectionProp
         ))}
       </div>
       
-      {request.product_type && (
+      {request.desired_product_type && (
         <div className="mt-3 md:mt-4 p-2 md:p-3 bg-accent rounded-lg">
           <p className="text-xs md:text-sm text-accent-foreground">
-            ✅ Выбрано: {productTypes.find(t => t.id === request.product_type)?.label}
+            ✅ Выбрано: {productTypes.find(t => t.id === request.desired_product_type)?.label}
           </p>
         </div>
       )}

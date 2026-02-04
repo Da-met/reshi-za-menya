@@ -80,8 +80,8 @@ export const moduleCategories: ModuleCategory[] = [
         id: 'ingredient-analyzer',
         title: 'Анализ состава',
         description: 'Проверьте состав косметики на безопасность',
-        href: '/skincare/analyzer',
-        icon: 'analyze', // Нужно создать файл analyze.svg в папках тем
+        href: 'analyzer',
+        icon: 'analyzer', // Нужно создать файл analyze.svg в папках тем
         status: 'active',
         isNew: true,
       },

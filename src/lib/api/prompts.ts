@@ -50,22 +50,21 @@ export const apiToOurFormat = (apiData: ApiPrompt): Prompt => {
   return {
     id: apiData.id.toString(),
     moduleName: apiData.category,
-    promptKey: apiData.name.toLowerCase(),
+    promptKey: apiData.name, // ИЗМЕНЕНИЕ: оставляем как есть, без .toLowerCase()
     text: apiData.template,
-    description: apiData.name,
+    description: apiData.name, // description = name из API
     variables: [...(apiData.requiredParameters?.map((p: ApiParameter) => p.parameterValue) || [])],
     requiredParameters: apiData.requiredParameters?.map(convertToPromptParameter) || [],
     optionalParameters: apiData.optionalParameters?.map(convertToPromptParameter) || [],
     outputParameters: apiData.outputParameters?.map(convertToPromptParameter) || [],
     createdAt: apiData.createdAt || new Date().toISOString(),
     updatedAt: apiData.updatedAt || new Date().toISOString()
-    // Убрали version и isActive - их нет в типе Prompt
   };
 };
 
 export const ourFormatToApi = (ourData: Prompt): ApiPromptRequest => {
   return {
-    name: ourData.description,
+    name: ourData.promptKey, // ИЗМЕНЕНИЕ: отправляем promptKey как name
     category: ourData.moduleName,
     template: ourData.text,
     requiredParameters: ourData.requiredParameters.map(convertToApiParameter),
@@ -99,7 +98,7 @@ export const fetchAllPrompts = async (): Promise<Prompt[]> => {
 // Сохранение промпта
 export const savePrompt = async (prompt: Prompt): Promise<void> => {
   const apiData = ourFormatToApi(prompt);
-  
+
   if (prompt.id.startsWith('new-')) {
     // Создание нового промпта
     await fetch('/api/prompt-templates/', {
@@ -108,7 +107,7 @@ export const savePrompt = async (prompt: Prompt): Promise<void> => {
       body: JSON.stringify(apiData)
     });
   } else {
-    // Обновление существующего промпта
+    // Обновление существующего промпта - важно: ID в URL, но не в теле!
     await fetch(`/api/prompt-templates/${prompt.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
