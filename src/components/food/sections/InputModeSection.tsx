@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { useState, useRef, useEffect } from 'react';
 import { FoodRequest } from '@/types/food';
 import { ProductChips } from '../ProductChips';
@@ -8,12 +9,14 @@ import { searchProducts } from '@/data/foodData';
 import { searchDishes } from '@/data/dishesData';
 import { validateProduct, validateDishName } from '@/utils/validationFood';
 
+
 interface InputModeSectionProps {
   request: FoodRequest;
   onChange: (updates: Partial<FoodRequest>) => void;
+  onModeChange?: (mode: 'products' | 'dish') => void;
 }
 
-export function InputModeSection({ request, onChange }: InputModeSectionProps) {
+export function InputModeSectionComponent({ request, onChange }: InputModeSectionProps) {
   const [productInput, setProductInput] = useState('');
   const [dishInput, setDishInput] = useState('');
   const [productSuggestions, setProductSuggestions] = useState<string[]>([]);
@@ -415,3 +418,5 @@ export function InputModeSection({ request, onChange }: InputModeSectionProps) {
     </div>
   );
 }
+
+export const InputModeSection = React.memo(InputModeSectionComponent);

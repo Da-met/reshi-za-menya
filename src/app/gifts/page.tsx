@@ -1,19 +1,32 @@
+// D:\МАЙО\JavaScript\ПРОЕКТЫ\РЕШИ ЗА МЕНЯ\reshi-za-menya\src\app\gifts\page.tsx
+
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, lazy } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { GiftGenerator } from '@/components/gifts/GiftGenerator';
-import { GiftResult } from '@/components/gifts/GiftResult';
-import { SavedGifts } from '@/components/gifts/SavedGifts';
 import { GiftResponse, GiftRequest } from '@/types/gifts';
+
+// Ленивая загрузка компонентов
+const GiftSelector = lazy(() => import('@/components/gifts/GiftSelector'));
+const SavedGifts = lazy(() => import('@/components/gifts/SavedGifts'));
+
+// Компонент загрузки
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4" />
+        <p className="text-muted-foreground">Загрузка модуля подарков...</p>
+      </div>
+    </div>
+  );
+}
 
 function GiftsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [currentView, setCurrentView] = useState<'generator' | 'saved'>('generator');
-  const [currentGift, setCurrentGift] = useState<GiftResponse | null>(null);
   const [currentRequest, setCurrentRequest] = useState<GiftRequest>({});
-  const [isGenerating, setIsGenerating] = useState(false);
 
   // При загрузке проверяем параметр URL
   useEffect(() => {
@@ -36,20 +49,12 @@ function GiftsContent() {
   };
 
   const handleGiftGenerated = (gift: GiftResponse) => {
-    setCurrentGift(gift);
-  };
-
-  const handleClearGift = () => {
-    setCurrentGift(null);
+    console.log('Подарок сгенерирован:', gift);
+    // Здесь можно добавить логику сохранения в историю
   };
 
   const handleRequestChange = (request: GiftRequest) => {
     setCurrentRequest(request);
-  };
-
-  const handleSaveGift = () => {
-    console.log('Сохранение подарка:', currentGift);
-    // Здесь будет логика сохранения
   };
 
   return (
@@ -57,32 +62,21 @@ function GiftsContent() {
       <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
         {/* Заголовок и навигация */}
         <div className="text-center mb-8 md:mb-10 lg:mb-12">
-          <h1 className="
-            text-4xl md:text-5xl lg:text-6xl  
-            font-accent 
-            text-foreground 
-            mb-3 md:mb-4
-          ">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-accent text-foreground mb-3 md:mb-4">
             Что подарить?
           </h1>
-          <p className="
-            text-base md:text-lg lg:text-xl
-            text-muted-foreground
-            mb-6 md:mb-8
-            max-w-2xl
-            mx-auto
-          ">
+          <p className="text-base md:text-lg lg:text-xl text-muted-foreground mb-6 md:mb-8 max-w-2xl mx-auto">
             Найдем идеальный подарок для любого человека и повода
           </p>
-          
+
           {/* Переключение между вкладками */}
           <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4 mb-6 md:mb-8">
             <button
               onClick={() => handleViewChange('generator')}
               className={`
-                px-5 py-3 md:px-6 md:py-3 
-                rounded-full 
-                font-medium 
+                px-5 py-3 md:px-6 md:py-3
+                rounded-full
+                font-medium
                 transition-all
                 text-sm md:text-base
                 cursor-pointer
@@ -97,9 +91,9 @@ function GiftsContent() {
             <button
               onClick={() => handleViewChange('saved')}
               className={`
-                px-5 py-3 md:px-6 md:py-3 
-                rounded-full 
-                font-medium 
+                px-5 py-3 md:px-6 md:py-3
+                rounded-full
+                font-medium
                 transition-all
                 text-sm md:text-base
                 cursor-pointer
@@ -114,28 +108,24 @@ function GiftsContent() {
           </div>
         </div>
 
-        {currentView === 'generator' ? (
-          <>
-            <GiftGenerator 
+        <Suspense fallback={
+          <div className="flex items-center justify-center py-12">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2" />
+              <p className="text-sm text-muted-foreground">Загрузка...</p>
+            </div>
+          </div>
+        }>
+          {currentView === 'generator' ? (
+            <GiftSelector
               onGiftGenerated={handleGiftGenerated}
-              isGenerating={isGenerating}
-              onGeneratingChange={setIsGenerating}
               onRequestChange={handleRequestChange}
               currentRequest={currentRequest}
-              onClearGift={handleClearGift}
             />
-            
-            {currentGift && (
-              <GiftResult
-                gift={currentGift}
-                onSave={handleSaveGift}
-                onGenerateAnother={() => setCurrentGift(null)}
-              />
-            )}
-          </>
-        ) : (
-          <SavedGifts />
-        )}
+          ) : (
+            <SavedGifts />
+          )}
+        </Suspense>
       </div>
     </div>
   );
@@ -143,14 +133,7 @@ function GiftsContent() {
 
 export default function GiftsPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Загрузка...</p>
-        </div>
-      </div>
-    }>
+    <Suspense fallback={<LoadingFallback />}>
       <GiftsContent />
     </Suspense>
   );

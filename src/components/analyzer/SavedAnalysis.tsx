@@ -1,11 +1,14 @@
-// components/analyzer/SavedAnalysis.tsx (ИСПРАВЛЕННЫЙ)
+// src/components/analyzer/SavedAnalysis.tsx
 'use client';
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Trash2, FlaskConical, Clock, MoreVertical } from 'lucide-react';
-import type { SavedAnalysis as SavedAnalysisType } from '@/types/analyzer'; // Переименовываем тип!
+import { Trash2, Clock, MoreVertical } from 'lucide-react';
+import type { SavedAnalysis as SavedAnalysisType } from '@/types/analyzer';
+import { EmptyState, PromotionalBanner } from '../ui/shared';
+import { ANALYZER_BANNER } from '@/constants/analyzer.constants';
 
+// Исправленные мок-данные - только productName!
 const mockSavedAnalysis: SavedAnalysisType[] = [
   {
     id: '1',
@@ -22,10 +25,7 @@ const mockSavedAnalysis: SavedAnalysisType[] = [
       recommendations: []
     },
     requestData: {
-      productName: 'La Roche-Posay Effaclar H',
-      skinType: 'oily',
-      skinConcerns: ['acne'],
-      preferences: { fragranceFree: true }
+      productName: 'La Roche-Posay Effaclar H'  // ← ТОЛЬКО productName!
     },
     createdAt: new Date('2024-01-15'),
     userComment: 'Отлично подошел для проблемной кожи'
@@ -45,9 +45,7 @@ const mockSavedAnalysis: SavedAnalysisType[] = [
       recommendations: []
     },
     requestData: {
-      productName: 'Cerave Увлажняющий крем',
-      skinType: 'dry',
-      preferences: { crueltyFree: true }
+      productName: 'Cerave Увлажняющий крем'  // ← ТОЛЬКО productName!
     },
     createdAt: new Date('2024-01-10')
   }
@@ -74,20 +72,32 @@ export function SavedAnalysis() {
 
   if (savedAnalysis.length === 0) {
     return (
-      <div className="text-center py-16">
-        <div className="w-20 h-20 bg-background rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-dashed border-muted-foreground/20">
-          <FlaskConical className="w-10 h-10 text-muted-foreground/60" />
-        </div>
-        <h3 className="text-xl text-foreground mb-3">Нет сохраненных анализов</h3>
-        <p className="text-muted-foreground max-w-sm mx-auto">
-          Сохраняйте результаты анализов, чтобы вернуться к ним позже
-        </p>
+      <div>
+        <PromotionalBanner
+          title={ANALYZER_BANNER.title}
+          description={ANALYZER_BANNER.description}
+          route={ANALYZER_BANNER.route}
+          emoji={ANALYZER_BANNER.emoji}
+        />
+
+        <EmptyState
+          icon="🧴"
+          title="Нет сохраненных анализов"
+          description="Сохраняйте результаты анализов, чтобы вернуться к ним позже"
+          variant="compact"
+        />
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
+        <PromotionalBanner
+          title={ANALYZER_BANNER.title}
+          description={ANALYZER_BANNER.description}
+          route={ANALYZER_BANNER.route}
+          emoji={ANALYZER_BANNER.emoji}
+        />
       <div className="flex items-center justify-between mb-3">
         <div>
           <p className="text-muted-foreground">
@@ -100,8 +110,8 @@ export function SavedAnalysis() {
         {savedAnalysis.map((analysis) => {
           const isDropdownOpen = activeDropdown === analysis.id;
           const safetyColor = analysis.giftData.safetyScore >= 8 ? 'text-green-500' :
-                            analysis.giftData.safetyScore >= 6 ? 'text-blue-500' :
-                            analysis.giftData.safetyScore >= 4 ? 'text-yellow-500' : 'text-red-500';
+            analysis.giftData.safetyScore >= 6 ? 'text-blue-500' :
+            analysis.giftData.safetyScore >= 4 ? 'text-yellow-500' : 'text-red-500';
 
           return (
             <div
@@ -140,7 +150,6 @@ export function SavedAnalysis() {
                     >
                       <MoreVertical size={16} />
                     </button>
-
                     {isDropdownOpen && (
                       <div className="absolute right-0 top-full mt-1 w-32 bg-card border border-border rounded-lg shadow-lg z-10 py-1">
                         <button
@@ -163,23 +172,7 @@ export function SavedAnalysis() {
                   {analysis.giftData.description}
                 </p>
 
-                {/* Параметры анализа */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {analysis.requestData.skinType && (
-                    <span className="px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 text-xs rounded-full">
-                      {analysis.requestData.skinType === 'normal' ? 'Нормальная кожа' :
-                       analysis.requestData.skinType === 'dry' ? 'Сухая кожа' :
-                       analysis.requestData.skinType === 'oily' ? 'Жирная кожа' :
-                       analysis.requestData.skinType === 'combination' ? 'Комбинированная' : 'Чувствительная'}
-                    </span>
-                  )}
-                  
-                  {analysis.requestData.skinConcerns?.map(concern => (
-                    <span key={concern} className="px-2 py-1 bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 text-xs rounded-full">
-                      {concern}
-                    </span>
-                  ))}
-                </div>
+                {/* УБИРАЕМ блок с параметрами анализа (skinType, skinConcerns) - их больше нет */}
 
                 {/* Комментарий */}
                 {analysis.userComment && (

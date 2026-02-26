@@ -1,10 +1,12 @@
 'use client';
 
+import React from 'react';
 import { useState, useRef, useEffect } from 'react';
 import { FoodRequest } from '@/types/food';
 import { X, Lightbulb } from 'lucide-react';
 import { searchProducts } from '@/data/foodData';
 import { validateProduct } from '@/utils/validationFood';
+
 
 interface ExcludeSectionProps {
   request: FoodRequest;
@@ -17,7 +19,7 @@ const commonAllergens = [
   'морепродукты', 'цитрусы', 'пшеница', 'соя'
 ];
 
-export function ExcludeSection({ request, onChange }: ExcludeSectionProps) {
+export function ExcludeSectionComponent({ request, onChange }: ExcludeSectionProps) {
   const [excludeInput, setExcludeInput] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -252,3 +254,5 @@ export function ExcludeSection({ request, onChange }: ExcludeSectionProps) {
     </div>
   );
 }
+
+export const ExcludeSection = React.memo(ExcludeSectionComponent);

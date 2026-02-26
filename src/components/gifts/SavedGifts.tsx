@@ -1,11 +1,17 @@
+// D:\МАЙО\JavaScript\ПРОЕКТЫ\РЕШИ ЗА МЕНЯ\reshi-za-menya\src\components\gifts\SavedGifts.tsx
 'use client';
 
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Trash2, Gift, Clock, MoreVertical } from 'lucide-react';
+import { Trash2, Clock, MoreVertical } from 'lucide-react';
 import { SavedGift } from '@/types/gifts';
-import { OptionTag } from '@/components/gifts/OptionTag';
-import { SeasonalBanner } from './SeasonalBanner';
+import { OptionTag } from '@/components/gifts';
+import { SafeContent } from '../ui/safe/SafeContent';
+import { EmptyState } from '../ui/shared/EmptyState';
+import { PromotionalBanner } from '@/components/ui/shared';
+import { GIFT_BANNER } from '@/constants/gifts.constants';
+
 
 // Вспомогательные функции
 const getCategoryLabel = (category: string) => {
@@ -21,7 +27,6 @@ const getCategoryLabel = (category: string) => {
   };
   return labels[category] || category;
 };
-
 
 const getTypeLabel = (type: string) => {
   switch (type) {
@@ -77,7 +82,7 @@ const mockSavedGifts: SavedGift[] = [
   }
 ];
 
-export function SavedGifts() {
+function SavedGifts() {
   const router = useRouter();
   const [savedGifts, setSavedGifts] = useState<SavedGift[]>(mockSavedGifts);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -98,25 +103,34 @@ export function SavedGifts() {
 
   if (savedGifts.length === 0) {
     return (
-      <div className="text-center py-16">
-        <SeasonalBanner />
-        <div className="w-20 h-20 bg-background rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-dashed border-muted-foreground/20">
-          <Gift className="w-10 h-10 text-muted-foreground/60" />
-        </div>
-        <h3 className="text-xl text-foreground mb-3">Нет сохраненных подарков</h3>
-        <p className="text-muted-foreground max-w-sm mx-auto">
-          Сохраняйте понравившиеся идеи подарков, чтобы вернуться к ним позже
-        </p>
+      <div className="space-y-6">
+        <PromotionalBanner
+          title={GIFT_BANNER.title}
+          description={GIFT_BANNER.description}
+          route={GIFT_BANNER.route}
+          emoji={GIFT_BANNER.emoji}
+        />
+        <EmptyState
+          icon="🎁"
+          title="Нет сохраненных подарков"
+          description="Сохраняйте понравившиеся идеи подарков, чтобы вернуться к ним позже"
+          variant="compact"
+        />
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      <SeasonalBanner />
+      <PromotionalBanner
+        title={GIFT_BANNER.title}
+        description={GIFT_BANNER.description}
+        route={GIFT_BANNER.route}
+        emoji={GIFT_BANNER.emoji}
+      />
+      
       <div className="flex items-center justify-between mb-3">
         <div>
-          {/* <h2 className="text-2xl text-foreground mb-2">Мои подарки</h2> */}
           <p className="text-muted-foreground">
             {savedGifts.length} сохранен{savedGifts.length === 1 ? 'ый' : 'ых'} подар{savedGifts.length === 1 ? 'ок' : 'ка'}
           </p>
@@ -141,20 +155,20 @@ export function SavedGifts() {
                       {savedGift.giftData.title}
                     </h3>
                     
-                    {/* Цена и тип */}
                     <div className="flex items-center gap-3 mt-2">
                       <span className="text-xl font-bold text-primary">
-                        {savedGift.giftData.price_range}
+                        {savedGift.giftData.price || savedGift.giftData.price_range}
                       </span>
-                      <span className="text-xl font-bold text-primary px-2 py-1 rounded-md">
+                      
+                      <span className="text-sm text-muted-foreground bg-muted px-2 py-1 rounded-md">
                         {getTypeLabel(savedGift.giftData.type)}
                       </span>
                     </div>
                   </div>
                   
-                  {/* Выпадающее меню только для удаления */}
+                  {/* Выпадающее меню */}
                   <div className="relative flex-shrink-0" onClick={(e) => e.stopPropagation()}>
-                    <button 
+                    <button
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleDropdown(savedGift.id);
@@ -180,12 +194,15 @@ export function SavedGifts() {
                     )}
                   </div>
                 </div>
-
+                
                 {/* Описание */}
-                <p className="text-muted-foreground leading-relaxed text-sm mb-4 line-clamp-2">
-                  {savedGift.giftData.description}
-                </p>
-
+                <SafeContent
+                  content={savedGift.giftData.description}
+                  type="paragraphs"
+                  className="text-muted-foreground leading-relaxed text-sm mb-4 line-clamp-2"
+                  maxLength={150}
+                />
+                
                 {/* Теги параметров */}
                 <div className="flex flex-wrap gap-2 mb-4">
                   {savedGift.requestData.recipient_type && (
@@ -204,23 +221,27 @@ export function SavedGifts() {
                     />
                   )}
                   
-                  {savedGift.requestData.interests_hobbies?.slice(0, 2).map(interests_hobbies => (
+                  {savedGift.requestData.interests_hobbies?.slice(0, 2).map(interest => (
                     <OptionTag
-                      key={interests_hobbies}
+                      key={interest}
                       type="interest"
-                      label={interests_hobbies}
-                      value={interests_hobbies}
+                      label={interest}
+                      value={interest}
                     />
                   ))}
                 </div>
-
-                {/* Комментарий (только отображение) */}
+                
+                {/* Комментарий */}
                 {savedGift.userComment && (
                   <div className="mb-4 p-3 bg-accent/20 border border-accent/30 rounded-lg">
-                    <p className="text-sm text-foreground break-words">{savedGift.userComment}</p>
+                    <SafeContent
+                      content={savedGift.userComment}
+                      type="paragraphs"
+                      className="text-sm text-foreground break-words"
+                    />
                   </div>
                 )}
-
+                
                 {/* Футер с датой */}
                 <div className="flex items-center justify-between pt-4 border-t border-border">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -236,3 +257,5 @@ export function SavedGifts() {
     </div>
   );
 }
+
+export default React.memo(SavedGifts);

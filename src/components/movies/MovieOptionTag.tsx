@@ -1,7 +1,9 @@
-// D:\МАЙО\JavaScript\ПРОЕКТЫ\РЕШИ ЗА МЕНЯ\reshi-za-menya\src\components\movies\MovieOptionTag.tsx
 'use client';
 
-import { Users, Smile, Film, Clock, Calendar, Globe, Star, Clapperboard, X } from 'lucide-react';
+import React from 'react';
+import { X } from 'lucide-react';
+import { typeConfig } from '@/constants/movies.constants';
+
 
 interface MovieOptionTagProps {
   label: string;
@@ -11,18 +13,14 @@ interface MovieOptionTagProps {
   showRemove?: boolean;
 }
 
-const typeConfig = {
-  context: { icon: Users, bgColor: 'bg-blue-50', textColor: 'text-blue-800' },
-  mood: { icon: Smile, bgColor: 'bg-purple-50', textColor: 'text-purple-800' },
-  genre: { icon: Film, bgColor: 'bg-green-50', textColor: 'text-green-800' },
-  format: { icon: Clapperboard, bgColor: 'bg-orange-50', textColor: 'text-orange-800' },
-  duration: { icon: Clock, bgColor: 'bg-red-50', textColor: 'text-red-800' },
-  year: { icon: Calendar, bgColor: 'bg-pink-50', textColor: 'text-pink-800' },
-  country: { icon: Globe, bgColor: 'bg-cyan-50', textColor: 'text-cyan-800' },
-  rating: { icon: Star, bgColor: 'bg-yellow-50', textColor: 'text-yellow-800' },
-};
 
-export function MovieOptionTag({ label, type, onRemove, showRemove = false }: MovieOptionTagProps) {
+
+function MovieOptionTagComponent({ 
+  label, 
+  type, 
+  onRemove, 
+  showRemove = false 
+}: MovieOptionTagProps) {
   const { icon: Icon, bgColor, textColor } = typeConfig[type];
 
   return (
@@ -45,6 +43,7 @@ export function MovieOptionTag({ label, type, onRemove, showRemove = false }: Mo
             onRemove();
           }}
           className="flex items-center justify-center w-4 h-4 rounded-full hover:bg-black/10 transition-colors"
+          aria-label="Удалить"
         >
           <X size={10} />
         </button>
@@ -52,3 +51,5 @@ export function MovieOptionTag({ label, type, onRemove, showRemove = false }: Mo
     </span>
   );
 }
+
+export const MovieOptionTag = React.memo(MovieOptionTagComponent);

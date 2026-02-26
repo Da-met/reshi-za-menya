@@ -1,13 +1,41 @@
-// /app/analyzer/page.tsx
+// src/app/analyzer/page.tsx
+
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, lazy, useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { AnalyzerSelector } from '@/components/analyzer/AnalyzerSelector';
-import { AnalyzerResult } from '@/components/analyzer/AnalyzerResult';
 import { AnalysisResponse, AnalyzerRequest } from '@/types/analyzer';
-import { SavedAnalysis } from '@/components/analyzer/SavedAnalysis';
 
+// Ленивая загрузка компонентов
+const AnalyzerSelector = lazy(() =>
+  import('@/components/analyzer/AnalyzerSelector').then(mod => ({
+    default: mod.AnalyzerSelector
+  }))
+);
+
+const AnalyzerResult = lazy(() =>
+  import('@/components/analyzer/AnalyzerResult').then(mod => ({
+    default: mod.AnalyzerResult
+  }))
+);
+
+const SavedAnalysis = lazy(() =>
+  import('@/components/analyzer/SavedAnalysis').then(mod => ({
+    default: mod.SavedAnalysis
+  }))
+);
+
+// Компонент загрузки
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4" />
+        <p className="text-muted-foreground">Загрузка анализатора...</p>
+      </div>
+    </div>
+  );
+}
 
 function AnalyzerContent() {
   const searchParams = useSearchParams();
@@ -15,9 +43,7 @@ function AnalyzerContent() {
   const [currentView, setCurrentView] = useState<'analyzer' | 'saved'>('analyzer');
   const [currentResult, setCurrentResult] = useState<AnalysisResponse | null>(null);
   const [currentRequest, setCurrentRequest] = useState<AnalyzerRequest>({ productName: '' });
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  // При загрузке проверяем параметр URL
   useEffect(() => {
     const view = searchParams.get('view');
     if (view === 'saved') {
@@ -25,7 +51,6 @@ function AnalyzerContent() {
     }
   }, [searchParams]);
 
-  // Функция для переключения вкладок с обновлением URL
   const handleViewChange = (view: 'analyzer' | 'saved') => {
     setCurrentView(view);
     const newParams = new URLSearchParams(searchParams.toString());
@@ -57,37 +82,18 @@ function AnalyzerContent() {
   return (
     <div className="min-h-screen bg-background py-6 md:py-8 lg:py-10">
       <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
-        {/* Заголовок и навигация */}
         <div className="text-center mb-8 md:mb-10 lg:mb-12">
-          <h1 className="
-            text-4xl md:text-5xl lg:text-6xl  
-            font-accent
-            text-foreground
-            mb-3 md:mb-4
-          ">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-accent text-foreground mb-3 md:mb-4">
             Разбери состав косметики
           </h1>
-          <p className="
-            text-base md:text-lg lg:text-xl
-            text-muted-foreground
-            mb-6 md:mb-8
-            max-w-2xl
-            mx-auto
-          ">
+          <p className="text-base md:text-lg lg:text-xl text-muted-foreground mb-6 md:mb-8 max-w-2xl mx-auto">
             Узнай, что на самом деле в твоих средствах для ухода
           </p>
-          
-          {/* Переключение между вкладками */}
           <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4 mb-6 md:mb-8">
             <button
               onClick={() => handleViewChange('analyzer')}
               className={`
-                px-5 py-3 md:px-6 md:py-3
-                rounded-full
-                font-medium
-                transition-all
-                text-sm md:text-base
-                cursor-pointer
+                px-5 py-3 md:px-6 md:py-3 rounded-full font-medium transition-all text-sm md:text-base cursor-pointer
                 ${currentView === 'analyzer'
                   ? 'bg-primary text-primary-foreground shadow-lg'
                   : 'bg-muted text-muted-foreground hover:bg-accent'
@@ -99,12 +105,7 @@ function AnalyzerContent() {
             <button
               onClick={() => handleViewChange('saved')}
               className={`
-                px-5 py-3 md:px-6 md:py-3
-                rounded-full
-                font-medium
-                transition-all
-                text-sm md:text-base
-                cursor-pointer
+                px-5 py-3 md:px-6 md:py-3 rounded-full font-medium transition-all text-sm md:text-base cursor-pointer
                 ${currentView === 'saved'
                   ? 'bg-primary text-primary-foreground shadow-lg'
                   : 'bg-muted text-muted-foreground hover:bg-accent'
@@ -115,28 +116,29 @@ function AnalyzerContent() {
             </button>
           </div>
         </div>
-        {currentView === 'analyzer' ? (
-          <>
-            <AnalyzerSelector
-              onResultGenerated={handleResultGenerated}
-              isAnalyzing={isAnalyzing}
-              onAnalyzingChange={setIsAnalyzing}
-              onRequestChange={handleRequestChange}
-              currentRequest={currentRequest}
-              onClearResult={handleClearResult}
-            />
-            
-            {currentResult && (
-              <AnalyzerResult
-                result={currentResult}
-                onSave={handleSaveAnalysis}
-                onAnalyzeAnother={() => setCurrentResult(null)}
+
+        <Suspense fallback={<div className="flex justify-center py-12"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" /></div>}>
+          {currentView === 'analyzer' ? (
+            <>
+              <AnalyzerSelector
+                onResultGenerated={handleResultGenerated}
+                onRequestChange={handleRequestChange}
+                currentRequest={currentRequest}
+                onClearResult={handleClearResult}
               />
-            )}
-          </>
-        ) : (
-          <SavedAnalysis />
-        )}
+              
+              {currentResult && (
+                <AnalyzerResult
+                  result={currentResult}
+                  onSave={handleSaveAnalysis}
+                  onAnalyzeAnother={() => setCurrentResult(null)}
+                />
+              )}
+            </>
+          ) : (
+            <SavedAnalysis />
+          )}
+        </Suspense>
       </div>
     </div>
   );
@@ -144,14 +146,7 @@ function AnalyzerContent() {
 
 export default function AnalyzerPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Загрузка...</p>
-        </div>
-      </div>
-    }>
+    <Suspense fallback={<LoadingFallback />}>
       <AnalyzerContent />
     </Suspense>
   );

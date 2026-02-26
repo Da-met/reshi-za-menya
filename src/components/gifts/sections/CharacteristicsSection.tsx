@@ -1,33 +1,19 @@
 'use client';
 
+import React from 'react';
 import { GiftRequest } from '@/types/gifts';
+import { PROFESSIONS, INTERESTS, PERSONALITY_TRAITS } from '@/constants/gifts.constants';
 
 interface CharacteristicsSectionProps {
   request: GiftRequest;
   onChange: (updates: Partial<GiftRequest>) => void;
 }
 
-const professions = [
-  'IT-специалист', 'Врач', 'Учитель', 'Студент', 'Дизайнер', 
-  'Бухгалтер', 'Юрист', 'Инженер', 'Повар', 'Строитель',
-  'Маркетолог', 'Менеджер', 'Фрилансер', 'Предприниматель', 'Спортсмен'
-];
 
-const interests = [
-  'Книги', 'Спорт', 'Путешествия', 'Игры', 'Кулинария',
-  'Музыка', 'Кино', 'Фотография', 'Рукоделие', 'Садоводство',
-  'Автомобили', 'Технологии', 'Искусство', 'Наука', 'Йога'
-];
-
-const personality = [
-  'Юморист', 'Минималист', 'Романтик', 'Прагматик', 'Творческий',
-  'Экстраверт', 'Интроверт', 'Активный', 'Спокойный', 'Амбициозный'
-];
-
-export function CharacteristicsSection({ request, onChange }: CharacteristicsSectionProps) {
+function CharacteristicsSectionComponent({ request, onChange }: CharacteristicsSectionProps) {
   const toggleArrayItem = (array: string[] | undefined, item: string) => {
     const current = array || [];
-    return current.includes(item) 
+    return current.includes(item)
       ? current.filter(i => i !== item)
       : [...current, item];
   };
@@ -50,7 +36,7 @@ export function CharacteristicsSection({ request, onChange }: CharacteristicsSec
       <div>
         <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">💼 Род занятий</h4>
         <div className="flex flex-wrap gap-1 md:gap-2">
-          {professions.map(prof => (
+          {PROFESSIONS.map(prof => (
             <button
               key={prof}
               onClick={() => {
@@ -72,7 +58,7 @@ export function CharacteristicsSection({ request, onChange }: CharacteristicsSec
       <div>
         <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">❤️ Интересы и хобби</h4>
         <div className="flex flex-wrap gap-1 md:gap-2">
-          {interests.map(interest => (
+          {INTERESTS.map(interest => (
             <button
               key={interest}
               onClick={() => {
@@ -94,7 +80,7 @@ export function CharacteristicsSection({ request, onChange }: CharacteristicsSec
       <div>
         <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">👤 Характер и стиль</h4>
         <div className="flex flex-wrap gap-1 md:gap-2">
-          {personality.map(trait => (
+          {PERSONALITY_TRAITS.map(trait => (
             <button
               key={trait}
               onClick={() => {
@@ -114,3 +100,5 @@ export function CharacteristicsSection({ request, onChange }: CharacteristicsSec
     </div>
   );
 }
+
+export const CharacteristicsSection = React.memo(CharacteristicsSectionComponent);

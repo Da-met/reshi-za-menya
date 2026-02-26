@@ -1,10 +1,13 @@
 'use client';
 
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Trash2, Utensils, Clock, MoreVertical, Eye, Zap, ShoppingCart } from 'lucide-react';
+import { Trash2, Clock, MoreVertical, Eye, Zap, ShoppingCart } from 'lucide-react';
 import { SavedRecipe } from '@/types/food';
-import { SeasonalBanner } from './SeasonalBanner';
+import { PromotionalBanner } from '@/components/ui/shared'; // 👈 заменяем SeasonalBanner
+import { EmptyState } from '@/components/ui/shared/EmptyState'; // 👈 добавляем EmptyState
+import { FOOD_BANNER } from '@/constants/food.constants'; // 👈 добавляем константы
 
 // Временные данные
 const mockSavedRecipes: SavedRecipe[] = [
@@ -27,10 +30,19 @@ const mockSavedRecipes: SavedRecipe[] = [
       },
       steps: ['Нарезать курицу', 'Обжарить с луком', 'Добавить рис и сливки', 'Тушить 15 минут'],
       cookingTime: '35 минут',
-      difficulty: 'Легко',
+      difficulty: 'easy',
       nutritionInfo: {
         calories: '420 ккал',
         protein: '35 г'
+      }
+    },
+    requestData: {
+      mode: 'products',
+      products: ['курица', 'рис', 'овощи'],
+      filters: {
+        dishType: 'dinner',
+        cookingTime: '<60',
+        difficulty: 'easy'
       }
     },
     generationId: 'gen-1',
@@ -56,14 +68,23 @@ const mockSavedRecipes: SavedRecipe[] = [
       },
       steps: ['Смешать творог с яйцами', 'Добавить муку', 'Обжарить на сковороде'],
       cookingTime: '25 минут',
-      difficulty: 'Легко'
+      difficulty: 'easy'
+    },
+    requestData: {
+      mode: 'products',
+      products: ['творог', 'яйца', 'мука'],
+      filters: {
+        dishType: 'breakfast',
+        cookingTime: '<30',
+        difficulty: 'easy'
+      }
     },
     generationId: 'gen-2',
     savedAt: new Date('2024-01-10')
   }
 ];
 
-export function SavedRecipes() {
+export function SavedRecipesComponent() {
   const router = useRouter();
   const [savedRecipes, setSavedRecipes] = useState<SavedRecipe[]>(mockSavedRecipes);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -76,7 +97,6 @@ export function SavedRecipes() {
 
   const handleToggleCooked = (recipeId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    // Здесь можно добавить логику отметки о приготовлении
     console.log('Отметка о приготовлении:', recipeId);
   };
 
@@ -88,24 +108,37 @@ export function SavedRecipes() {
     setActiveDropdown(activeDropdown === recipeId ? null : recipeId);
   };
 
+  // 👇 Используем EmptyState
   if (savedRecipes.length === 0) {
     return (
-      <div className="text-center py-16">
-        <SeasonalBanner />
-        <div className="w-20 h-20 bg-background rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-dashed border-muted-foreground/20">
-          <Utensils className="w-10 h-10 text-muted-foreground/60" />
-        </div>
-        <h3 className="text-xl text-foreground mb-3">Нет сохраненных рецептов</h3>
-        <p className="text-muted-foreground max-w-sm mx-auto">
-          Сохраняйте понравившиеся рецепты, чтобы вернуться к ним позже
-        </p>
-      </div>
+      <>
+        <PromotionalBanner
+          title={FOOD_BANNER.title}
+          description={FOOD_BANNER.description}
+          route={FOOD_BANNER.route}
+          emoji={FOOD_BANNER.emoji}
+        />
+        <EmptyState
+          icon="🍳"
+          title="Нет сохраненных рецептов"
+          description="Сохраняйте понравившиеся рецепты, чтобы вернуться к ним позже"
+          // actionLabel="Перейти к генератору"
+          // onAction={() => router.push('/food')}
+          variant="compact"
+        />
+      </>
     );
   }
 
   return (
     <div className="space-y-6">
-      <SeasonalBanner />
+      <PromotionalBanner
+        title={FOOD_BANNER.title}
+        description={FOOD_BANNER.description}
+        route={FOOD_BANNER.route}
+        emoji={FOOD_BANNER.emoji}
+      />
+      
       <div className="flex items-center justify-between mb-3">
         <div>
           <p className="text-muted-foreground">
@@ -243,3 +276,6 @@ export function SavedRecipes() {
     </div>
   );
 }
+
+export const SavedRecipes = React.memo(SavedRecipesComponent);
+SavedRecipes.displayName = 'SavedRecipes';

@@ -1,18 +1,40 @@
 'use client';
 
-import { Suspense, useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { Suspense, lazy, useState, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { MovieResponse, MovieRequest } from '@/types/movies';
-import { MovieGenerator } from '@/components/movies/MovieGenerator';
-import { MovieResult } from '@/components/movies/MovieResult';
-import { SavedMovies } from '@/components/movies/SavedMovies';
+
+// Ленивая загрузка компонентов
+const MovieSelector = lazy(() => 
+  import('@/components/movies/MovieSelector').then(mod => ({
+    default: mod.MovieSelector
+  }))
+);
+
+const SavedMovies = lazy(() => 
+  import('@/components/movies/SavedMovies').then(mod => ({
+    default: mod.SavedMovies
+  }))
+);
+
+
+// Компонент загрузки
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4" />
+        <p className="text-muted-foreground">Загрузка модуля фильмов...</p>
+      </div>
+    </div>
+  );
+}
 
 function MoviesContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [currentView, setCurrentView] = useState<'generator' | 'saved'>('generator');
-  const [currentMovie, setCurrentMovie] = useState<MovieResponse | null>(null);
   const [currentRequest, setCurrentRequest] = useState<MovieRequest>({});
-  const [isGenerating, setIsGenerating] = useState(false);
 
   // При загрузке проверяем параметр URL
   useEffect(() => {
@@ -23,20 +45,22 @@ function MoviesContent() {
   }, [searchParams]);
 
   const handleMovieGenerated = (movie: MovieResponse) => {
-    setCurrentMovie(movie);
-  };
-
-  const handleClearMovie = () => {
-    setCurrentMovie(null);
+    console.log('Фильм сгенерирован:', movie);
   };
 
   const handleRequestChange = (request: MovieRequest) => {
     setCurrentRequest(request);
   };
 
-  const handleSaveMovie = () => {
-    console.log('Сохранение фильма:', currentMovie);
-    // Здесь будет логика сохранения
+  const handleViewChange = (view: 'generator' | 'saved') => {
+    setCurrentView(view);
+    const newParams = new URLSearchParams(searchParams.toString());
+    if (view === 'saved') {
+      newParams.set('view', 'saved');
+    } else {
+      newParams.delete('view');
+    }
+    router.replace(`/movies?${newParams.toString()}`, { scroll: false });
   };
 
   return (
@@ -44,28 +68,17 @@ function MoviesContent() {
       <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
         {/* Заголовок и навигация */}
         <div className="text-center mb-8 md:mb-10 lg:mb-12">
-          <h1 className="
-            text-4xl md:text-5xl lg:text-6xl 
-            font-accent
-            text-foreground
-            mb-3 md:mb-4
-          ">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-accent text-foreground mb-3 md:mb-4">
             Что посмотреть?
           </h1>
-          <p className="
-            text-base md:text-lg lg:text-xl
-            text-muted-foreground
-            mb-6 md:mb-8
-            max-w-2xl
-            mx-auto
-          ">
+          <p className="text-base md:text-lg lg:text-xl text-muted-foreground mb-6 md:mb-8 max-w-2xl mx-auto">
             Найдем идеальный фильм или сериал для вашего настроения
           </p>
-          
-          {/* Переключение между вкладках */}
+
+          {/* Переключение между вкладками */}
           <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4 mb-6 md:mb-8">
             <button
-              onClick={() => setCurrentView('generator')}
+              onClick={() => handleViewChange('generator')}
               className={`
                 px-5 py-3 md:px-6 md:py-3
                 rounded-full
@@ -81,7 +94,7 @@ function MoviesContent() {
               🎬 Генератор фильмов
             </button>
             <button
-              onClick={() => setCurrentView('saved')}
+              onClick={() => handleViewChange('saved')}
               className={`
                 px-5 py-3 md:px-6 md:py-3
                 rounded-full
@@ -99,28 +112,25 @@ function MoviesContent() {
           </div>
         </div>
 
-        {currentView === 'generator' ? (
-          <>
-            <MovieGenerator
+        {/* Динамическая загрузка компонентов */}
+        <Suspense fallback={
+          <div className="flex items-center justify-center py-12">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2" />
+              <p className="text-sm text-muted-foreground">Загрузка...</p>
+            </div>
+          </div>
+        }>
+          {currentView === 'generator' ? (
+            <MovieSelector
               onMovieGenerated={handleMovieGenerated}
-              isGenerating={isGenerating}
-              onGeneratingChange={setIsGenerating}
               onRequestChange={handleRequestChange}
               currentRequest={currentRequest}
-              onClearMovie={handleClearMovie}
             />
-            
-            {currentMovie && (
-              <MovieResult
-                movie={currentMovie}
-                onSave={handleSaveMovie}
-                onGenerateAnother={() => setCurrentMovie(null)}
-              />
-            )}
-          </>
-        ) : (
-          <SavedMovies />
-        )}
+          ) : (
+            <SavedMovies />
+          )}
+        </Suspense>
       </div>
     </div>
   );
@@ -128,14 +138,7 @@ function MoviesContent() {
 
 export default function MoviesPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Загрузка...</p>
-        </div>
-      </div>
-    }>
+    <Suspense fallback={<LoadingFallback />}>
       <MoviesContent />
     </Suspense>
   );

@@ -1,6 +1,8 @@
 'use client';
 
+import React from 'react';
 import { BookRequest } from '@/types/books';
+
 
 interface MoodSectionProps {
   request: BookRequest;
@@ -58,7 +60,7 @@ const moodOptions = [
   }
 ];
 
-export function MoodSection({ request, onChange }: MoodSectionProps) {
+const MoodSectionComponent = ({ request, onChange }: MoodSectionProps) => {
   const handleMoodSelect = (moodId: string) => {
     const selectedMood = moodOptions.find(m => m.id === moodId);
     
@@ -114,3 +116,6 @@ export function MoodSection({ request, onChange }: MoodSectionProps) {
     </div>
   );
 }
+
+export const MoodSection = React.memo(MoodSectionComponent);
+MoodSection.displayName = 'MoodSection';

@@ -1,5 +1,7 @@
 'use client';
 
+import React from "react";
+
 interface BookActionsProps {
   isFormValid: boolean;
   isGenerating: boolean;
@@ -7,12 +9,7 @@ interface BookActionsProps {
   onLucky: () => void;
 }
 
-export function BookActions({
-  isFormValid,
-  isGenerating,
-  onGenerate,
-  onLucky
-}: BookActionsProps) {
+const BookActionsComponent = ({ isFormValid, isGenerating, onGenerate, onLucky }: BookActionsProps) => {
   return (
     <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
       <button
@@ -63,3 +60,6 @@ export function BookActions({
     </div>
   );
 }
+
+export const BookActions = React.memo(BookActionsComponent);
+BookActions.displayName = 'BookActions';

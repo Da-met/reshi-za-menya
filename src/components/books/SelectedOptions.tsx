@@ -1,7 +1,9 @@
 'use client';
 
+import React from 'react';
 import { BookRequest } from '@/types/books';
 import { Heart, BookOpen, Clock, Calendar, Globe, Users, Star } from 'lucide-react';
+
 
 interface SelectedOptionsProps {
   request: BookRequest;
@@ -69,7 +71,7 @@ const popularityLabels: Record<string, string> = {
   any: 'Любая'
 };
 
-export function SelectedOptions({ request }: SelectedOptionsProps) {
+const SelectedOptionsComponent = ({ request }: SelectedOptionsProps) => {
   const hasSelections =
     request.readingMood ||
     request.preferredGenres?.length ||
@@ -266,3 +268,7 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
     </div>
   );
 }
+
+
+export const SelectedOptions = React.memo(SelectedOptionsComponent);
+SelectedOptions.displayName = 'SelectedOptions';

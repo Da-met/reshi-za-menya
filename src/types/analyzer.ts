@@ -1,14 +1,14 @@
 // types/analyzer.ts
 export interface AnalyzerRequest {
   productName: string;
-  skinType?: 'normal' | 'dry' | 'oily' | 'combination' | 'sensitive';
-  skinConcerns?: string[];
-  preferences?: {
-    vegan?: boolean;
-    fragranceFree?: boolean;
-    crueltyFree?: boolean;
-  };
-  inputMethod?: 'text' | 'photo' | 'link'; // Если нужно
+  // skinType?: 'normal' | 'dry' | 'oily' | 'combination' | 'sensitive';
+  // skinConcerns?: string[];
+  // preferences?: {
+  //   vegan?: boolean;
+  //   fragranceFree?: boolean;
+  //   crueltyFree?: boolean;
+  // };
+  // inputMethod?: 'text' | 'photo' | 'link'; 
 }
 
 export interface AnalyzerProduct {

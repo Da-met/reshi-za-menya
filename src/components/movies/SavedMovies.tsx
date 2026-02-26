@@ -1,46 +1,20 @@
 'use client';
 
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Trash2, Film, Clock, MoreVertical, Eye, EyeOff, Star } from 'lucide-react';
+import { Trash2, Clock, MoreVertical, Eye, EyeOff, Star } from 'lucide-react';
 import { SavedMovie } from '@/types/movies';
-import { MovieOptionTag } from '@/components/movies/MovieOptionTag';
-import { TrendingBanner } from './TrendingBanner';
+import { MovieOptionTag } from './MovieOptionTag';
+import { EmptyState, PromotionalBanner } from '@/components/ui/shared';
+import { MOVIES_BANNER } from '@/constants/movies.constants';
+import { 
+  contextLabels, 
+  moodLabels, 
+  formatLabels 
+} from '@/constants/movies.constants';
 
-// Вспомогательные функции
-const getContextLabel = (context: string) => {
-  const labels: Record<string, string> = {
-    family: 'Семьей',
-    child: 'С детьми',
-    friends: 'С друзьями',
-    romance: 'Для романтического вечера',
-    solo: 'В одиночку',
-    party: 'На вечеринке',
-    parents: 'С родителями',
-    colleagues: 'С коллегами'
-  };
-  return labels[context] || context;
-};
 
-const getMoodLabel = (mood: string) => {
-  const labels: Record<string, string> = {
-    funny: 'Веселое',
-    thrilling: 'Захватывающее',
-    thoughtful: 'Заставляющее задуматься',
-    any: 'Любое'
-  };
-  return labels[mood] || mood;
-};
-
-const getFormatLabel = (format: string) => {
-  const labels: Record<string, string> = {
-    movie: 'Фильм',
-    series: 'Сериал',
-    cartoon: 'Мультфильм',
-    anime: 'Аниме'
-  };
-  return labels[format] || format;
-};
 
 // Временные данные
 const mockSavedMovies: SavedMovie[] = [
@@ -102,7 +76,7 @@ const mockSavedMovies: SavedMovie[] = [
   }
 ];
 
-export function SavedMovies() {
+export function SavedMoviesComponent() {
   const router = useRouter();
   const [savedMovies, setSavedMovies] = useState<SavedMovie[]>(mockSavedMovies);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -132,22 +106,31 @@ export function SavedMovies() {
 
   if (savedMovies.length === 0) {
     return (
-      <div className="text-center py-16">
-        <TrendingBanner />
-        <div className="w-20 h-20 bg-background rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-dashed border-muted-foreground/20">
-          <Film className="w-10 h-10 text-muted-foreground/60" />
-        </div>
-        <h3 className="text-xl text-foreground mb-3">Нет сохраненных фильмов</h3>
-        <p className="text-muted-foreground max-w-sm mx-auto">
-          Сохраняйте понравившиеся рекомендации фильмов и сериалов, чтобы вернуться к ним позже
-        </p>
-      </div>
+      <>
+        <PromotionalBanner
+          title={MOVIES_BANNER.title}
+          description={MOVIES_BANNER.description}
+          route={MOVIES_BANNER.route}
+          emoji={MOVIES_BANNER.emoji}
+        />
+        <EmptyState
+          icon="🎬"
+          title="Нет сохраненных фильмов"
+          description="Сохраняйте понравившиеся рекомендации фильмов и сериалов, чтобы вернуться к ним позже"
+          variant="compact"
+        />
+      </>
     );
   }
 
   return (
     <div className="space-y-6">
-      <TrendingBanner />
+      <PromotionalBanner
+        title={MOVIES_BANNER.title}
+        description={MOVIES_BANNER.description}
+        route={MOVIES_BANNER.route}
+        emoji={MOVIES_BANNER.emoji}
+      />
       <div className="flex items-center justify-between mb-3">
         <div>
           {/* <h2 className="text-2xl text-foreground mb-2">Мои фильмы</h2> */}
@@ -247,7 +230,7 @@ export function SavedMovies() {
                   {savedMovie.requestData.context && (
                     <MovieOptionTag
                       type="context"
-                      label={getContextLabel(savedMovie.requestData.context)}
+                      label={contextLabels[savedMovie.requestData.context]}
                       value={savedMovie.requestData.context}
                     />
                   )}
@@ -255,7 +238,7 @@ export function SavedMovies() {
                   {savedMovie.requestData.mood && (
                     <MovieOptionTag
                       type="mood"
-                      label={getMoodLabel(savedMovie.requestData.mood)}
+                      label={moodLabels[savedMovie.requestData.mood]}
                       value={savedMovie.requestData.mood}
                     />
                   )}
@@ -264,7 +247,7 @@ export function SavedMovies() {
                     <MovieOptionTag
                       key={format}
                       type="format"
-                      label={getFormatLabel(format)}
+                      label={formatLabels[format]}
                       value={format}
                     />
                   ))}
@@ -319,3 +302,5 @@ export function SavedMovies() {
     </div>
   );
 }
+
+export const SavedMovies = React.memo(SavedMoviesComponent);

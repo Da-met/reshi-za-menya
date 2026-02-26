@@ -1,5 +1,6 @@
 'use client';
-
+import React from 'react';
+import { GENRE_OPTIONS, MOOD_OPTIONS } from '@/constants/movies.constants';
 import { MovieRequest } from '@/types/movies';
 
 interface MoodSectionProps {
@@ -7,67 +8,7 @@ interface MoodSectionProps {
   onChange: (updates: Partial<MovieRequest>) => void;
 }
 
-export const moodOptions = [
-  { 
-    id: 'funny', 
-    label: 'Посмеяться', 
-    emoji: '😂', 
-    hints: ['Комедии', 'Ситкомы', 'Стендап'] 
-  },
-  { 
-    id: 'thrilling', 
-    label: 'Поволноваться', 
-    emoji: '🎢', 
-    hints: ['Триллеры', 'Ужасы', 'Детективы'] 
-  },
-  { 
-    id: 'thoughtful', 
-    label: 'Подумать', 
-    emoji: '🤔', 
-    hints: ['Драмы', 'Арт-хаус', 'Философское кино'] 
-  },
-  { 
-    id: 'romantic', 
-    label: 'Почувствовать романтику', 
-    emoji: '💕', 
-    hints: ['Мелодрамы', 'Ромкомы', 'Истории любви'] 
-  },
-  { 
-    id: 'inspiring', 
-    label: 'Вдохновиться', 
-    emoji: '✨', 
-    hints: ['Биографии', 'Спортивные драмы', 'Истории успеха'] 
-  },
-  { 
-    id: 'adventurous', 
-    label: 'Отправиться в приключение', 
-    emoji: '🗺️', 
-    hints: ['Приключения', 'Экшн', 'Фэнтези'] 
-  },
-  { 
-    id: 'relaxing', 
-    label: 'Расслабиться', 
-    emoji: '😌', 
-    hints: ['Комедии', 'Лёгкие драмы', 'Семейные фильмы'] 
-  },
-  { 
-    id: 'emotional', 
-    label: 'Пережить эмоции', 
-    emoji: '🎭', 
-    hints: ['Драмы', 'Трагедии', 'Психологическое кино'] 
-  }
-];
-
-const genreOptions = [
-  'Комедия', 'Драма', 'Триллер', 'Фантастика', 'Фэнтези',
-  'Ужасы', 'Романтика', 'Детектив', 'Приключения', 'Семейные',
-  'Мультфильм', 'Аниме', 'Боевик', 'Мелодрама', 'Исторический',
-  'Криминал', 'Биография', 'Вестерн', 'Военный', 'Документальный',
-  'Арт-хаус', 'Философское', 'Спортивный', 'Музыкальный', 'Короткометражка',
-  'Научная фантастика', 'Психологический', 'Ситком', 'Стендап', 'Ромком'
-];
-
-export function MoodSection({ request, onChange }: MoodSectionProps) {
+export function MoodSectionComponent({ request, onChange }: MoodSectionProps) {
   const toggleGenre = (genre: string) => {
     const currentGenres = request.genres || [];
     const newGenres = currentGenres.includes(genre)
@@ -95,7 +36,7 @@ export function MoodSection({ request, onChange }: MoodSectionProps) {
       <div>
         <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">🎭 Настроение</h4>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {moodOptions.map((mood) => (
+          {MOOD_OPTIONS.map((mood) => (
             <button
               key={mood.id}
               onClick={() => onChange({ mood: mood.id })}
@@ -114,7 +55,7 @@ export function MoodSection({ request, onChange }: MoodSectionProps) {
         {request.mood && (
           <div className="mt-3 md:mt-4 p-2 md:p-3 bg-accent rounded-lg">
             <p className="text-xs md:text-sm text-accent-foreground">
-              💡 Часто выбирают: {moodOptions.find(m => m.id === request.mood)?.hints?.join(', ')}
+              💡 Часто выбирают: {MOOD_OPTIONS.find(m => m.id === request.mood)?.hints?.join(', ')}
             </p>
           </div>
         )}
@@ -128,7 +69,7 @@ export function MoodSection({ request, onChange }: MoodSectionProps) {
           🎬 Жанры {request.genres && <span className="text-primary">({request.genres.length})</span>}
         </h4>
         <div className="flex flex-wrap gap-2">
-          {genreOptions.map((genre) => (
+          {GENRE_OPTIONS.map((genre) => (
             <button
               key={genre}
               onClick={() => toggleGenre(genre)}
@@ -146,3 +87,5 @@ export function MoodSection({ request, onChange }: MoodSectionProps) {
     </div>
   );
 }
+
+export const MoodSection = React.memo(MoodSectionComponent);

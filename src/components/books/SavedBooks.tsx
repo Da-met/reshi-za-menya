@@ -2,9 +2,11 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Trash2, Book, Clock, MoreVertical, Eye, EyeOff, Star } from 'lucide-react';
+import { Trash2, Clock, MoreVertical, Eye, EyeOff, Star } from 'lucide-react';
 import { SavedBook } from '@/types/books';
-import { TrendingBanner } from './TrendingBanner';
+import { EmptyState, PromotionalBanner } from '../ui/shared';
+import { BOOKS_BANNER } from '@/constants/books.constants';
+import React from 'react';
 
 // Временные данные
 const mockSavedBooks: SavedBook[] = [
@@ -62,7 +64,9 @@ const mockSavedBooks: SavedBook[] = [
   }
 ];
 
-export function SavedBooks() {
+
+
+export function SavedBooksComponent() {
   const router = useRouter();
   const [savedBooks, setSavedBooks] = useState<SavedBook[]>(mockSavedBooks);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -92,29 +96,37 @@ export function SavedBooks() {
 
   if (savedBooks.length === 0) {
     return (
-      <div className="text-center py-16">
-        <TrendingBanner />
-        <div className="w-20 h-20 bg-background rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-dashed border-muted-foreground/20">
-          <Book className="w-10 h-10 text-muted-foreground/60" />
-        </div>
-        <h3 className="text-xl text-foreground mb-3">Нет сохраненных книг</h3>
-        <p className="text-muted-foreground max-w-sm mx-auto">
-          Сохраняйте понравившиеся рекомендации книг, чтобы вернуться к ним позже
-        </p>
-      </div>
+      <>
+        <PromotionalBanner
+          title={BOOKS_BANNER.title}
+          description={BOOKS_BANNER.description}
+          route={BOOKS_BANNER.route}
+          emoji={BOOKS_BANNER.emoji}
+        />
+        <EmptyState
+          icon="📚"
+          title="Нет сохраненных книг"
+          description="Сохраняйте понравившиеся рекомендации книг, чтобы вернуться к ним позже"
+          variant="compact"
+        />
+      </>
     );
   }
 
   return (
     <div className="space-y-6">
-      <TrendingBanner />
+      <PromotionalBanner
+        title={BOOKS_BANNER.title}
+        description={BOOKS_BANNER.description}
+        route={BOOKS_BANNER.route}
+        emoji={BOOKS_BANNER.emoji}
+      />
+
       <div className="flex items-center justify-between mb-3">
-        <div>
-          {/* <h2 className="text-2xl text-foreground mb-2">Мои книги</h2> */}
-          <p className="text-muted-foreground">
-            {savedBooks.length} сохранен{savedBooks.length === 1 ? 'ая' : 'ых'} книг{savedBooks.length === 1 ? 'а' : savedBooks.length >= 2 && savedBooks.length <= 4 ? 'и' : ''}
-          </p>
-        </div>
+        <p className="text-muted-foreground">
+          {savedBooks.length} сохранен{savedBooks.length === 1 ? 'ая' : 'ых'} книг
+          {savedBooks.length === 1 ? 'а' : savedBooks.length >= 2 && savedBooks.length <= 4 ? 'и' : ''}
+        </p>
       </div>
 
       <div className="grid gap-5">
@@ -136,12 +148,10 @@ export function SavedBooks() {
                       {book.title}
                     </h3>
                     
-                    {/* Автор */}
                     <p className="text-lg text-muted-foreground mt-1">
                       {book.author}
                     </p>
                     
-                    {/* Мета-информация */}
                     <div className="flex items-center gap-3 mt-2 flex-wrap">
                       <span className="text-lg text-primary font-semibold">
                         {book.year}
@@ -158,7 +168,6 @@ export function SavedBooks() {
                     </div>
                   </div>
 
-                  {/* Выпадающее меню */}
                   <div className="relative flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                     <button
                       onClick={(e) => {
@@ -187,7 +196,7 @@ export function SavedBooks() {
                             e.stopPropagation();
                             handleDeleteBook(savedBook.id);
                           }}
-                          className="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950 transition-colors"
+                          className="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
                         >
                           <Trash2 size={14} />
                           Удалить
@@ -197,12 +206,10 @@ export function SavedBooks() {
                   </div>
                 </div>
 
-                {/* Описание */}
                 <p className="text-muted-foreground leading-relaxed text-sm mb-4 line-clamp-2">
                   {book.description}
                 </p>
 
-                {/* Жанры */}
                 <div className="flex flex-wrap gap-2 mb-4">
                   {book.genres.slice(0, 3).map((genre) => (
                     <span key={genre} className="px-2 py-1 bg-primary-foreground text-primary rounded text-sm">
@@ -211,7 +218,6 @@ export function SavedBooks() {
                   ))}
                 </div>
 
-                {/* Статус прочтения */}
                 <div className="flex items-center gap-2 mb-4">
                   <button
                     onClick={(e) => {
@@ -229,14 +235,12 @@ export function SavedBooks() {
                   </button>
                 </div>
 
-                {/* Комментарий */}
                 {savedBook.userComment && (
                   <div className="mb-4 p-3 bg-primary/20 border border-primary/30 rounded-lg">
                     <p className="text-sm text-foreground break-words">{savedBook.userComment}</p>
                   </div>
                 )}
 
-                {/* Футер с датой */}
                 <div className="flex items-center justify-between pt-4 border-t border-border">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Clock size={12} />
@@ -251,3 +255,6 @@ export function SavedBooks() {
     </div>
   );
 }
+
+export const SavedBooks = React.memo(SavedBooksComponent);
+SavedBooks.displayName = 'SavedBooks';

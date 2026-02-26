@@ -1,30 +1,18 @@
 // components/analyzer/sections/ProductSearchSection.tsx
 'use client';
 
+import React from 'react';
 import { AnalyzerRequest } from '@/types/analyzer';
 import { Search } from 'lucide-react';
 import { useState } from 'react';
+import { POPULAR_PRODUCTS } from '@/constants/analyzer.constants';
 
 interface ProductSearchSectionProps {
   request: AnalyzerRequest;
   onChange: (updates: Partial<AnalyzerRequest>) => void;
 }
 
-// Пример популярных продуктов
-const popularProducts = [
-  'La Roche-Posay Effaclar H',
-  'Cerave Увлажняющий крем для лица',
-  'The Ordinary Niacinamide 10% + Zinc 1%',
-  'Cosrx Advanced Snail 96 Mucin Power Essence',
-  'Nivea Soft увлажняющий крем',
-  'Garnier BB Cream для проблемной кожи',
-  'L\'Oreal Paris Revitalift Филлер',
-  'Vichy Liftactiv Сыворотка',
-  'Avene Cleanance КОМЕДОГЕН',
-  'Bioderma Sensibio H2O Мицеллярная вода'
-];
-
-export function ProductSearchSection({ request, onChange }: ProductSearchSectionProps) {
+export function ProductSearchSectionComponent({ request, onChange }: ProductSearchSectionProps) {
   const [searchQuery, setSearchQuery] = useState(request.productName || '');
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
@@ -33,7 +21,7 @@ export function ProductSearchSection({ request, onChange }: ProductSearchSection
     onChange({ productName: value });
     
     if (value.trim().length > 2) {
-      const filtered = popularProducts.filter(product =>
+      const filtered = POPULAR_PRODUCTS.filter(product =>
         product.toLowerCase().includes(value.toLowerCase())
       ).slice(0, 5);
       setSuggestions(filtered);
@@ -96,7 +84,7 @@ export function ProductSearchSection({ request, onChange }: ProductSearchSection
           🔥 Популярные средства для анализа
         </h4>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
-          {popularProducts.slice(0, 4).map((product) => (
+          {POPULAR_PRODUCTS.slice(0, 4).map((product) => (
             <button
               key={product}
               onClick={() => handleSuggestionClick(product)}
@@ -115,9 +103,9 @@ export function ProductSearchSection({ request, onChange }: ProductSearchSection
           ))}
         </div>
       </div>
-      
-
-
     </div>
   );
 }
+
+export const ProductSearchSection = React.memo(ProductSearchSectionComponent);
+ProductSearchSection.displayName = 'ProductSearchSection';

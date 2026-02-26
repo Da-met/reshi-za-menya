@@ -1,8 +1,10 @@
 // src/components/ui/UniversalLoader.tsx
 'use client';
 
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
+
 
 interface UniversalLoaderProps {
   /** Показать/скрыть лоадер */
@@ -14,11 +16,11 @@ interface UniversalLoaderProps {
 
 }
 
-export function UniversalLoader({
+const UniversalLoaderComponent = ({
   isVisible,
   title = "Подбираем уходовые средства",
   message = "Анализируем ваш тип кожи и потребности..."
-}: UniversalLoaderProps) {
+}: UniversalLoaderProps) => {
   
   if (!isVisible) return null;
   
@@ -131,3 +133,6 @@ export function UniversalLoader({
     </motion.div>
   );
 }
+
+export const UniversalLoader = React.memo(UniversalLoaderComponent);
+UniversalLoader.displayName = 'UniversalLoader';

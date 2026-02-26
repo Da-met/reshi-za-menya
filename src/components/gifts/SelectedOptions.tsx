@@ -1,23 +1,15 @@
 'use client';
 
+import React from 'react';
 import { GiftRequest } from '@/types/gifts';
 import { User, Briefcase, Heart, Smile, DollarSign, Calendar, Package, Star } from 'lucide-react';
-import React from 'react';
+import { recipientCategoryLabels, giftTypeLabels } from '@/constants/gifts.constants';
+
 
 interface SelectedOptionsProps {
   request: GiftRequest;
 }
 
-const categoryLabels: Record<string, string> = {
-  mother: 'Маме',
-  father: 'Папе', 
-  girlfriend: 'Девушке',
-  boyfriend: 'Парню',
-  friend: 'Другу',
-  friend_female: 'Подруге', 
-  child: 'Ребёнку',
-  colleague: 'Коллеге'
-};
 
 // Функция для получения иконки по типу подарка
 const getGiftTypeIcon = (type: string) => {
@@ -29,7 +21,7 @@ const getGiftTypeIcon = (type: string) => {
   }
 };
 
-export function SelectedOptions({ request }: SelectedOptionsProps) {
+function SelectedOptionsComponent({ request }: SelectedOptionsProps) {
   const hasSelections = 
     request.recipient_type || 
     request.profession?.length || 
@@ -64,16 +56,18 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
         {/* Категория */}
         {request.recipient_type && (
           <span className="
-            bg-section-development/20 text-section-development 
-            px-2 py-1 md:px-3 md:py-1 
-            rounded-full 
-            text-xs md:text-sm 
-            font-medium 
+            bg-section-development/20 text-section-development
+            px-2 py-1 md:px-3 md:py-1
+            rounded-full
+            text-xs md:text-sm
+            font-medium
             flex items-center space-x-1
             flex-shrink-0
           ">
             <User size={10} className="md:size-[14px] flex-shrink-0" />
-            <span className="truncate">{categoryLabels[request.recipient_type]}</span>
+            <span className="truncate">
+              {recipientCategoryLabels[request.recipient_type]}
+            </span>
           </span>
         )}
         
@@ -155,15 +149,17 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
         {/* Типы подарков */}
         {request.gift_format?.map(format => (
           <span key={format} className="
-            bg-indigo-100 text-indigo-800 
-            px-2 py-1 md:px-3 md:py-1 
-            rounded-full 
-            text-xs md:text-sm 
+            bg-indigo-100 text-indigo-800
+            px-2 py-1 md:px-3 md:py-1
+            rounded-full
+            text-xs md:text-sm
             flex items-center space-x-1
             flex-shrink-0
           ">
             {getGiftTypeIcon(format)}
-            <span className="truncate">{format}</span>
+            <span className="truncate">
+              {giftTypeLabels[format] || format}
+            </span>
           </span>
         ))}
       </div>
@@ -177,3 +173,5 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
     </div>
   );
 }
+
+export const SelectedOptions = React.memo(SelectedOptionsComponent);

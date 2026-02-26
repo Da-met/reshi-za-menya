@@ -1,5 +1,6 @@
 'use client';
-import Image from 'next/image';
+
+import { SafeImage } from '../ui/safe/SafeImage';
 
 interface CollectionGiftCardProps {
   gift: {
@@ -21,11 +22,14 @@ export function CollectionGiftCard({ gift }: CollectionGiftCardProps) {
       <div className="bg-card rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl h-full flex flex-col">
         {/* Изображение */}
         <div className="h-48 relative overflow-hidden">
-          <Image 
-            src={gift.image} 
-            alt={gift.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          />
+          <div className="relative w-full aspect-[4/3]">
+            <SafeImage 
+              src={gift.image} 
+              alt={gift.title}
+              className="absolute inset-0"
+              maxHeight="100%"
+            />
+          </div>
           <div className="absolute top-3 left-3">
             <span className="text-xs font-bold text-primary bg-secondary px-2 py-1 rounded-full">
               {gift.category}

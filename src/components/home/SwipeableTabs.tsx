@@ -69,6 +69,7 @@ export function SwipeableTabs({ categories, activeTab, onTabChange }: SwipeableT
                   flex flex-col md:flex-row items-center
                   transition-all duration-200
                   px-3 py-2 md:px-0 md:py-0
+                  cursor-pointer
                   ${isActive 
                     ? 'text-primary' 
                     : 'text-muted-foreground hover:text-foreground/80'

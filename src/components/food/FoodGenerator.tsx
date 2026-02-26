@@ -1,175 +1,187 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FoodRequest, FoodResponse } from '@/types/food';
 import { Edit3, Filter, XCircle } from 'lucide-react';
-import { SeasonalBanner } from './SeasonalBanner';
+import { FOOD_BANNER } from '@/constants/food.constants';
+import { PromotionalBanner } from '@/components/ui/shared';
 import { SelectedOptions } from './SelectedOptions';
 import { FiltersSection } from './sections/FiltersSection';
 import { ExcludeSection } from './sections/ExcludeSection';
 import { InputModeSection } from './sections/InputModeSection';
-
+import { useFoodForm } from '@/hooks/food/useFoodForm';
+import { useFoodApi } from '@/hooks/food/useFoodApi';
+import { UniversalLoader } from '@/components/ui/UniversalLoader';
+import { ErrorDisplay } from '@/components/ui/ErrorDisplay';
+import { FoodResult } from './FoodResult';
+import { commonDishes } from '@/data/dishesData';
 
 
 interface FoodGeneratorProps {
   onRecipeGenerated?: (recipe: FoodResponse) => void;
-  isGenerating?: boolean;
-  onGeneratingChange?: (generating: boolean) => void;
   onRequestChange?: (request: FoodRequest) => void;
   currentRequest?: FoodRequest;
-  onClearRecipe?: () => void;
 }
 
-export function FoodGenerator({ 
-  onRecipeGenerated, 
-  isGenerating = false, 
-  onGeneratingChange,
+export function FoodGenerator({
+  onRecipeGenerated,
   onRequestChange,
-  currentRequest = {
-    mode: 'products',
-    products: [],
-    excludeIngredients: [],
-    filters: {}
-  },
-  onClearRecipe
+  currentRequest
 }: FoodGeneratorProps) {
-  const [foodRequest, setFoodRequest] = useState<FoodRequest>(currentRequest);
-  const [activeSection, setActiveSection] = useState<'input' | 'filters' | 'exclude'>('input');
-  const isFiltersDisabled = foodRequest.mode === 'dish' && !!foodRequest.dishName;
+  const { 
+    request: foodRequest, 
+    updateRequest, 
+    isValid,
+    resetFilters,
+    clearProducts,
+    clearDishName
+  } = useFoodForm(currentRequest);
 
-  // Синхронизируем с родительским состоянием
+  const [activeSection, setActiveSection] = useState<'input' | 'filters' | 'exclude'>('input');
+  const [currentRecipe, setCurrentRecipe] = useState<FoodResponse | null>(null);
+
+  // 👇 Рефы для скролла
+  const loaderContainerRef = useRef<HTMLDivElement>(null);
+  const resultsContainerRef = useRef<HTMLDivElement>(null);
+
+  const {
+    generateRecipe,
+    isLoading,
+    error,
+    clearError
+  } = useFoodApi({
+    onSuccess: (recipe) => {
+      setCurrentRecipe(recipe);
+      onRecipeGenerated?.(recipe);
+    },
+    onError: (err) => {
+      console.error('Ошибка генерации рецепта:', err);
+    },
+    timeoutMs: 30000,
+    maxRetries: 2,
+    enableCache: true
+  });
+
+
   useEffect(() => {
     onRequestChange?.(foodRequest);
   }, [foodRequest, onRequestChange]);
 
-  // Валидация формы
-  const isFormValid = () => {
-    if (foodRequest.mode === 'products') {
-      return foodRequest.products && foodRequest.products.length > 0;
-    } else {
-      return !!foodRequest.dishName?.trim();
+  // 👇 Скролл к лоудеру
+  useEffect(() => {
+    if (isLoading && loaderContainerRef.current) {
+      setTimeout(() => {
+        loaderContainerRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }, 200);
     }
+  }, [isLoading]);
+
+  // 👇 Скролл к результату
+  useEffect(() => {
+    if (currentRecipe && resultsContainerRef.current) {
+      setTimeout(() => {
+        resultsContainerRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }, 100);
+    }
+  }, [currentRecipe]);
+
+  const handleModeChange = (mode: 'products' | 'dish') => {
+    if (mode === foodRequest.mode) return;
+    
+    if (mode === 'products') {
+      clearDishName();
+      resetFilters();
+    } else {
+      clearProducts();
+    }
+    
+    updateRequest({ mode });
+    clearError();
   };
 
   const handleGenerate = async () => {
-    if (!isFormValid() || isGenerating) return;
-    onClearRecipe?.();
-    onGeneratingChange?.(true);
-    console.log('Генерируем рецепт с параметрами:', foodRequest);
-    
-    // Временная заглушка
-    setTimeout(() => {
-      const mockRecipe: FoodResponse = {
-        recipe: {
-          id: '1',
-          title: 'Курица с рисом и овощами',
-          description: 'Ароматное и сытное блюдо с нежным мясом и полезными овощами',
-          ingredients: {
-            available: [
-              { name: 'куриное филе', quantity: '500 гр' },
-              { name: 'hbc', quantity: '500 гр' },
-            ],
-            // ['куриное филе', 'рис'],
-            toBuy: [
-              { name: 'лук репчатый', quantity: '1 шт' },
-              { name: 'морковь', quantity: '1 шт' },
-              { name: 'сладкий перец', quantity: '1 шт' },
-              { name: 'специи для курицы', quantity: 'по вкусу' }
-            ]
-          },
-          steps: [
-            'Нарежьте куриное филе кубиками и обжарьте на сковороде до золотистой корочки',
-            'Добавьте нарезанный лук и морковь, обжаривайте 5 минут',
-            'Всыпьте рис и залейте водой так, чтобы она покрывала ingredients на 2 см',
-            'Тушите под крышкой 20 минут на медленном огне',
-            'Добавьте нарезанный перец и специи, готовьте еще 5 минут'
-          ],
-          cookingTime: '35 минут',
-          difficulty: 'Легко',
-          nutritionInfo: {
-            calories: '320 ккал',
-            protein: '25г',
-            carbs: '45г',
-            fats: '8г'
-          },
-          tips: [
-            'Для аромата можно добавить чеснок и зелень',
-            'Рис можно заменить на булгур или киноа'
-          ]
-        },
-        generationId: '123'
-      };
-      
-      onRecipeGenerated?.(mockRecipe);
-      onGeneratingChange?.(false);
-    }, 2000);
+    if (!isValid || isLoading) return;
+
+    setCurrentRecipe(null);
+    await generateRecipe(foodRequest);
   };
 
-  const handleLucky = () => {
-    onClearRecipe?.();
-    onGeneratingChange?.(true);
+  const handleGenerateAnother = async (excludeTitle?: string) => {
+    if (!isValid || isLoading) return;
     
-    // Рандомный рецепт
-    setTimeout(() => {
-      const randomRecipes: FoodResponse[] = [
-        // ... разные рандомные рецепты
-      ];
-      const randomRecipe = randomRecipes[Math.floor(Math.random() * randomRecipes.length)];
-      onRecipeGenerated?.(randomRecipe);
-      onGeneratingChange?.(false);
-    }, 1500);
+    setCurrentRecipe(null);
+    await generateRecipe(foodRequest, excludeTitle);
+  };
+
+  const handleLucky = async () => {
+    if (isLoading) return;
+    
+    const randomDish = commonDishes[Math.floor(Math.random() * commonDishes.length)];
+    
+    const randomRequest: FoodRequest = {
+      mode: 'dish',
+      dishName: randomDish,
+      filters: {} // БЕЗ фильтров!
+    };
+
+    setCurrentRecipe(null);
+    await generateRecipe(randomRequest);
   };
 
   const handleRequestChange = (updates: Partial<FoodRequest>) => {
-    setFoodRequest(prev => ({ ...prev, ...updates }));
+    updateRequest(updates);
+    clearError();
   };
 
   return (
     <div className="space-y-6">
-      {/* Сезонный баннер */}
-      <SeasonalBanner />
+      <PromotionalBanner
+        title={FOOD_BANNER.title}
+        description={FOOD_BANNER.description}
+        route={FOOD_BANNER.route}
+        emoji={FOOD_BANNER.emoji}
+      />
       
-      {/* Блок выбранных опций */}
       <SelectedOptions request={foodRequest} />
       
-      {/* Основной генератор */}
+      {error && (
+        <ErrorDisplay
+          error={error}
+          onRetry={handleGenerate}
+          onDismiss={clearError}
+          module="recipes"
+        />
+      )}
+      
       <div className="bg-card rounded-2xl shadow-lg p-6">
-
         {/* Навигация по секциям */}
         <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-1 mb-6 md:mb-8 p-2 sm:p-1 bg-muted rounded-xl">
           {[
             { id: 'input' as const, label: 'Режим ввода', icon: <Edit3 size={16} /> },
-            { 
-              id: 'filters' as const, 
-              label: 'Фильтры', 
-              icon: <Filter size={16} />,
-              disabled: isFiltersDisabled 
-            },
-            { 
-              id: 'exclude' as const, 
-              label: 'Исключить', 
-              icon: <XCircle size={16} />
-            }
+            { id: 'filters' as const, label: 'Фильтры', icon: <Filter size={16} /> },
+            { id: 'exclude' as const, label: 'Исключить', icon: <XCircle size={16} /> }
           ].map((section) => (
             <button
               key={section.id}
-              onClick={() => !section.disabled && setActiveSection(section.id)}
-              disabled={section.disabled}
-              className={`flex items-center space-x-2 px-3 py-2 sm:px-4 sm:py-3 rounded-lg transition-all flex-1 justify-center text-sm sm:text-base ${
-                activeSection === section.id
+              onClick={() => setActiveSection(section.id)}
+              className={`
+                flex items-center space-x-2 px-3 py-2 sm:px-4 sm:py-3 
+                rounded-lg transition-all flex-1 justify-center text-sm sm:text-base 
+                cursor-pointer
+                ${activeSection === section.id
                   ? 'bg-background text-foreground shadow-sm'
-                  : section.disabled
-                  ? 'text-muted-foreground/50 cursor-not-allowed opacity-50'
                   : 'text-muted-foreground hover:text-foreground'
-              }`}
+                }
+              `}
             >
               {section.icon}
               <span className="font-medium">{section.label}</span>
-              {section.disabled && (
-                <span className="text-xs bg-muted-foreground/20 text-muted-foreground px-1.5 py-0.5 rounded ml-1">
-                  заблокировано
-                </span>
-              )}
             </button>
           ))}
         </div>
@@ -180,25 +192,16 @@ export function FoodGenerator({
             <InputModeSection
               request={foodRequest}
               onChange={handleRequestChange}
+              onModeChange={handleModeChange}
             />
           )}
-          
+         
           {activeSection === 'filters' && (
             <div>
               <FiltersSection
                 request={foodRequest}
                 onChange={handleRequestChange}
               />
-              {isFiltersDisabled && (
-                <div className="text-center p-4 bg-yellow-50 border border-yellow-200 rounded-lg mt-4">
-                  <p className="text-yellow-800 text-sm">
-                    ⚠️ Фильтры недоступны при поиске по конкретному блюду
-                  </p>
-                  <p className="text-yellow-700 text-xs mt-1">
-                    Используйте режим &quot;по продуктам&quot; для применения фильтров
-                  </p>
-                </div>
-              )}
             </div>
           )}
 
@@ -214,22 +217,23 @@ export function FoodGenerator({
         <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
           <button
             onClick={handleGenerate}
-            disabled={!isFormValid() || isGenerating}
+            disabled={!isValid || isLoading}
             className={`
               w-full sm:w-auto
-              px-6 py-3 md:px-8 md:py-4 
-              rounded-xl md:rounded-2xl 
-              font-bold 
+              px-6 py-3 md:px-8 md:py-4
+              rounded-xl md:rounded-2xl
+              font-bold
               text-base md:text-lg
               transition-all duration-300 transform
-              ${isFormValid() && !isGenerating
-                ? 'bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105 cursor-pointer'
+              cursor-pointer
+              ${isValid && !isLoading
+                ? 'bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105'
                 : 'bg-muted text-muted-foreground cursor-not-allowed'
               }
-              ${isGenerating ? 'opacity-70' : ''}
+              ${isLoading ? 'opacity-70' : ''}
             `}
           >
-            {isGenerating ? (
+            {isLoading ? (
               <div className="flex items-center space-x-2 justify-center">
                 <div className="w-4 h-4 md:w-5 md:h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
                 <span>Готовим рецепт...</span>
@@ -238,10 +242,10 @@ export function FoodGenerator({
               '🍳 РЕШИТЬ ЗА МЕНЯ!'
             )}
           </button>
-
+          
           <button
             onClick={handleLucky}
-            disabled={isGenerating}
+            disabled={isLoading}
             className="
               w-full sm:w-auto
               px-4 py-3 md:px-6 md:py-3
@@ -251,6 +255,7 @@ export function FoodGenerator({
               bg-secondary text-secondary-foreground
               hover:bg-secondary/80
               transition-all
+              cursor-pointer
               flex items-center space-x-2 justify-center
             "
           >
@@ -259,13 +264,35 @@ export function FoodGenerator({
           </button>
         </div>
         
-        {!isFormValid() && (
+        {!isValid && !isLoading && (
           <p className="text-sm text-muted-foreground mt-3 text-center">
-            {foodRequest.mode === 'products' 
+            {foodRequest.mode === 'products'
               ? 'Добавьте хотя бы один продукт'
               : 'Введите название блюда'
             }
           </p>
+        )}
+      </div>
+
+      {/* 👇 Лоудер с рефом для скролла */}
+      <div ref={loaderContainerRef}>
+        <UniversalLoader
+          isVisible={isLoading}
+          title="Готовим рецепт"
+          message="Анализируем ваши продукты, подбираем идеальные сочетания..."
+        />
+      </div>
+
+      {/* 👇 Результаты с рефом для скролла */}
+      <div ref={resultsContainerRef} className="scroll-mt-24">
+        {currentRecipe && !isLoading && (
+          <div className="mt-8 animate-in fade-in slide-in-from-bottom-5 duration-400">
+            <FoodResult
+              recipe={currentRecipe}
+              onSave={() => console.log('Сохранить')}
+              onGenerateAnother={() => handleGenerateAnother(currentRecipe.recipe.title)} 
+            />
+          </div>
         )}
       </div>
     </div>

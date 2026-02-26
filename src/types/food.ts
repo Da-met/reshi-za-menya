@@ -9,6 +9,10 @@ export interface FoodRequest {
     dishType?: string;
     cookingTime?: string;
     cuisine?: string;
+    requestServings?: string;        // 👈 добавить
+    healthGoal?: string;      // 👈 добавить
+    calorieRange?: string;    // 👈 добавить
+    excludeComposition?: string[]; // 👈 добавить
     diet?: string;
     allergens?: string[];
     occasion?: string;
@@ -47,26 +51,23 @@ export interface FoodResponse {
     description: string;
     imageUrl?: string;
     ingredients: {
-      available: IngredientItem[]; 
-      toBuy: IngredientItem[]; 
+      available: IngredientItem[];   // было: available_available? нет, так и оставляем!
+      toBuy: IngredientItem[];       // было: to_buy → toBuy
     };
     steps: string[];
-    cookingTime: string;
+    cookingTime: string;              // было: cooking_time → cookingTime
     difficulty: string;
-    nutritionInfo?: {
+    nutritionInfo?: {                  // было: nutrition_info → nutritionInfo
       calories?: string;
       protein?: string;
       carbs?: string;
       fats?: string;
     };
     tips?: string[];
-    // НОВЫЕ ПОЛЯ ↓
-    cuisine?: string;
-    dishType?: string;
+    cuisine?: string;                  // было: cuisine (ок)
+    dishType?: string;                  // было: dish_type → dishType
     servings?: string;
-    adaptationNotes?: AdaptationNote[];
-    ingredientEfficiency?: IngredientEfficiency;
-    whyPerfect?: string;
+    whyPerfect?: string;                 // было: why_perfect → whyPerfect
   };
   generationId: string;
 }
@@ -74,4 +75,5 @@ export interface FoodResponse {
 export interface SavedRecipe extends FoodResponse {
   savedAt: Date;
   note?: string;
+  requestData: FoodRequest;
 }

@@ -1,14 +1,16 @@
 // components/analyzer/SelectedOptions.tsx
 'use client';
 
+import React from 'react';
 import { AnalyzerRequest } from '@/types/analyzer';
 import { Search } from 'lucide-react';
+
 
 interface SelectedOptionsProps {
   request: AnalyzerRequest;
 }
 
-export function SelectedOptions({ request }: SelectedOptionsProps) {
+export function SelectedOptionsComponent({ request }: SelectedOptionsProps) {
   const hasSelections = request.productName;
 
   if (!hasSelections) {
@@ -48,3 +50,6 @@ export function SelectedOptions({ request }: SelectedOptionsProps) {
     </div>
   );
 }
+
+export const SelectedOptions = React.memo(SelectedOptionsComponent);
+SelectedOptions.displayName = 'SelectedOptions';

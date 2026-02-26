@@ -1,21 +1,43 @@
 'use client';
 
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, lazy } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { SkincareSelector } from '@/components/skincare/SkincareSelector';
 import { SkincareResponse, SkincareRequest } from '@/types/skincare';
-import SavedSkincare from '@/components/skincare/SavedSkincare';
+
+
+
+// Ленивая загрузка тяжелых компонентов
+const SkincareSelector = lazy(() => 
+  import('@/components/skincare/SkincareSelector').then(mod => ({ 
+    default: mod.SkincareSelector 
+  }))
+);
+
+const SavedSkincare = lazy(() => 
+  import('@/components/skincare/SavedSkincare').then(mod => ({ 
+    default: mod.default 
+  }))
+);
+
+// Компонент загрузки
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+        <p className="text-muted-foreground">Загрузка модуля ухода за кожей...</p>
+      </div>
+    </div>
+  );
+}
 
 function SkincareContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  
+
   const [currentView, setCurrentView] = useState<'selector' | 'saved'>('selector');
   const [currentRequest, setCurrentRequest] = useState<SkincareRequest>({});
-  const [isGenerating, setIsGenerating] = useState(false);
-  
-  // Результаты теперь хранятся в SkincareSelector
-  
+
   useEffect(() => {
     const view = searchParams.get('view');
     if (view === 'saved') {
@@ -35,24 +57,12 @@ function SkincareContent() {
   };
 
   const handleProductsGenerated = (response: SkincareResponse) => {
-    // Можно логировать или обрабатывать, но отображение теперь в SkincareSelector
     console.log('Сгенерированы средства:', response);
-  };
-
-  const handleClearProducts = () => {
-    // Очистка происходит в SkincareSelector
   };
 
   const handleRequestChange = (request: SkincareRequest) => {
     setCurrentRequest(request);
   };
-
-  // const handleSaveProducts = () => {
-  //   console.log('Сохранение подборки');
-  //   // Здесь будет логика сохранения
-  // };
-
-  
 
   return (
     <div className="min-h-screen bg-background py-6 md:py-8 lg:py-10">
@@ -65,7 +75,7 @@ function SkincareContent() {
           <p className="text-base md:text-lg lg:text-xl text-muted-foreground mb-6 md:mb-8 max-w-2xl mx-auto">
             Персональные рекомендации косметики по типу кожи и потребностям
           </p>
-          
+
           {/* Переключение между вкладками */}
           <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4 mb-6 md:mb-8">
             <button
@@ -90,22 +100,27 @@ function SkincareContent() {
             </button>
           </div>
         </div>
-        
-        {currentView === 'selector' ? (
-          // ВСЯ логика генерации теперь в SkincareSelector
-          <SkincareSelector
-            key="skincare-selector"
-            onProductsGenerated={handleProductsGenerated}
-            isGenerating={isGenerating}
-            onGeneratingChange={setIsGenerating}
-            onRequestChange={handleRequestChange}
-            currentRequest={currentRequest}
-            onClearProducts={handleClearProducts}
-          />
-        ) : (
-          // SavedSkincare компонент
-          <SavedSkincare />
-        )}
+
+        {/* Динамическая загрузка компонентов */}
+        <Suspense fallback={
+          <div className="flex items-center justify-center py-12">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+              <p className="text-sm text-muted-foreground">Загрузка...</p>
+            </div>
+          </div>
+        }>
+          {currentView === 'selector' ? (
+            <SkincareSelector
+              key="skincare-selector"
+              onProductsGenerated={handleProductsGenerated}
+              onRequestChange={handleRequestChange}
+              currentRequest={currentRequest}
+            />
+          ) : (
+            <SavedSkincare />
+          )}
+        </Suspense>
       </div>
     </div>
   );
@@ -113,14 +128,7 @@ function SkincareContent() {
 
 export default function SkincarePage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Загрузка...</p>
-        </div>
-      </div>
-    }>
+    <Suspense fallback={<LoadingFallback />}>
       <SkincareContent />
     </Suspense>
   );

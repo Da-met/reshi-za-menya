@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+Allow: /skincare
+Allow: /skincare/*
+Allow: /movies
+Allow: /movies/* 
+
+Disallow: /api/
+Disallow: /admin/
+
+Sitemap: https://reshizamena.ru/sitemap.xml
+Sitemap: https://reshizamena.ru/skincare/sitemap.xml
+Sitemap: https://reshizamena.ru/movies/sitemap.xml
+
+# Скорость сканирования
+Crawl-delay: 1
+
+# Предпочтительные хосты
+Host: https://reshizamena.ru

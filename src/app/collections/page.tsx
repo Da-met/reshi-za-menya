@@ -6,80 +6,15 @@ import Link from 'next/link';
 import { Sparkles } from 'lucide-react';
 import Image from 'next/image';
 
-
-
-
-const allCollections = [
-  {
-    id: '1',
-    module: 'gifts',
-    title: 'Новогодние подарки',
-    description: 'Идеи для зимних праздников - от уютных до технологичных',
-    image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&h=400&fit=crop',
-    itemsCount: 24,
-    category: 'gifts'
-  },
-  {
-    id: '2',
-    module: 'gifts', 
-    title: 'Подарки на День Рождения',
-    description: 'Универсальные и тематические подарки для именинников',
-    image: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&h=400&fit=crop',
-    itemsCount: 18,
-    category: 'gifts'
-  },
-  {
-    id: '3',
-    module: 'food',
-    title: 'Новогодние рецепты',
-    description: 'Блюда для праздничного стола - от закусок до десертов',
-    image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=600&h=400&fit=crop',
-    itemsCount: 15,
-    category: 'food'
-  },
-  {
-    id: '4',
-    module: 'food',
-    title: 'Быстрые рецепты',
-    description: 'Вкусные блюда на скорую руку для занятых дней',
-    image: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600&h=400&fit=crop',
-    itemsCount: 20,
-    category: 'food'
-  },
-  {
-    id: '5',
-    module: 'movies',
-    title: 'Фильмы для свидания',
-    description: 'Романтическое кино для особенных вечеров',
-    image: 'https://images.unsplash.com/photo-1489599809505-7c8e1c75ce13?w=600&h=400&fit=crop',
-    itemsCount: 12,
-    category: 'movies'
-  },
-  {
-    id: '6',
-    module: 'books',
-    title: 'Книги в дорогу',
-    description: 'Захватывающие истории для путешественников',
-    image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&h=400&fit=crop',
-    itemsCount: 8,
-    category: 'books'
-  }
-];
-
-const categories = [
-  { id: 'all', label: 'Все подборки' },
-  { id: 'gifts', label: 'Подарки' },
-  { id: 'food', label: 'Рецепты' },
-  { id: 'books', label: 'Книги' },
-  { id: 'movies', label: 'Фильмы/Сериалы' }
-];
+// Импортируем моковые данные
+import { allCollectionsSummary, categories } from './data';
 
 export default function AllCollectionsPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  const filteredCollections = selectedCategory === 'all' 
-    ? allCollections 
-    : allCollections.filter(collection => collection.category === selectedCategory);
+  const filteredCollections = selectedCategory === 'all'
+    ? allCollectionsSummary
+    : allCollectionsSummary.filter(collection => collection.category === selectedCategory);
 
   return (
     <div className="min-h-screen bg-background py-8">
@@ -118,20 +53,19 @@ export default function AllCollectionsPage() {
         {/* Сетка подборок */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filteredCollections.map((collection) => (
-            <Link 
-              key={collection.id} 
+            <Link
+              key={collection.id}
               href={`/${collection.module}/collections/${collection.id}`}
               className="group block"
             >
               <div className="bg-card rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl h-full flex flex-col">
                 <div className="h-48 relative overflow-hidden">
-                  <Image 
+                  <Image
                     width={0}
                     height={0}
                     src={collection.image}
                     alt={collection.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-
                   />
                   <div className="absolute top-3 right-3">
                     <span className="text-xs font-normal text-primary-foreground bg-primary/80 px-2 py-1 rounded-full">

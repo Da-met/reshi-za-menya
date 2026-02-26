@@ -7,6 +7,7 @@ export interface MovieRequest {
   year?: string;             // "2020s" | "2010s" | "2000s" | "90s" | "80s" | "70s" | "classic" | "any"
   country?: string;          // "russia" | "usa" | "europe" | "korea" | "japan" | "china" | "india" | "latin" | "any"
   rating?: string;           // "high" | "good" | "average" | "any" (новое поле)
+  exclude_titles?: string[]; 
 }
 
 export interface MovieResponse {

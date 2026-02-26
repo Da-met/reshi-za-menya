@@ -1,84 +1,29 @@
 'use client';
-
-
-import { MovieRequest, MovieOption } from '@/types/movies';
-import { moodOptions } from './MoodSection';
+import React from 'react';
+import { MovieRequest } from '@/types/movies';
+import { CONTEXT_OPTIONS, MOOD_OPTIONS } from '@/constants/movies.constants';
 
 interface ContextSectionProps {
   request: MovieRequest;
   onChange: (updates: Partial<MovieRequest>) => void;
 }
 
-const contextOptions: MovieOption[] = [
-  {
-    id: 'family',
-    label: 'Семьей',
-    emoji: '👨‍👩‍👧‍👦',
-    hints: ['Комедия', 'Приключения', 'Семейные']
-  },
-  {
-    id: 'child', 
-    label: 'С ребенком',
-    emoji: '👶',
-    hints: ['Мультфильмы', 'Приключения', 'Семейные']
-  },
-  {
-    id: 'friends',
-    label: 'С друзьями', 
-    emoji: '👫',
-    hints: ['Комедия', 'Ужасы', 'Триллер']
-  },
-  {
-    id: 'romance',
-    label: 'На свидании',
-    emoji: '💕',
-    hints: ['Романтика', 'Драма', 'Мелодрама']
-  },
-  {
-    id: 'solo',
-    label: 'В одиночку',
-    emoji: '🧘',
-    hints: ['Драма', 'Триллер', 'Арт-хаус']
-  },
-  {
-    id: 'party',
-    label: 'На вечеринке',
-    emoji: '🎉',
-    hints: ['Комедия', 'Музыкальный', 'Культовый']
-  },
-  {
-    id: 'parents',
-    label: 'С родителями',
-    emoji: '👴👵',
-    hints: ['Драма', 'Классика', 'Исторический']
-  },
-  {
-    id: 'colleagues',
-    label: 'С коллегами',
-    emoji: '💼',
-    hints: ['Детектив', 'Триллер', 'Комедия']
-  }
-];
-
-export function ContextSection({ request, onChange }: ContextSectionProps) {
+export function ContextSectionComponent({ request, onChange }: ContextSectionProps) {
   const handleContextSelect = (contextId: string) => {
     onChange({ context: contextId });
   };
 
   return (
     <div>
-      <h3 className="
-          text-xl md:text-2xl lg:text-3xl font-accent 
-          mb-3 md:mb-4 text-foreground
-      ">
+      <h3 className="text-xl md:text-2xl lg:text-3xl font-accent mb-3 md:mb-4 text-foreground">
         С кем планируете смотреть?
       </h3>
       <p className="text-sm md:text-base text-muted-foreground mb-4 md:mb-6">
         Выберите вариант — мы подскажем подходящие жанры
       </p>
-      
+
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
-        {contextOptions.map((option) => (
+        {CONTEXT_OPTIONS.map((option) => (
           <button
             key={option.id}
             onClick={() => handleContextSelect(option.id)}
@@ -96,15 +41,17 @@ export function ContextSection({ request, onChange }: ContextSectionProps) {
           </button>
         ))}
       </div>
-      
+
       {request.context && (
         <div className="mt-3 md:mt-4 p-2 md:p-3 bg-accent rounded-lg">
           <p className="text-xs md:text-sm text-accent-foreground">
-            ✅ Автоматически установлено: {contextOptions.find(c => c.id === request.context)?.label}
-            {request.mood && `, Настроение: ${moodOptions.find(m => m.id === request.mood)?.label || 'не найдено'}`}
+            ✅ Автоматически установлено: {CONTEXT_OPTIONS.find(c => c.id === request.context)?.label}
+            {request.mood && `, Настроение: ${MOOD_OPTIONS.find(m => m.id === request.mood)?.label || 'не найдено'}`}
           </p>
         </div>
       )}
     </div>
   );
 }
+
+export const ContextSection = React.memo(ContextSectionComponent);

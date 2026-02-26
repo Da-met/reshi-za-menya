@@ -14,6 +14,8 @@ export interface BookRequest {
   publicationPeriod?: string;    // ~ period ~            "modern" | "recent" | "20th" | "classic" | "any"
   targetAudience?: string;       // ~ audience ~             "child" | "teen" | "adult" | "any"
   popularityLevel?: string;     // ~ popularity ~           "bestseller" | "average" | "hidden_gem" | "any"
+
+  exclude_titles?: string[];
 }
 
 export interface BookResponse {

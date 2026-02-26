@@ -1,74 +1,13 @@
 'use client';
 
 import { GiftRequest } from '@/types/gifts';
+import { GIFT_OCCASIONS, BUDGET_RANGES, GIFT_TYPES } from '@/constants/gifts.constants';
 
 interface FiltersSectionProps {
   request: GiftRequest;
   onChange: (updates: Partial<GiftRequest>) => void;
 }
 
-const occasions = [
-  // 🎂 Личные праздники
-  'День рождения',
-  'Юбилей',
-  'Выпускной',
-  'Повышение на работе',
-  'Защита диплома',
-  
-  // 💕 Романтические
-  'Свадьба',
-  'Годовщина отношений',
-  'День святого Валентина',
-  'Предложение',
-  
-  // 🏠 Семейные и домашние
-  'Новоселье',
-  'Рождение ребенка',
-  'Крестины',
-  'Семейное торжество',
-  
-  // 🎅 Сезонные праздники
-  'Новый год',
-  'Рождество',
-  '8 Марта', 
-  '23 Февраля',
-  'День матери',
-  'День отца',
-  
-  // 🎓 Профессиональные
-  'День учителя',
-  'День медицинского работника',
-  'Профессиональный праздник',
-  'Выход на пенсию',
-  
-  // ✨ Просто так
-  'Без повода',
-  'В знак благодарности',
-  'Для поддержки',
-  'Сюрприз',
-  
-  // 🏆 Достижения
-  'Спортивная победа',
-  'Завершение проекта',
-  'Личное достижение',
-  'Преодоление трудностей',
-  
-  // 🌍 Путешествия и события
-  'Отпуск',
-  'Командировка', 
-  'Переезд в другой город',
-  'Напутствие в дорогу'
-];
-const budgets = [
-  'до 500₽', 
-  '500-1000₽', 
-  '1000-3000₽', 
-  '3000-5000₽', 
-  '5000-10000₽', 
-  '10000-20000₽',
-  '20000+₽'
-];
-const giftTypes = ['Вещь', 'Впечатление', 'Сделай сам'];
 
 export function FiltersSection({ request, onChange }: FiltersSectionProps) {
   const toggleArrayItem = (array: string[] | undefined, item: string) => {
@@ -104,7 +43,7 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
       <div>
         <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">🎉 Повод</h4>
         <div className="flex flex-wrap gap-1 md:gap-2">
-          {occasions.map(occasion => (
+          {GIFT_OCCASIONS.map(occasion => (
             <button
               key={occasion}
               onClick={() => handleSingleSelect('gift_occasion', occasion)}
@@ -124,7 +63,7 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
       <div>
         <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">💰 Бюджет</h4>
         <div className="flex flex-wrap gap-1 md:gap-2">
-          {budgets.map(budget => (
+          {BUDGET_RANGES.map(budget => (
             <button
               key={budget}
               onClick={() => handleSingleSelect('budget', budget)}
@@ -144,19 +83,19 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
       <div>
         <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">🎁 Тип подарка</h4>
         <div className="flex flex-wrap gap-1 md:gap-2">
-          {giftTypes.map(type => (
+          {GIFT_TYPES.map(type => (
             <button
-              key={type}
+              key={type.id}
               onClick={() => {
-                onChange({ gift_format: toggleArrayItem(request.gift_format, type) });
+                onChange({ gift_format: toggleArrayItem(request.gift_format, type.id) });
               }}
               className={`px-2 py-1 md:px-4 md:py-2 rounded-lg border transition-all text-xs md:text-sm ${
-                request.gift_format?.includes(type)
+                request.gift_format?.includes(type.id)
                   ? 'bg-primary text-primary-foreground border-primary shadow-sm'
                   : 'bg-card border-border hover:border-primary hover:bg-accent'
               }`}
             >
-              {type}
+              {type.icon} {type.label}
             </button>
           ))}
         </div>

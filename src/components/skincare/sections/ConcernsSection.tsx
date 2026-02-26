@@ -1,29 +1,15 @@
-// В ConcernsSection.tsx
 'use client';
 
+import React from 'react';
 import { SkincareRequest } from '@/types/skincare';
+import { CONCERNS } from '@/constants/skincare.constants';
 
 interface ConcernsSectionProps {
   request: SkincareRequest;
   onChange: (updates: Partial<SkincareRequest>) => void;
 }
 
-const skinConcerns = [
-  { id: 'acne', label: 'Акне и высыпания', emoji: '🔴' },
-  { id: 'dryness', label: 'Сухость и шелушение', emoji: '🍂' },
-  { id: 'oiliness', label: 'Избыточный блеск', emoji: '✨' },
-  { id: 'pigmentation', label: 'Пигментация', emoji: '🎨' },
-  { id: 'wrinkles', label: 'Морщины', emoji: '👵' },
-  { id: 'redness', label: 'Покраснения', emoji: '🔺' },
-  { id: 'pores', label: 'Расширенные поры', emoji: '🕳️' },
-  { id: 'dullness', label: 'Тусклый цвет лица', emoji: '🌑' },
-  { id: 'sensitivity', label: 'Чувствительность', emoji: '🌿' },
-  { id: 'hydration', label: 'Обезвоженность', emoji: '💧' },
-  { id: 'dark-circles', label: 'Темные круги под глазами', emoji: '👁️' },
-  { id: 'scarring', label: 'Постакне и шрамы', emoji: '🩹' },
-];
-
-export function ConcernsSection({ request, onChange }: ConcernsSectionProps) {
+function ConcernsSectionComponent({ request, onChange }: ConcernsSectionProps) {
   // Выбранные проблемы (гарантируем что это массив)
   const currentConcerns = request.concerns || [];
 
@@ -38,7 +24,6 @@ export function ConcernsSection({ request, onChange }: ConcernsSectionProps) {
     const newConcerns = currentConcerns.includes(concernId)
       ? currentConcerns.filter(id => id !== concernId)
       : [...currentConcerns, concernId];
-
     onChange({ concerns: newConcerns });
   };
 
@@ -52,7 +37,7 @@ export function ConcernsSection({ request, onChange }: ConcernsSectionProps) {
       </p>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
-        {skinConcerns.map((concern) => {
+        {CONCERNS.map((concern) => {
           const isSelected = currentConcerns.includes(concern.id);
           const isLastSelected = isSelected && currentConcerns.length === 1;
 
@@ -115,3 +100,5 @@ export function ConcernsSection({ request, onChange }: ConcernsSectionProps) {
     </div>
   );
 }
+
+export const ConcernsSection = React.memo(ConcernsSectionComponent);

@@ -1,28 +1,39 @@
 'use client';
 
+import React from 'react';
+
 interface MovieActionsProps {
-  isFormValid: boolean; // 👈 Должно быть boolean, а не boolean | undefined
+  isFormValid: boolean;
   isGenerating: boolean;
   onGenerate: () => void;
   onLucky: () => void;
 }
 
-export function MovieActions({ 
+function MovieActionsComponent({ 
   isFormValid, 
   isGenerating, 
   onGenerate, 
   onLucky 
 }: MovieActionsProps) {
+  
+  const handleGenerate = React.useCallback(() => {
+    onGenerate();
+  }, [onGenerate]);
+
+  const handleLucky = React.useCallback(() => {
+    onLucky();
+  }, [onLucky]);
+
   return (
     <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
       <button
-        onClick={onGenerate}
+        onClick={handleGenerate}
         disabled={!isFormValid || isGenerating}
         className={`
           w-full sm:w-auto
-          px-6 py-3 md:px-8 md:py-4 
-          rounded-xl md:rounded-2xl 
-          font-bold 
+          px-6 py-3 md:px-8 md:py-4
+          rounded-xl md:rounded-2xl
+          font-bold
           text-base md:text-lg
           transition-all duration-300 transform
           ${isFormValid && !isGenerating
@@ -41,9 +52,8 @@ export function MovieActions({
           '🎬 РЕШИТЬ ЗА МЕНЯ!'
         )}
       </button>
-
       <button
-        onClick={onLucky}
+        onClick={handleLucky}
         disabled={isGenerating}
         className="
           w-full sm:w-auto
@@ -64,3 +74,4 @@ export function MovieActions({
   );
 }
 
+export const MovieActions = React.memo(MovieActionsComponent);

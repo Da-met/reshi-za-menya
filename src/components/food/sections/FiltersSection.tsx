@@ -1,78 +1,30 @@
 'use client';
 
+import React from 'react';
 import { useState } from 'react';
 import { FoodRequest } from '@/types/food';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, Filter } from 'lucide-react';
+import {
+  DISH_TYPES,
+  COOKING_TIMES,
+  CUISINES,
+  SERVINGS,
+  HEALTH_GOALS,
+  CALORIE_RANGES,
+  EXCLUDE_COMPOSITION,
+  DIETS,
+  ALLERGENS,
+  OCCASIONS,
+  DIFFICULTY_LEVELS,
+  COOKING_METHODS
+} from '@/constants/food.constants';
 
 interface FiltersSectionProps {
   request: FoodRequest;
   onChange: (updates: Partial<FoodRequest>) => void;
 }
 
-const mainFilters = {
-  dishType: [
-    { id: 'breakfast', label: 'Завтрак' },
-    { id: 'lunch', label: 'Обед' },
-    { id: 'dinner', label: 'Ужин' },
-    { id: 'dessert', label: 'Десерт' },
-    { id: 'snack', label: 'Перекус' }
-  ],
-  cookingTime: [
-    { id: '<15', label: 'До 15 мин' },
-    { id: '<30', label: 'До 30 мин' },
-    { id: '<45', label: 'До 45 мин' },
-    { id: '<60', label: 'До 60 мин' },
-    { id: '>60', label: 'Более 60 мин' }
-  ],
-  cuisine: [
-    { id: 'russian', label: 'Русская' },
-    { id: 'italian', label: 'Итальянская' },
-    { id: 'asian', label: 'Азиатская' },
-    { id: 'georgian', label: 'Грузинская' },
-    { id: 'mexican', label: 'Мексиканская' }
-  ]
-};
-
-const additionalFilters = {
-  diet: [
-    { id: 'vegetarian', label: 'Вегетарианское' },
-    { id: 'vegan', label: 'Веганское' },
-    { id: 'gluten-free', label: 'Безглютеновое' },
-    { id: 'lactose-free', label: 'Безлактозное' },
-    { id: 'keto', label: 'Низкоуглеводное' },
-    { id: 'high-protein', label: 'Высокобелковое' }
-  ],
-  allergens: [
-    { id: 'nuts', label: 'Орехи' },
-    { id: 'seafood', label: 'Морепродукты' },
-    { id: 'eggs', label: 'Яйца' },
-    { id: 'milk', label: 'Молоко' },
-    { id: 'gluten', label: 'Глютен' },
-    { id: 'honey', label: 'Мед' }
-  ],
-  occasion: [
-    { id: 'everyday', label: 'Повседневное' },
-    { id: 'holiday', label: 'На праздник' },
-    { id: 'romantic', label: 'Для романтического ужина' },
-    { id: 'kids', label: 'Для детей' },
-    { id: 'healthy', label: 'Здоровое питание' }
-  ],
-  difficulty: [
-    { id: 'easy', label: 'Легко' },
-    { id: 'medium', label: 'Средне' },
-    { id: 'hard', label: 'Сложно' }
-  ],
-  cookingMethod: [
-    { id: 'oven', label: 'В духовке' },
-    { id: 'stove', label: 'На сковороде' },
-    { id: 'multicooker', label: 'В мультиварке' },
-    { id: 'grill', label: 'На гриле' },
-    { id: 'no-cook', label: 'Без варки' },
-    { id: 'steam', label: 'На пару' }
-  ]
-};
-
-export function FiltersSection({ request, onChange }: FiltersSectionProps) {
+function FiltersSectionComponent({ request, onChange }: FiltersSectionProps) {
   const [showAdditional, setShowAdditional] = useState(false);
 
   const handleFilterChange = (filterType: string, value: string | string[]) => {
@@ -95,7 +47,7 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
 
   const renderFilterGroup = (
     title: string,
-    filters: Array<{ id: string; label: string }>,
+    filters: readonly { id: string; label: string; }[],
     filterType: string,
     isMultiple = false
   ) => (
@@ -150,28 +102,53 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
           Выберите подходящие фильтры для более точного подбора
         </p>
 
-        {/* Основные фильтры */}
-        {renderFilterGroup('Тип блюда', mainFilters.dishType, 'dishType')}
-        {renderFilterGroup('Время приготовления', mainFilters.cookingTime, 'cookingTime')}
-        {renderFilterGroup('Кухня мира', mainFilters.cuisine, 'cuisine')}
+        {/* 👇 ФИЛЬТРЫ, ДОСТУПНЫЕ В ЛЮБОМ РЕЖИМЕ */}
+        {renderFilterGroup('Количество порций', SERVINGS, 'requestServings')}
+        {renderFilterGroup('Цель питания', HEALTH_GOALS, 'healthGoal')}
+        {renderFilterGroup('Диета', DIETS, 'diet')}
+        {renderFilterGroup('Исключить по составу', EXCLUDE_COMPOSITION, 'excludeComposition', true)}
 
-        {/* Дополнительные фильтры */}
-        <div className="border-t border-border pt-6">
+        {/* 👇 ФИЛЬТРЫ, ДОСТУПНЫЕ ТОЛЬКО В РЕЖИМЕ "ПО ПРОДУКТАМ" */}
+        {request.mode === 'products' && (
+          <>
+            {renderFilterGroup('Тип блюда', DISH_TYPES, 'dishType')}
+            {renderFilterGroup('Время приготовления', COOKING_TIMES, 'cookingTime')}
+            {renderFilterGroup('Кухня мира', CUISINES, 'cuisine')}
+            {renderFilterGroup('Калорийность', CALORIE_RANGES, 'calorieRange')}
+            {renderFilterGroup('Сложность', DIFFICULTY_LEVELS, 'difficulty')}
+            {renderFilterGroup('Способ приготовления', COOKING_METHODS, 'cookingMethod')}
+            {renderFilterGroup('Повод', OCCASIONS, 'occasion')}
+          </>
+        )}
+
+        {/* Дополнительные фильтры (аллергены) - доступны всегда */}
+        <div className="border-t border-border pt-8 mt-8">
           <button
             onClick={() => setShowAdditional(!showAdditional)}
-            className="flex items-center space-x-2 hover:text-primary transition-colors mb-4"
+            className="flex items-center justify-between w-full p-5 bg-primary/5 hover:bg-primary/10 rounded-xl border border-primary/20 transition-all group mb-8"
           >
-            <span className="text-xl md:text-2xl lg:text-3xl" style={{ fontFamily: 'var(--font-accent)' }}>Дополнительные фильтры</span>
-            {showAdditional ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                <Filter size={18} className="text-primary" />
+              </div>
+              <div className="text-left">
+                <span className="text-lg font-medium text-foreground">Аллергены</span>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Исключить продукты, вызывающие аллергию
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 bg-background/50 px-4 py-2 rounded-lg">
+              <span className="text-sm font-medium text-primary">
+                {showAdditional ? 'скрыть' : 'показать'}
+              </span>
+              {showAdditional ? <ChevronUp size={18} className="text-primary" /> : <ChevronDown size={18} className="text-primary" />}
+            </div>
           </button>
 
           {showAdditional && (
-            <div className="space-y-6 animate-in fade-in duration-300">
-              {renderFilterGroup('Диета', additionalFilters.diet, 'diet')}
-              {renderFilterGroup('Исключить аллергены', additionalFilters.allergens, 'allergens', true)}
-              {renderFilterGroup('Повод', additionalFilters.occasion, 'occasion')}
-              {renderFilterGroup('Сложность', additionalFilters.difficulty, 'difficulty')}
-              {renderFilterGroup('Способ приготовления', additionalFilters.cookingMethod, 'cookingMethod')}
+            <div className="space-y-6 animate-in fade-in duration-300 pt-2">
+              {renderFilterGroup('Аллергены', ALLERGENS, 'allergens', true)}
             </div>
           )}
         </div>
@@ -179,3 +156,5 @@ export function FiltersSection({ request, onChange }: FiltersSectionProps) {
     </div>
   );
 }
+
+export const FiltersSection = React.memo(FiltersSectionComponent);

@@ -1,10 +1,16 @@
 'use client';
 
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Trash2, Droplets, Clock, MoreVertical, Heart } from 'lucide-react';
+import { Trash2, Clock, MoreVertical, Heart } from '@/lib/icons';
 import { SavedSkincare } from '@/types/skincare';
-import { OptionTag } from './OptionTag';
+import { SkincareOptionTag } from './SkincareOptionTag';
+import { SafeContent } from '../ui/safe/SafeContent';
+import { productTypeLabels, SKIN_BANNER, skinTypeLabels } from '@/constants/skincare.constants';
+import { EmptyState } from '../ui/shared/EmptyState';
+import { PromotionalBanner } from '@/components/ui/shared';
+
 
 
 // Временные данные
@@ -21,6 +27,9 @@ const mockSavedSkincare: SavedSkincare[] = [
       key_ingredients: ['Гиалуроновая кислота', 'Витамин С', 'Ниацинамид'],
       features: ['Увлажнение', 'Осветление', 'Укрепление барьера кожи'],
       reasons: ['Подходит для чувствительной кожи', 'Нежирная текстура', 'Быстро впитывается'],
+
+      image: `https://source.unsplash.com/featured/400x300/?La%20Roche%20Posay%20hyaluronic%20serum%20skincare`,
+
       purchaseLink: 'https://example.com',
       tags: ['увлажнение', 'витамин C', 'сыворотка'],
       rating: 4.8
@@ -46,6 +55,9 @@ const mockSavedSkincare: SavedSkincare[] = [
       key_ingredients: ['Керамиды', 'Гиалуроновая кислота', 'Ниацинамид'],
       features: ['Восстановление барьера', 'Увлажнение 24 часа', 'Не комедогенный'],
       reasons: ['Без отдушек', 'Подходит для чувствительной кожи', 'Доступная цена'],
+
+      image: `https://source.unsplash.com/featured/400x300/?CeraVe%20moisturizer%20cream%20skincare`,
+
       purchaseLink: 'https://example.com',
       tags: ['увлажнение', 'керамиды', 'крем'],
       rating: 4.9
@@ -60,35 +72,10 @@ const mockSavedSkincare: SavedSkincare[] = [
   }
 ];
 
-const skinTypeLabels: Record<string, string> = {
-  'normal': 'Нормальная',
-  'dry': 'Сухая',
-  'oily': 'Жирная',
-  'combination': 'Комбинированная',
-  'sensitive': 'Чувствительная',
-  'mature': 'Зрелая',
-  'acne-prone': 'Склонная к акне',
-  'dehydrated': 'Обезвоженная'
-};
-
-const productTypeLabels: Record<string, string> = {
-  'cleanser': 'Очищение',
-  'toner': 'Тоник',
-  'serum': 'Сыворотка',
-  'moisturizer': 'Увлажнение',
-  'eye-cream': 'Для глаз',
-  'sunscreen': 'Солнцезащита',
-  'mask': 'Маски',
-  'exfoliator': 'Пилинг',
-  'treatment': 'Лечение',
-  'oil': 'Масло',
-  'mist': 'Спрей',
-  'set': 'Набор'
-};
 
 
 
-export default function SavedSkincareComponent() {
+function SavedSkincareComponent() {
   const router = useRouter();
   const [savedProducts, setSavedProducts] = useState<SavedSkincare[]>(mockSavedSkincare);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -109,20 +96,33 @@ export default function SavedSkincareComponent() {
 
   if (savedProducts.length === 0) {
     return (
-      <div className="text-center py-16">
-        <div className="w-20 h-20 bg-background rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-dashed border-muted-foreground/20">
-          <Droplets className="w-10 h-10 text-muted-foreground/60" />
-        </div>
-        <h3 className="text-xl text-foreground mb-3">Нет сохраненных средств</h3>
-        <p className="text-muted-foreground max-w-sm mx-auto">
-          Сохраняйте понравившиеся средства, чтобы вернуться к ним позже
-        </p>
-      </div>
+      <>
+        <PromotionalBanner
+          title={SKIN_BANNER.title}
+          description={SKIN_BANNER.description}
+          route={SKIN_BANNER.route}
+          emoji={SKIN_BANNER.emoji}
+        />
+        <EmptyState
+          icon="💆"
+          title="Нет сохраненных средств"
+          description="Сохраняйте понравившиеся средства, чтобы вернуться к ним позже"
+          variant="compact"
+        />
+      </>
     );
   }
 
+
+
   return (
     <div className="space-y-6">
+      <PromotionalBanner
+        title={SKIN_BANNER.title}
+        description={SKIN_BANNER.description}
+        route={SKIN_BANNER.route}
+        emoji={SKIN_BANNER.emoji}
+      />
       <div className="flex items-center justify-between mb-3">
         <div>
           <p className="text-muted-foreground">
@@ -195,42 +195,45 @@ export default function SavedSkincareComponent() {
                 </div>
 
                 {/* Описание */}
-                <p className="text-muted-foreground leading-relaxed text-sm mb-4 line-clamp-2">
-                  {savedProduct.productData.description}
-                </p>
+                <SafeContent
+                  content={savedProduct.productData.description}
+                  type="paragraphs"
+                  className="text-muted-foreground leading-relaxed text-sm mb-4 line-clamp-2"
+                  maxLength={150}
+                />
 
                 {/* Теги параметров */}
                 <div className="flex flex-wrap gap-2 mb-4">
                   {savedProduct.requestData.skin_type && (
-                    <OptionTag
+                    <SkincareOptionTag
                       type="skinType"
                       label={skinTypeLabels[savedProduct.requestData.skin_type] || savedProduct.requestData.skin_type}
-                      value={savedProduct.requestData.skin_type}
+                      // value={savedProduct.requestData.skin_type}
                     />
                   )}
 
                   {savedProduct.requestData.desired_product_type && (
-                    <OptionTag
+                    <SkincareOptionTag
                       type="productType"
                       label={productTypeLabels[savedProduct.requestData.desired_product_type] || savedProduct.requestData.desired_product_type}
-                      value={savedProduct.requestData.desired_product_type}
+                      // value={savedProduct.requestData.desired_product_type}
                     />
                   )}
 
                   {savedProduct.requestData.concerns?.slice(0, 2).map(concern => (
-                    <OptionTag
+                    <SkincareOptionTag
                       key={concern}
                       type="concern"
                       label={concern}
-                      value={concern}
+                      // value={concern}
                     />
                   ))}
 
                   {savedProduct.requestData.budget && (
-                    <OptionTag
+                    <SkincareOptionTag
                       type="budget"
                       label={savedProduct.requestData.budget}
-                      value={savedProduct.requestData.budget}
+                      // value={savedProduct.requestData.budget}
                     />
                   )}
                 </div>
@@ -238,7 +241,11 @@ export default function SavedSkincareComponent() {
                 {/* Комментарий */}
                 {savedProduct.userComment && (
                   <div className="mb-4 p-3 bg-accent/20 border border-accent/30 rounded-lg">
-                    <p className="text-sm text-foreground break-words">{savedProduct.userComment}</p>
+                    <SafeContent
+                      content={savedProduct.userComment || ''}
+                      type="paragraphs"
+                      className="text-sm text-foreground break-words"
+                    />
                   </div>
                 )}
 
@@ -263,4 +270,7 @@ export default function SavedSkincareComponent() {
     </div>
   );
 }
+
+
+export default React.memo(SavedSkincareComponent);
 

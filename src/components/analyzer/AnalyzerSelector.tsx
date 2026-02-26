@@ -1,138 +1,103 @@
-// components/analyzer/AnalyzerSelector.tsx (ФИНАЛЬНЫЙ)
+// src/components/analyzer/AnalyzerSelector.tsx
+
 'use client';
 
-import { useState, useEffect } from 'react';
+import React from 'react';
+import { useEffect } from 'react';
 import { AnalyzerRequest, AnalysisResponse } from '@/types/analyzer';
 import { ProductSearchSection } from './sections/ProductSearchSection';
 import { SelectedOptions } from './SelectedOptions';
-import { SeasonalBanner } from './SeasonalBanner';
-
+import { UniversalLoader } from '@/components/ui/UniversalLoader';
+import { ErrorDisplay } from '@/components/ui/ErrorDisplay';
+import { PromotionalBanner } from '@/components/ui/shared';
+import { useAnalyzerForm } from '@/hooks/analyzer/useAnalyzerForm';
+import { useAnalyzerApi } from '@/hooks/analyzer/useAnalyzerApi';
+import { ANALYZER_BANNER } from '@/constants/analyzer.constants';
 
 interface AnalyzerSelectorProps {
   onResultGenerated?: (result: AnalysisResponse) => void;
-  isAnalyzing?: boolean;
   onAnalyzingChange?: (analyzing: boolean) => void;
   onRequestChange?: (request: AnalyzerRequest) => void;
   currentRequest?: AnalyzerRequest;
   onClearResult?: () => void;
 }
 
-export function AnalyzerSelector({
+export function AnalyzerSelectorComponent({
   onResultGenerated,
-  isAnalyzing = false,
   onAnalyzingChange,
   onRequestChange,
   currentRequest = { productName: '' },
   onClearResult
 }: AnalyzerSelectorProps) {
-  const [analyzerRequest, setAnalyzerRequest] = useState<AnalyzerRequest>({
-    productName: currentRequest.productName || ''
+
+  // Используем кастомные хуки
+  const { request, updateRequest, isValid } = useAnalyzerForm(currentRequest);
+  
+  const {
+    analyzeProduct,
+    isLoading,
+    error,
+    clearError
+  } = useAnalyzerApi({
+    onSuccess: (response) => {
+      console.log('✅ Анализ успешно завершен:', response.product.name);
+      onResultGenerated?.(response);
+    },
+    onError: (error) => {
+      console.error('❌ Ошибка анализа:', error);
+    },
+    timeoutMs: 60000,
+    maxRetries: 2,
+    enableCache: true,
+    cacheTTL: 3600000
   });
 
-  // Синхронизируем с родительским состоянием
+  // Уведомляем родителя об изменениях запроса
   useEffect(() => {
-    onRequestChange?.(analyzerRequest);
-  }, [analyzerRequest, onRequestChange]);
+    onRequestChange?.(request);
+  }, [request, onRequestChange]);
 
-  // Валидация формы
-  const isFormValid = () => {
-    const hasProductName = !!analyzerRequest.productName.trim();
-    return hasProductName;
-  };
+  // Уведомляем о состоянии загрузки
+  useEffect(() => {
+    onAnalyzingChange?.(isLoading);
+  }, [isLoading, onAnalyzingChange]);
 
   const handleAnalyze = async () => {
-    if (!isFormValid() || isAnalyzing) return;
+    if (!isValid || isLoading) return;
+    
+    // Очищаем предыдущий результат
     onClearResult?.();
-    onAnalyzingChange?.(true);
     
-    console.log('Анализируем продукт:', analyzerRequest);
+    // Очищаем ошибку
+    clearError();
     
-    try {
-      // TODO: Заменить на реальный API вызов
-      // const response = await fetch('/api/analyzer', {
-      //   method: 'POST',
-      //   body: JSON.stringify(analyzerRequest)
-      // });
-      
-      // Пока используем заглушку
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      const mockResponse: AnalysisResponse = {
-        product: {
-          id: '1',
-          name: analyzerRequest.productName || 'Пример средства',
-          brand: 'Пример бренда',
-          description: 'Это пример результата анализа. В реальной версии здесь будет полный анализ состава косметического средства с оценкой безопасности, разбором ингредиентов и рекомендациями.',
-          safetyScore: 7.5,
-          features: [
-            'Содержит гиалуроновую кислоту',
-            'Обогащен церамидами',
-            'Без отдушек и парабенов',
-            'Гипоаллергенная формула',
-            'Подходит для чувствительной кожи'
-          ],
-          ingredients: [
-            {
-              name: 'Aqua',
-              safety: 'excellent',
-              purpose: 'Растворитель',
-              comedogenicRating: 0,
-              irritancy: 'low',
-              benefits: ['Безопасный', 'Гипоаллергенный'],
-              concerns: []
-            },
-            {
-              name: 'Glycerin',
-              safety: 'good',
-              purpose: 'Увлажнитель',
-              comedogenicRating: 0,
-              irritancy: 'low',
-              benefits: ['Интенсивное увлажнение', 'Укрепление барьера кожи'],
-              concerns: []
-            }
-          ],
-          skinTypeCompatibility: {
-            normal: 8,
-            dry: 9,
-            oily: 6,
-            combination: 7,
-            sensitive: 5
-          },
-          warnings: ['Содержит отдушки', 'Может вызывать раздражение у чувствительной кожи'],
-          recommendations: ['Использовать 1-2 раза в день', 'Провести тест на аллергию'],
-          tags: ['увлажняющий', 'для сухой кожи']
-        },
-        generationId: Date.now().toString()
-      };
-      
-      onResultGenerated?.(mockResponse);
-      
-    } catch (error) {
-      console.error('Ошибка анализа:', error);
-      alert('Произошла ошибка при анализе состава. Попробуйте еще раз.');
-    } finally {
-      onAnalyzingChange?.(false);
-    }
+    // Запускаем анализ
+    await analyzeProduct(request);
   };
 
-  const handleRequestChange = (updates: Partial<AnalyzerRequest>) => {
-    setAnalyzerRequest(prev => ({ ...prev, ...updates }));
+  // Обработчик повторной попытки при ошибке
+  const handleRetry = () => {
+    handleAnalyze();
   };
 
   return (
     <div className="space-y-6">
-      {/* Сезонный баннер */}
-      <SeasonalBanner />
-
-      {/* Блок выбранных опций */}
-      <SelectedOptions request={analyzerRequest} />
+      {/* Заменяем SeasonalBanner на PromotionalBanner */}
+      <PromotionalBanner
+        title={ANALYZER_BANNER.title}
+        description={ANALYZER_BANNER.description}
+        route={ANALYZER_BANNER.route}
+        emoji={ANALYZER_BANNER.emoji}
+      />
       
-      {/* Основной анализатор */}
+      {/* Блок с выбранными опциями (только название продукта) */}
+      <SelectedOptions request={request} />
+
+      {/* Основной блок анализатора */}
       <div className="bg-card rounded-2xl shadow-lg p-6">
         {/* Заголовок секции */}
         <div className="mb-6 md:mb-8">
           <div className="flex items-center space-x-3 mb-4">
-
             <div>
               <h3 className="text-xl md:text-2xl font-accent text-foreground">
                 Введите название средства
@@ -144,20 +109,19 @@ export function AnalyzerSelector({
           </div>
         </div>
 
-        {/* Секция формы */}
+        {/* Секция поиска продукта */}
         <div className="mb-6">
           <ProductSearchSection
-            request={analyzerRequest}
-            onChange={handleRequestChange}
+            request={request}
+            onChange={updateRequest}
           />
         </div>
-
 
         {/* Кнопка анализа */}
         <div className="text-center pt-4">
           <button
             onClick={handleAnalyze}
-            disabled={!isFormValid() || isAnalyzing}
+            disabled={!isValid || isLoading}
             className={`
               w-full
               px-6 py-4 md:px-8 md:py-5
@@ -165,30 +129,51 @@ export function AnalyzerSelector({
               font-bold
               text-lg md:text-xl
               transition-all duration-300 transform
-              ${isFormValid() && !isAnalyzing
+              ${isValid && !isLoading
                 ? 'bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105 cursor-pointer'
                 : 'bg-muted text-muted-foreground cursor-not-allowed'
               }
-              ${isAnalyzing ? 'opacity-70' : ''}
+              ${isLoading ? 'opacity-70' : ''}
             `}
           >
-            {isAnalyzing ? (
+            {isLoading ? (
               <div className="flex items-center space-x-2 justify-center">
                 <div className="w-5 h-5 md:w-6 md:h-6 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
-                <span>Анализируем...</span>
+                <span>Анализируем состав...</span>
               </div>
             ) : (
               '🧪 ПРОАНАЛИЗИРОВАТЬ СОСТАВ'
             )}
           </button>
-          
-          {!isFormValid() && (
+          {!isValid && (
             <p className="text-sm text-muted-foreground mt-3">
               Введите название продукта для анализа состава
             </p>
           )}
         </div>
       </div>
+
+      {/* Универсальный лоадер */}
+      <UniversalLoader
+        isVisible={isLoading}
+        title="Анализируем состав"
+        message="Ищем информацию о продукте и анализируем каждый ингредиент..."
+      />
+
+      {/* Блок с ошибкой */}
+      {error && (
+        <div className="mt-4">
+          <ErrorDisplay
+            error={error}
+            onRetry={handleRetry}
+            onDismiss={clearError}
+            module="analyzer"
+          />
+        </div>
+      )}
     </div>
   );
 }
+
+export const AnalyzerSelector = React.memo(AnalyzerSelectorComponent);
+AnalyzerSelector.displayName = 'AnalyzerSelector';

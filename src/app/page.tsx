@@ -12,26 +12,10 @@ import { Goal, Lightbulb, ShoppingCart } from 'lucide-react';
 
 export default function Home() {
   const [activeCategoryId, setActiveCategoryId] = useState('creative');
-  // const [isMobile, setIsMobile] = useState(false);
-  // const { theme } = useThemeStore();
   
   // Только креативные и экспертные категории для свайпера
   const swipeCategories = moduleCategories.filter(cat => cat.id !== 'collections');
   const activeCategory = moduleCategories.find(cat => cat.id === activeCategoryId);
-
-  // useEffect(() => {
-  //   const checkMobile = () => {
-  //     setIsMobile(window.innerWidth < 768);
-  //   };
-    
-  //   if (typeof window !== 'undefined') {
-  //     checkMobile();
-  //     window.addEventListener('resize', checkMobile);
-  //     return () => window.removeEventListener('resize', checkMobile);
-  //   }
-  // }, []);
-
-  // ВОССТАНАВЛИВАЕМ ВАШИ ОРИГИНАЛЬНЫЕ ФУНКЦИИ
   const getMobileColorScheme = (index: number) => {
     // Мобильные: 1-2-1-2
     return index % 2 === 0 ? 'primary' : 'inverted';
@@ -45,13 +29,6 @@ export default function Home() {
       return 'inverted';
     }
   };
-
-  // Пути к картинкам
-  // const backgroundImages = {
-  //   light: '/images/themes/light/collections-bg.svg',
-  //   night: '/images/themes/night/collections-bg.svg', 
-  //   sky: '/images/themes/sky/collections-bg.svg'
-  // };
 
   // Создаем разные порядки карточек как в вашем оригинале
   const getModulesForView = () => {
@@ -70,11 +47,6 @@ export default function Home() {
   const { desktopModules, mobileModules } = getModulesForView();
 
 
-
-
-
-
-
 return (
   <div className="min-h-screen bg-background flex flex-col">
     {/* Заголовок */}
@@ -88,7 +60,7 @@ return (
     </header>
 
     {/* Свайпабельные вкладки */}
-    <div className="container mx-auto px-4">
+    <div className="container mx-auto px-4 ">
       <SwipeableTabs
         categories={swipeCategories.map(cat => ({
           id: cat.id,

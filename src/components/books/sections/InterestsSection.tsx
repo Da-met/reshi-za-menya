@@ -1,27 +1,17 @@
+// src/components/books/sections/InterestsSection.tsx
+
 'use client';
 
+import React from 'react';
 import { BookRequest } from '@/types/books';
+import { FICTION_GENRES, NONFICTION_GENRES } from '@/constants/books.constants';
 
 interface InterestsSectionProps {
   request: BookRequest;
   onChange: (updates: Partial<BookRequest>) => void;
 }
 
-const fictionGenres = [
-  'Фантастика', 'Фэнтези', 'Детектив', 'Триллер', 'Ужасы', 'Роман',
-  'Приключения', 'Исторический', 'Современная проза', 'Классика',
-  'Поэзия', 'Драма', 'Юмор', 'Мистика', 'Киберпанк', 'Постапокалипсис',
-  'Стимпанк', 'Магический реализм'
-];
-
-const nonfictionGenres = [
-  'Биографии', 'Мемуары', 'Психология', 'Саморазвитие', 'Философия',
-  'Наука', 'История', 'Путешествия', 'Искусство', 'Бизнес',
-  'Здоровье', 'Кулинария', 'Хобби', 'Природа', 'Технологии',
-  'Эссеистика', 'Журналистика', 'Культура', 'Религия', 'Политика'
-];
-
-export function InterestsSection({ request, onChange }: InterestsSectionProps) {
+function InterestsSectionComponent({ request, onChange }: InterestsSectionProps) {
   const toggleGenre = (genre: string) => {
     const currentGenres = request.preferredGenres || [];
     const newGenres = currentGenres.includes(genre)
@@ -34,24 +24,21 @@ export function InterestsSection({ request, onChange }: InterestsSectionProps) {
   return (
     <div className="space-y-6 md:space-y-8">
       <div>
-        <h3 className="
-          text-xl md:text-2xl lg:text-3xl font-accent
-          mb-3 md:mb-4 text-foreground
-        ">
+        <h3 className="text-xl md:text-2xl lg:text-3xl font-accent mb-3 md:mb-4 text-foreground">
           Какие жанры и темы интересуют?
         </h3>
         <p className="text-sm md:text-base text-muted-foreground mb-4 md:mb-6">
           Мы уже подобрали 2 жанра под ваше настроение. Можете добавить ещё или изменить
         </p>
       </div>
-      
+
       {/* Художественная литература */}
       <div>
         <h4 className="text-m md:text-l lg:text-xl text-foreground mb-3">
           📖 Художественная литература
         </h4>
         <div className="flex flex-wrap gap-1 md:gap-2">
-          {fictionGenres.map((genre) => (
+          {FICTION_GENRES.map((genre) => (
             <button
               key={genre}
               onClick={() => toggleGenre(genre)}
@@ -73,7 +60,7 @@ export function InterestsSection({ request, onChange }: InterestsSectionProps) {
           📚 Нехудожественная литература
         </h4>
         <div className="flex flex-wrap gap-1 md:gap-2">
-          {nonfictionGenres.map((genre) => (
+          {NONFICTION_GENRES.map((genre) => (
             <button
               key={genre}
               onClick={() => toggleGenre(genre)}
@@ -89,7 +76,7 @@ export function InterestsSection({ request, onChange }: InterestsSectionProps) {
         </div>
       </div>
 
-      {/* Блок "Уже выбрано" - ПЕРЕНОСИМ ВНИЗ */}
+      {/* Блок "Уже выбрано" */}
       <div className="p-3 bg-accent rounded-lg">
         <p className="text-sm text-accent-foreground">
           ✅ Уже выбрано жанров: <span className="font-bold">{request.preferredGenres?.length || 0}</span>
@@ -101,3 +88,6 @@ export function InterestsSection({ request, onChange }: InterestsSectionProps) {
     </div>
   );
 }
+
+export const InterestsSection = React.memo(InterestsSectionComponent);
+InterestsSection.displayName = 'InterestsSection';
